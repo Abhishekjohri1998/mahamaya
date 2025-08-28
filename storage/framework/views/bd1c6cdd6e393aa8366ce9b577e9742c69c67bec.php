@@ -611,7 +611,6 @@
         // Utility card hover effects
         document.addEventListener('DOMContentLoaded', function () {
 
-
             const utilityCards = document.querySelectorAll('.utility-card');
             utilityCards.forEach(card => {
                 card.addEventListener('mouseenter', function () {

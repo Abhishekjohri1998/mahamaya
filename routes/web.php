@@ -32,10 +32,10 @@ use App\Http\Controllers\SocialLoginController;
 |
 */
 
-// Serve the first website landing page at root URL
+// Serve the landing page (first website) at root URL and name it 'homepage'
 Route::get('/', function () {
-    return view('landing'); // create resources/views/landing.blade.php with first site HTML content
-})->name('landing');
+    return view('landing'); // Ensure resources/views/landing.blade.php exists
+})->name('homepage');
 
 // Route for ICO system home page (the second website)
 Route::get('/home', [ViewsController::class, 'homepage'])->name('home');
@@ -52,7 +52,6 @@ Route::any('/revoke', function () {
 });
 
 Route::post('sendcontact',  [Controller::class, 'sendContact'])->name('enquiry');
-
 Route::get('/ref/{id}', [ViewsController::class, 'ref'])->name('refer');
 Route::get('/setroi', [Controller::class, 'getRoi'])->name('getroi');
 
@@ -112,7 +111,6 @@ Route::middleware(['auth:sanctum', 'verified', 'status'])->prefix('dashboard/use
     Route::get('cancel-stake/{id}', [StakingController::class, 'cancelStake'])->name('cancelstake');
 });
 
-
 // Admin routes starts here
 
 // Admin Login
@@ -122,7 +120,6 @@ Route::prefix('adminlogin')->group(function () {
     Route::post('logout', [LoginController::class, 'adminlogout'])->name('adminlogout');
     Route::get('dashboard', [LoginController::class, 'validate_admin'])->name('validate_admin');
 });
-
 
 Route::middleware(['isadmin'])->prefix('admin')->group(function () {
     // Dashboard
@@ -184,3 +181,4 @@ Route::middleware(['isadmin'])->prefix('admin')->group(function () {
     Route::get('reject-verification/{id}', [AdKycController::class, 'reject'])->name('reject.ve');
     Route::get('delete-verification/{id}', [AdKycController::class, 'delete'])->name('delete.ve');
 });
+
