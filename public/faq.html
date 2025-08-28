@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #000; /* solid black background */
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Back to Top Button */
+        #backToTop {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #1a0d2e;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(255, 215, 0, 0.4);
+            transition: opacity 0.4s ease, transform 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 999;
+        }
+
+            #backToTop:hover {
+                transform: scale(1.1) translateY(-3px);
+            }
+
+            #backToTop.show {
+                opacity: 1;
+                visibility: visible;
+            }
+
+        /* Header Section */
+        .hero {
+            text-align: center;
+            padding: 80px 0 60px 0;
+            position: relative;
+        }
+
+            .hero::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: radial-gradient(circle at center, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+                pointer-events: none;
+            }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 40px;
+            background: linear-gradient(45deg, #ffd700, #ffed4e, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+            }
+
+            to {
+                text-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
+            }
+        }
+
+        .symbol-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            pointer-events: none;
+        }
+
+
+
+        /* Token Symbol */
+        .token-symbol {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto 100px auto;
+            background: transparent; /* Or a flat color like #fff or #1a0d2e */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            font-weight: bold;
+            color: #1a0d2e;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.5), 0 0 100px rgba(255, 215, 0, 0.3), inset 0 0 30px rgba(255, 255, 255, 0.2);
+            animation: pulse 3s ease-in-out infinite;
+            position: relative;
+        }
+
+            .token-symbol::before {
+                content: '';
+                position: absolute;
+                inset: -20px; /* Increase padding to fit image */
+                background: url('assets/MAYX_coin_Ring.png') no-repeat center center;
+                background-size: contain;
+                z-index: -1;
+                animation: rotate 6s linear infinite;
+            }
+
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: 2px solid #ffd700;
+            background: rgba(255, 215, 0, 0.1);
+            color: #ffd700;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+            .btn:hover {
+                background: #ffd700;
+                color: #1a0d2e;
+                transform: translateY(-2px);
+                box-shadow: 0 10px 20px rgba(255, 215, 0, 0.3);
+            }
+
+            .btn.primary {
+                background: linear-gradient(45deg, #ffd700, #ffed4e);
+                color: #1a0d2e;
+            }
+
+                .btn.primary:hover {
+                    transform: translateY(-2px) scale(1.05);
+                }
+
+        /* Token Utility Section */
+        .utility-section {
+            padding: 40px 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 60px;
+            color: #ffd700;
+        }
+
+        .utility-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .utility-card {
+            background: rgba(255, 215, 0, 0.05);
+            border: 2px solid rgba(255, 215, 0, 0.2);
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+            .utility-card:hover {
+                transform: translateY(-10px);
+                border-color: #ffd700;
+                box-shadow: 0 20px 40px rgba(255, 215, 0, 0.2);
+            }
+
+        .utility-icon {
+            font-size: 3rem;
+            color: #ffd700;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .utility-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ffd700;
+        }
+
+        .utility-desc {
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
+
+        /* Footer Section */
+        .footer {
+            padding: 60px 0 40px 0;
+            text-align: center;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            color: #ffd700;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+            .social-link:hover {
+                transform: translateY(-3px);
+                text-shadow: 0 5px 10px rgba(255, 215, 0, 0.5);
+            }
+
+        .footer-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 600px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .token-symbol {
+                width: 150px;
+                height: 150px;
+                font-size: 3rem;
+            }
+
+            .utility-grid {
+                grid-template-columns: 1fr;
+            }
+
+         
+
+
+            .footer-info {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        
+        #bgAudio {
+            display: none;
+        }
+
+        #bgGif {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        #soundToggle {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            padding: 10px 15px;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #1a0d2e;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: transform 0.2s ease;
+        }
+
+            #soundToggle:hover {
+                transform: scale(1.1);
+            }
+
+
+
+
+        .floating-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ffd700;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0.6;
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+                opacity: 1;
+            }
+        }
+
+        .faq-item {
+            background: rgba(255, 215, 0, 0.05);
+            border: 2px solid rgba(255, 215, 0, 0.2);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question {
+            padding: 15px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #ffd700;
+            position: relative;
+        }
+
+            .faq-question::after {
+                content: '+';
+                position: absolute;
+                right: 20px;
+                font-size: 1.2rem;
+                transition: transform 0.3s ease;
+            }
+
+        .faq-item.active .faq-question::after {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            padding: 0 20px;
+            color: #ccc;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+            padding: 15px 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <img src="assets/background.gif" id="bgGif">
+
+
+    <audio id="bgAudio" loop>
+        <source src="assets/background.mp3" type="audio/mpeg">
+    </audio>
+
+
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+
+            <div class="token-symbol">
+                <img src="assets/MAYX_coin_M.png" alt="MAYX Coin Symbol" class="symbol-image">
+            </div>
+
+
+            <h1 class="section-title">Frequently Asked Questions</h1>
+
+            <div class="action-buttons">
+                <a href="mahamaya_whitepaper.html" class="btn primary">📄 Whitepaper</a>
+                <a href="index.html" class="btn">Home</a>
+                <a href="#" class="btn primary" onclick="buyToken()">Buy MAYX</a>
+                <a href="#" class="btn" onclick="joinCommunity()">Join Community</a>
+            </div>
+        </section>
+
+        <!-- FAQs Section -->
+        <section class="utility-section">
+            <h2 class="section-title">FAQs</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">What is MAYX Coin?</div>
+                <div class="faq-answer">MAYX is the native cryptocurrency powering the Mahamaya Web3 ecosystem, combining blockchain, gaming, Sanskrit learning, and Vedic Cultural innovation. Omni Manual Private Limited a IT Services company developing and provinding technical supports to the Mahamaya ecosystem.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">How can I buy MAYX?</div>
+                <div class="faq-answer">You can purchase MAYX by clicking the "Buy MAYX" button on the homepage. It will guide you to ICO (Initial Coin Offering) platforms during the ICO token sale.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Which blockchain does MAYX run on?</div>
+                <div class="faq-answer">MAYX is deployed on the Polygon network (Smart Contract:0xc38475656538D79a977FAF39C7713b76F69b1fa6), ensuring fast, secure, and low-cost transactions.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What is the maximum supply of MAYX?</div>
+                <div class="faq-answer">The total max supply is 1,000,000,000 MAYX, with an initial circulation of 50,000,000 tokens.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What are the utilities of MAYX?</div>
+                <div class="faq-answer">MAYX can be staked for rewards, used to unlock in-game shrines, participate in governance of the game, join PvP tournaments, and purchase NFT assets.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">How does staking work?</div>
+                <div class="faq-answer">Players can lock their MAYX tokens to earn passive yields and bonus rewards from special "spiritual quests."</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What is the Mahamaya game?</div>
+                <div class="faq-answer">Mahamaya is a mythologically inspired survival and co-op Web3 game where players explore Vedic lore, engage in PvP, and learn Sanskrit Vedic Culture through immersive gameplay.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Is there governance in the ecosystem?</div>
+                <div class="faq-answer">Yes, MAYX holders will be able to vote on shrine placements, PvP balance, Sanskrit Vedic Cultural curriculum expansion, and ecosystem updates through a DAO system.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">How will the community grow?</div>
+                <div class="faq-answer">Through Sanskrit Vedic Cultural challenges, PvP leaderboards, NFT drops, partnerships with cultural foundations, and collaborations with Web3 guilds worldwide.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Is MAYX safe and compliant?</div>
+                <div class="faq-answer">Yes, smart contracts will be audited, KYC will be required for private investors, and the project aligns with GDPR and Indian IT regulations.</div>
+            </div>
+        </section>
+
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="social-links">
+                    <a href="#" class="social-link" onclick="openTelegram()">📱 Telegram</a>
+                    <a href="#" class="social-link" onclick="openDiscord()">💬 Discord</a>
+                    <a href="#" class="social-link" onclick="openTwitter()">🐦 Twitter</a>
+                </div>
+
+                <div class="footer-info">
+                    <!-- Back to Top Button -->
+                    <button id="backToTop">↑</button>
+
+                </div>
+            </div>
+        </footer>
+
+        <script>
+
+            // Back to Top functionality
+            const backToTopBtn = document.getElementById("backToTop");
+
+            window.addEventListener("scroll", () => {
+                if (window.scrollY > 300) {
+                    backToTopBtn.classList.add("show");
+                } else {
+                    backToTopBtn.classList.remove("show");
+                }
+            });
+
+            backToTopBtn.addEventListener("click", () => {
+                document.querySelector(".hero").scrollIntoView({
+                    behavior: "smooth"
+                });
+            });
+
+
+            // Button click handlers
+            function buyToken() {
+                alert('Redirecting to token purchase...\n\nIn a real implementation, this would connect to a DEX or token sale platform.');
+            }
+
+            function joinCommunity() {
+                // Smooth scroll to footer
+                const footer = document.querySelector("footer");
+                footer.scrollIntoView({ behavior: "smooth" });
+
+                // Highlight footer briefly
+                footer.style.transition = "box-shadow 0.5s ease";
+                footer.style.boxShadow = "0 0 20px 5px rgba(255, 215, 0, 0.7)";
+                setTimeout(() => footer.style.boxShadow = "none", 1500);
+            }
+
+            function openTelegram() {
+                alert('Opening Telegram...\n\nThis would open the project\'s Telegram channel.');
+            }
+
+            function openDiscord() {
+                alert('Opening Discord...\n\nThis would open the project\'s Discord server.');
+            }
+
+            function openTwitter() {
+                alert('Opening Twitter...\n\nThis would open the project\'s Twitter profile.');
+            }
+
+            function openWhitepaper() {
+                window.open('mahamaya_whitepaper.html', '_blank');
+            }
+
+            // DOM ready
+            document.addEventListener('DOMContentLoaded', function () {
+
+                // Hover animation for utility cards
+                const utilityCards = document.querySelectorAll('.utility-card');
+                utilityCards.forEach(card => {
+                    card.addEventListener('mouseenter', () => card.style.transform = 'translateY(-10px) scale(1.05)');
+                    card.addEventListener('mouseleave', () => card.style.transform = 'translateY(0) scale(1)');
+                });
+
+
+
+                // Smooth scrolling for internal links
+                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                    anchor.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        const target = document.querySelector(this.getAttribute('href'));
+                        if (target) {
+                            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    });
+                });
+
+                // Collapsible FAQ
+                const faqs = document.querySelectorAll(".faq-item");
+                faqs.forEach(faq => {
+                    faq.querySelector(".faq-question").addEventListener("click", () => {
+                        // Close all others before opening the clicked one
+                        faqs.forEach(item => {
+                            if (item !== faq) item.classList.remove("active");
+                        });
+
+                        // Toggle this FAQ
+                        faq.classList.toggle("active");
+                    });
+                });
+
+            });
+
+            // Scroll-based animations (✅ safe checks added)
+            window.addEventListener('scroll', function () {
+                const scrolled = window.pageYOffset;
+                const heroTitle = document.querySelector('.hero-title'); // might not exist
+                const tokenSymbol = document.querySelector('.token-symbol');
+
+                if (heroTitle) {
+                    heroTitle.style.transform = `translateY(${scrolled * 0.5}px)`;
+                }
+                if (tokenSymbol) {
+                    tokenSymbol.style.transform = `translateY(${scrolled * 0.3}px) rotate(${scrolled * 0.1}deg)`;
+                }
+            });
+
+            // Unlock audio on first user scroll or click
+            function unlockAudio() {
+                const audio = document.getElementById("bgAudio");
+                if (audio && audio.paused) {
+                    audio.play().catch(err => console.log("Autoplay blocked:", err));
+                }
+                document.removeEventListener("click", unlockAudio);
+                document.removeEventListener("scroll", unlockAudio);
+            }
+            document.addEventListener("click", unlockAudio, { once: true });
+            document.addEventListener("scroll", unlockAudio, { once: true });
+
+        </script>
+
+    </div>
+</body>
+</html>
