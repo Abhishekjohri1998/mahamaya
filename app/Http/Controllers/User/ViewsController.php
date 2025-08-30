@@ -18,25 +18,19 @@ use App\Models\RoiLog;
 
 class ViewsController extends Controller
 {
-    //
-
     public function dashboard_home(Request $request){
-        $settings=Settings::where('id','1')->first();
+        $settings = Settings::where('id','1')->first();
         
-        //check for users without ref link and update them with it
-         $usf=User::all();
-        foreach($usf as $usf){
-            //if the ref_link column is empty
-            if($usf->ref_link==''){
-                User::where('id', $usf->id)
-                ->update([
-                'ref_link' => $settings->site_url.'/ref/'.$usf->username,
-                ]);
-            }
+        // Check for users without ref link and update them with it
+        $users = User::whereNull('ref_link')->orWhere('ref_link', '')->get();
+        foreach($users as $user){
+            $user->update([
+                'ref_link' => $settings->site_url.'/ref/'.$user->username,
+            ]);
         }
        
         return view('user.dashboard',[
-            'settings' => Settings::where('id', '1')->first(),
+            'settings' => $settings,
             'stage' => Stage::where('status', 'active')->first(),
             'title' => "User Dashboard",
         ]);
@@ -47,17 +41,26 @@ class ViewsController extends Controller
         $options = $set->pay_methods;
         $optarray = json_decode($options);
         return view('user.buytoken',[
-            'settings' => Settings::where('id', '1')->first(),
-            'options' =>$optarray,
+            'settings' => $set,
+            'options' => $optarray,
             'title' => "Buy Token",
         ]);
     }
     
     public function transactions(){
+        $userId = Auth::id();
+        
+        // Get transactions with proper filtering and ordering
+        $recent_txn = Transactions::where('user', $userId)
+            ->orderByDesc('created_at')
+            ->paginate(25); // Add pagination for better performance
+        
+        $settings = Settings::where('id', '1')->first();
+        
         return view('user.transactions',[
-            'recent_txn' => Transactions::where('user', Auth::user()->id)->orderByDesc('id')->get(),
-            'settings' => Settings::where('id', '1')->first(),
-            'title' => "Transaction",
+            'recent_txn' => $recent_txn,
+            'settings' => $settings,
+            'title' => "My Transactions",
         ]);
     }
 
@@ -89,9 +92,8 @@ class ViewsController extends Controller
         ]);
     }
 
-    //Controller self ref issue
+    // Controller self ref issue
     public function ref(Request $request, $id){
-        
         if(isset($id)){
             $request->session()->flush();
             $request->session()->put('ref_by', $id);
@@ -106,7 +108,7 @@ class ViewsController extends Controller
 
         return view('user.mytoken',[
             'total' => $total,
-            'settings' => Settings::where('id', '1')->first(),
+            'settings' => $settings,
             'title' => "My Token Balances",
         ]);
     }
@@ -125,6 +127,7 @@ class ViewsController extends Controller
             'title' => "Kyc Application",
         ]);
     }
+    
     public function activity(){
         return view('user.activity',[
             'activities' => Activity::where('user', Auth::user()->id)->OrderByDesc('id')->get(),
@@ -132,6 +135,7 @@ class ViewsController extends Controller
             'title' => "Your Activities",
         ]);
     }
+    
     public function referral(){
         $checrefby = User::where('id', Auth::user()->id)->first();
         if (!empty($checrefby->ref_by)) {
@@ -152,10 +156,8 @@ class ViewsController extends Controller
         ]);
     }
 
-
-    //payment route
+    // Payment route
     public function payment(Request $request){
-
         if ($request->session()->exists('amount') && $request->session()->exists('token')) {
             return view('user.payment')
             ->with(array(
@@ -170,12 +172,10 @@ class ViewsController extends Controller
             return redirect()->route('buytoken')
             ->with('message', 'Choose Payment option and calculate token amount first');
         }
-        
     }
 
-    //payment route
+    // Transfer success route
     public function tsuccess(Request $request){
-
         if ($request->session()->exists('receiver') && $request->session()->exists('ref')) {
             $reciever = User::where('email', $request->session()->get('receiver'))->first();
             return view('user.successtransfer')
@@ -190,14 +190,40 @@ class ViewsController extends Controller
         }else {
             return redirect()->back();
         }
-        
     }
 
+    // New method to handle MetaMask transaction logging
+    public function storeMetaMaskTransaction(Request $request){
+        $request->validate([
+            'txn_hash' => 'required|string',
+            'amount' => 'required|numeric',
+            'token_amount' => 'required|numeric',
+            'wallet_address' => 'required|string',
+        ]);
 
+        $settings = Settings::where('id', '1')->first();
+        
+        // Create transaction record
+        Transactions::create([
+            'txn_id' => $request->txn_hash,
+            'user' => Auth::id(),
+            'amount' => $request->amount,
+            'tokens' => $request->token_amount,
+            'base_amt' => $request->amount * $settings->amt_usd,
+            'to' => 'ETH',
+            'type' => 'MetaMask Purchase',
+            'status' => 'pending',
+            'wallet_address' => $request->wallet_address,
+        ]);
 
+        // Update user's token balance
+        $user = Auth::user();
+        $user->tot_tk_bal += $request->token_amount;
+        $user->save();
 
-
-
-
-
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Transaction recorded successfully'
+        ]);
+    }
 }

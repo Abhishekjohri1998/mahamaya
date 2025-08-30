@@ -25,22 +25,18 @@ use App\Http\Controllers\SocialLoginController;
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
 */
 
-// Serve the landing page (first website) at root URL and name it 'homepage'
+// Landing page route
 Route::get('/', function () {
-    return view('landing'); // Ensure resources/views/landing.blade.php exists
+    $settings = Settings::where('id', '1')->first();
+    return view('landing', compact('settings'));
 })->name('homepage');
 
-// Route for ICO system home page (the second website)
+// ICO system home page
 Route::get('/home', [ViewsController::class, 'homepage'])->name('home');
 
-//activate and deactivate Prechain
+// Activation routes
 Route::any('/activate', function () {
     return view('activate.index', [
         'settings' => Settings::where('id', '1')->first(),
@@ -51,20 +47,22 @@ Route::any('/revoke', function () {
     return view('revoke.index');
 });
 
-Route::post('sendcontact',  [Controller::class, 'sendContact'])->name('enquiry');
+// Contact and referral routes
+Route::post('sendcontact', [Controller::class, 'sendContact'])->name('enquiry');
 Route::get('/ref/{id}', [ViewsController::class, 'ref'])->name('refer');
 Route::get('/setroi', [Controller::class, 'getRoi'])->name('getroi');
 
-// Socialite login 
+// Socialite login routes
 Route::get('/auth/{social}/redirect', [SocialLoginController::class, 'redirect'])
     ->where('social', 'twitter|facebook|linkedin|google|github|bitbucket')->name('social.redirect');
 
 Route::get('/auth/{social}/callback', [SocialLoginController::class, 'authenticate'])
     ->where('social', 'twitter|facebook|linkedin|google|github|bitbucket')->name('social.callback');
 
+// Email verification routes
 Route::get('/verify-email', function () {
     return view('auth.verify-email');
-})->middleware('auth')->name('verification.notice');;
+})->middleware('auth')->name('verification.notice');
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
@@ -94,6 +92,9 @@ Route::middleware(['auth:sanctum', 'verified', 'status'])->prefix('dashboard/use
     Route::get('buytoken/payment', [ViewsController::class, 'payment'])->name('payment');
     Route::get('transfer/success', [ViewsController::class, 'tsuccess'])->name('tsuccess');
 
+    // NEW: MetaMask transaction handling
+    Route::post('metamask-transaction', [ViewsController::class, 'storeMetaMaskTransaction'])->name('metamask.transaction');
+
     // Profile Update
     Route::put('update-profile', [ProfileController::class, 'updateprofile'])->name('profile.update');
     Route::put('update-wallet-address', [ProfileController::class, 'updatewallet'])->name('wallet.update');
@@ -111,9 +112,7 @@ Route::middleware(['auth:sanctum', 'verified', 'status'])->prefix('dashboard/use
     Route::get('cancel-stake/{id}', [StakingController::class, 'cancelStake'])->name('cancelstake');
 });
 
-// Admin routes starts here
-
-// Admin Login
+// Admin routes (unchanged)
 Route::prefix('adminlogin')->group(function () {
     Route::get('login', [LoginController::class, 'showLoginForm'])->name('adminloginform');
     Route::post('login', [LoginController::class, 'adminlogin'])->name('adminlogin');
@@ -181,4 +180,3 @@ Route::middleware(['isadmin'])->prefix('admin')->group(function () {
     Route::get('reject-verification/{id}', [AdKycController::class, 'reject'])->name('reject.ve');
     Route::get('delete-verification/{id}', [AdKycController::class, 'delete'])->name('delete.ve');
 });
-
