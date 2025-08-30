@@ -34,7 +34,7 @@
                        <div class="col-md-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Transactions list</h5>
+                                    <h5 class="card-title">Transactio list</h5>
                                     <div class="table-responsive"> 
                                         <table class="table" id="ttable"> 
                                             <thead> 

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Purchase MAYX Tokens</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #ffd700;
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      margin: 0;
+    }
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 0.5em;
+      text-shadow: 0 0 10px #ffd700;
+    }
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 2em;
+      max-width: 500px;
+      line-height: 1.4;
+      color: #ffa;
+    }
+    .btn {
+      background: linear-gradient(45deg, #ffd700, #ffed4e);
+      border: none;
+      padding: 15px 30px;
+      border-radius: 30px;
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: #1a1a1a;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 10px;
+    }
+    .btn:disabled {
+      background: #555;
+      cursor: not-allowed;
+      box-shadow: none;
+      color: #ccc;
+    }
+    input[type=number] {
+      padding: 10px;
+      font-size: 1.2rem;
+      text-align: center;
+      width: 180px;
+      border-radius: 12px;
+      border: 2px solid #ffd700;
+      background: #222;
+      color: #ffd700;
+      margin-bottom: 15px;
+    }
+    #status {
+      margin-top: 15px;
+      font-weight: bold;
+      min-height: 50px;
+      word-break: break-word;
+    }
+  </style>
+</head>
+<body>
+  <h1>Purchase MAYX Tokens</h1>
+  <p>Connect your MetaMask wallet and pay with ETH to purchase MAYX tokens instantly.</p>
+
+  <button id="connectBtn" class="btn">Connect Wallet</button>
+
+  <div id="paymentArea" style="display:none;">
+    <input type="number" id="ethAmount" placeholder="ETH amount" step="0.0001" min="0.0001" />
+    <br />
+    <button id="payBtn" class="btn" disabled>Purchase Token</button>
+    <div id="status"></div>
+  </div>
+
+  <a href="/home" class="btn" style="margin-top:30px;">Back to Home</a>
+
+  <script>
+    const connectBtn = document.getElementById('connectBtn');
+    const payBtn = document.getElementById('payBtn');
+    const statusDiv = document.getElementById('status');
+    const paymentArea = document.getElementById('paymentArea');
+    const ethAmountInput = document.getElementById('ethAmount');
+    let currentAccount = null;
+
+    const recipientAddress = '0xf66cc5B1a36f97996b6feced6cFC6C2B96225CA'; // Your address (fix if needed)
+
+    // Check if MetaMask installed
+    if (typeof window.ethereum === 'undefined') {
+      connectBtn.disabled = true;
+      statusDiv.style.color = 'red';
+      statusDiv.textContent = 'MetaMask not detected. Please install MetaMask extension.';
+    }
+
+    connectBtn.onclick = async () => {
+      try {
+        const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+        currentAccount = accounts[0];
+        statusDiv.style.color = 'lightgreen';
+        statusDiv.textContent = `Connected: ${truncateAddress(currentAccount)}`;
+        connectBtn.style.display = 'none';
+        paymentArea.style.display = 'block';
+        checkPayBtn();
+      } catch(error) {
+        statusDiv.style.color = 'red';
+        statusDiv.textContent = 'Connection rejected or failed.';
+        console.error(error);
+      }
+    };
+
+    ethAmountInput.addEventListener('input', checkPayBtn);
+
+    function checkPayBtn() {
+      let val = parseFloat(ethAmountInput.value);
+      payBtn.disabled = !(val > 0);
+    }
+
+    payBtn.onclick = async () => {
+      if(!currentAccount) {
+        alert('Please connect your wallet first.');
+        return;
+      }
+      let ethValue = ethAmountInput.value;
+      if(!ethValue || isNaN(ethValue) || Number(ethValue) <= 0) {
+        alert('Please enter a valid ETH amount.');
+        return;
+      }
+
+      // Convert ETH to Wei as hex string
+      const amountHex = '0x' + (parseFloat(ethValue) * 1e18).toString(16);
+
+      try {
+        statusDiv.style.color = 'orange';
+        statusDiv.textContent = 'Waiting for transaction confirmation...';
+
+        const txHash = await ethereum.request({
+          method: 'eth_sendTransaction',
+          params: [{
+            from: currentAccount,
+            to: recipientAddress,
+            value: amountHex
+          }]
+        });
+
+        statusDiv.innerHTML = `Transaction sent!<br>Tx Hash: <a href="https://etherscan.io/tx/${txHash}" target="_blank" rel="noopener">${txHash}</a>`;
+      } catch(err) {
+        statusDiv.style.color = 'red';
+        statusDiv.textContent = 'Transaction failed or rejected.';
+        console.error(err);
+      }
+    };
+
+    // Utility function to truncate address
+    function truncateAddress(addr) {
+      return addr.slice(0,6) + '...' + addr.slice(-4);
+    }
+  </script>
+</body>
+</html>
