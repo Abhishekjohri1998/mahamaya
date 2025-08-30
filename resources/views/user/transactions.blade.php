@@ -1,69 +1,78 @@
-<?php
-if (Auth::user()->dashboard_style == "light") {
-    $bg = "light";
-    $text = "dark";
-} else {
-    $bg = "dark";
-    $text = "light";
-}
-?>
-
 @extends('layouts.app')
 @section('content')
     @include('user.topmenu')
     @include('user.sidebar')
-    <div class="main-panel bg-{{$bg}}">
-        <div class="content bg-{{$bg}}">
+    <div class="main-panel">
+        <div class="content">
             <div class="page-inner">
                 <x-danger-alert/>
                 <x-success-alert/>
-                
                 <div class="row">
-                    <div class="col-md-12">
-                        <div class="card bg-{{$bg == 'light' ? 'white' : 'dark'}} border-{{$bg == 'light' ? 'light' : 'secondary'}}">
+                   <div class="col-md-12">
+                        <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title text-{{$text}}">Transactions List</h5>
+                                <h5 class="card-title">Transactions List</h5>
                                 <div class="table-responsive"> 
-                                    <table class="table table-striped table-bordered table-hover table-sm table-{{$bg == 'light' ? 'light' : 'dark'}}" id="ttable"> 
-                                        <thead class="thead-{{$bg == 'light' ? 'light' : 'secondary'}}"> 
+                                    <table class="table" id="ttable"> 
+                                        <thead> 
                                             <tr> 
-                                                <th class="text-{{$text}}">TRANX NO.</th>
-                                                <th class="text-{{$text}}">TOKENS</th>
-                                                <th class="text-{{$text}}">AMOUNT</th>
-                                                <th class="text-{{$text}}">USD AMOUNT</th>
-                                                <th class="text-{{$text}}">TYPE</th>
-                                                <th class="text-{{$text}}">DATE</th>
-                                                <th class="text-{{$text}}">STATUS</th>
+                                                <th>TRANX NO.</th>
+                                                <th>WALLET ADDRESS</th>
+                                                <th>TOKENS</th>
+                                                <th>ETH AMOUNT</th>
+                                                <th>USD AMOUNT</th>
+                                                <th>GST (18%)</th>
+                                                <th>TYPE</th>
+                                                <th>DATE</th>
+                                                <th>STATUS</th>
+                                                <th>ETHERSCAN</th>
                                             </tr> 
                                         </thead> 
                                         <tbody> 
-                                            @forelse ($recent_txn as $txn)
-                                               <tr class="bg-{{$bg == 'light' ? 'white' : 'dark'}} text-{{$text}}"> 
-                                                <td class="text-{{$text}}">{{$txn->txn_id}}</td>
-                                                <td class="text-{{$text}}">{{$txn->tokens}} {{$settings->token_symbol}}</td> 
-                                                <td class="text-{{$text}}">{{$txn->amount}} {{$txn->to}}</td>
-                                                <td class="text-{{$text}}">{{$txn->base_amt}} USD</td>
-                                                <td class="text-{{$text}}">{{$txn->type}}</td>
-                                                <td class="text-{{$text}}">{{\Carbon\Carbon::parse($txn->created_at)->toDayDateTimeString()}}</td>
-                                                <td> 
+                                            @foreach ($recent_txn as $txn)
+                                               <tr> 
+                                                <td>
+                                                    <small>{{substr($txn->txn_id, 0, 10)}}...</small>
+                                                </td>
+                                                <td>
+                                                    @if($txn->wallet_address)
+                                                        <small>{{substr($txn->wallet_address, 0, 6)}}...{{substr($txn->wallet_address, -4)}}</small>
+                                                    @else
+                                                        N/A
+                                                    @endif
+                                                </td>
+                                                <td>{{number_format($txn->tokens)}} {{$settings->token_symbol}}</td> 
+                                                <td>{{$txn->amount}} {{$txn->to}}</td>
+                                                <td>${{number_format($txn->base_amt, 2)}} USD</td>
+                                                <td>
+                                                    @if($txn->gst_amount_eth)
+                                                        {{$txn->gst_amount_eth}} ETH
+                                                    @else
+                                                        N/A
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <span class="badge badge-info">{{$txn->type}}</span>
+                                                </td>
+                                                <td>{{\Carbon\Carbon::parse($txn->created_at)->toDayDateTimeString()}}</td>
+                                                <td>
                                                     @if ($txn->status == "pending")
                                                         <span class="badge badge-warning">{{$txn->status}}</span>
-                                                    @elseif ($txn->status == "completed")
-                                                        <span class="badge badge-success">{{$txn->status}}</span>
-                                                    @elseif ($txn->status == "failed")
-                                                        <span class="badge badge-danger">{{$txn->status}}</span>
                                                     @else
-                                                        <span class="badge badge-secondary">{{$txn->status}}</span>
+                                                        <span class="badge badge-success">{{$txn->status}}</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if($txn->type == 'MetaMask Purchase' && $txn->txn_id)
+                                                        <a href="https://etherscan.io/tx/{{$txn->txn_id}}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                                            <i class="fas fa-external-link-alt"></i> View
+                                                        </a>
+                                                    @else
+                                                        N/A
                                                     @endif
                                                 </td>
                                             </tr>  
-                                            @empty
-                                            <tr class="bg-{{$bg == 'light' ? 'white' : 'dark'}}">
-                                                <td colspan="7" class="text-center text-{{$text}}">
-                                                    <i class="fa fa-info-circle"></i> No transactions found
-                                                </td>
-                                            </tr>
-                                            @endforelse
+                                            @endforeach
                                         </tbody> 
                                     </table>
                                 </div>
@@ -74,19 +83,4 @@ if (Auth::user()->dashboard_style == "light") {
             </div>
         </div>
     </div>
-@endsection
-
-@section('scripts')
-<script>
-$(document).ready(function() {
-    $('#ttable').DataTable({
-        "responsive": true,
-        "pageLength": 25,
-        "order": [[ 5, "desc" ]], // Order by date column
-        "columnDefs": [
-            { "orderable": false, "targets": 6 } // Disable sorting on status column
-        ]
-    });
-});
-</script>
 @endsection

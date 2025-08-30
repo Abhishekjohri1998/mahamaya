@@ -12,6 +12,9 @@
     <x-danger-alert/>
     <x-success-alert/>
 
+    <!-- Add CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <!-- MetaMask CSS Styles -->
     <style>
         .metamask-btn {
@@ -122,6 +125,38 @@
             background: #e2761b;
             transform: scale(1.1);
         }
+
+        .price-breakdown {
+            background: rgba(40, 167, 69, 0.1);
+            border: 2px solid rgba(40, 167, 69, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .breakdown-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 5px 0;
+            padding: 5px 0;
+        }
+
+        .breakdown-total {
+            border-top: 2px solid rgba(40, 167, 69, 0.3);
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #28a745;
+        }
+
+        .gst-info {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 8px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 0.9em;
+        }
     </style>
 
     <div class="row">
@@ -165,10 +200,10 @@
                     <!-- Token Purchase Calculator -->
                     <div class="token-calculation">
                         <h5 class="card-title mb-4"><i class="fas fa-calculator"></i> Token Purchase Calculator</h5>
-                        <p class="card-text">Enter the number of {{$settings->token_symbol}} tokens you want to purchase. The ETH amount will be calculated automatically.</p>
+                        <p class="card-text">Enter the number of {{$settings->token_symbol}} tokens you want to purchase. The ETH amount will be calculated automatically with 18% GST included.</p>
                         
                         <div class="row align-items-center">
-                            <div class="col-md-5">
+                            <div class="col-md-12">
                                 <label for="metamask-token-amount" class="form-label">Number of {{$settings->token_symbol}} Tokens</label>
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
@@ -185,20 +220,32 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <!-- Price Breakdown with GST -->
+                        <div class="price-breakdown">
+                            <h6 class="mb-3"><i class="fas fa-receipt text-success"></i> Price Breakdown</h6>
                             
-                            <div class="col-md-2 text-center">
-                                <h4 class="text-muted">=</h4>
+                            <div class="breakdown-row">
+                                <span>Base Price (<span id="tokens-display">100</span> tokens × 0.001 ETH):</span>
+                                <span id="base-price-display">0.100 ETH</span>
                             </div>
                             
-                            <div class="col-md-5">
-                                <label for="metamask-eth-amount" class="form-label">ETH Amount Required</label>
-                                <div class="input-group mb-3">
-                                    <input type="text" id="metamask-eth-amount" class="form-control text-center font-weight-bold" readonly value="0.100">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text bg-warning text-dark"><i class="fab fa-ethereum"></i> ETH</span>
-                                    </div>
-                                </div>
+                            <div class="breakdown-row">
+                                <span>GST (18%):</span>
+                                <span id="gst-amount-display">0.018 ETH</span>
                             </div>
+                            
+                            <div class="breakdown-row breakdown-total">
+                                <span>Total Amount:</span>
+                                <span id="total-price-display">0.118 ETH</span>
+                            </div>
+                        </div>
+
+                        <!-- GST Information -->
+                        <div class="gst-info">
+                            <i class="fas fa-info-circle text-warning"></i>
+                            <strong>GST Information:</strong> 18% Goods and Services Tax is applicable on all token purchases as per Indian tax regulations. This amount is included in the total payable amount.
                         </div>
 
                         <!-- Quick Amount Buttons -->
@@ -279,6 +326,7 @@
                                 <li><i class="fas fa-check text-success"></i> Ensure you're on the correct network</li>
                                 <li><i class="fas fa-check text-success"></i> Keep sufficient ETH for gas fees</li>
                                 <li><i class="fas fa-check text-success"></i> Double-check transaction details</li>
+                                <li><i class="fas fa-check text-success"></i> 18% GST is included in total amount</li>
                             </ul>
                         </div>
                     </div>
@@ -304,11 +352,12 @@
     <script>
         // Configuration
         const CONFIG = {
-            contractAddress: '0xf66cc5B1a36f97996b6feced5C6FC6C2a96225CA', // Replace with your actual contract address
+            contractAddress: '0xf66cc5B1a36f97996b6feced5C6FC6C2a96225CA',
             chainId: '0x1', // Ethereum Mainnet
             chainName: 'Ethereum Mainnet',
-            tokenPrice: 0.001, // Price per token in ETH (adjust as needed)
-            rpcUrl: 'https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID', // Replace with your Infura project ID
+            tokenPrice: 0.001,
+            gstRate: 0.18,
+            rpcUrl: 'https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID',
             gasLimit: 100000
         };
 
@@ -317,6 +366,19 @@
         let userAccount;
         let connected = false;
 
+        // Price calculation function
+        function calculatePriceWithGST(tokenAmount) {
+            const basePrice = tokenAmount * CONFIG.tokenPrice;
+            const gstAmount = basePrice * CONFIG.gstRate;
+            const totalPrice = basePrice + gstAmount;
+            
+            return {
+                basePrice: basePrice,
+                gstAmount: gstAmount,
+                totalPrice: totalPrice
+            };
+        }
+
         // Initialize Web3
         async function initWeb3() {
             try {
@@ -324,7 +386,6 @@
                     web3 = new Web3(window.ethereum);
                     console.log('MetaMask detected');
                     
-                    // Check if already connected
                     const accounts = await web3.eth.getAccounts();
                     if (accounts.length > 0) {
                         userAccount = accounts[0];
@@ -362,11 +423,15 @@
             updateMetaMaskCalculation();
         }
 
-        // Update MetaMask calculation
+        // Update MetaMask calculation with GST
         function updateMetaMaskCalculation() {
             const tokenAmount = parseInt(document.getElementById('metamask-token-amount').value) || 0;
-            const ethAmount = (tokenAmount * CONFIG.tokenPrice).toFixed(6);
-            document.getElementById('metamask-eth-amount').value = ethAmount;
+            const prices = calculatePriceWithGST(tokenAmount);
+            
+            document.getElementById('tokens-display').textContent = tokenAmount.toLocaleString();
+            document.getElementById('base-price-display').textContent = prices.basePrice.toFixed(6) + ' ETH';
+            document.getElementById('gst-amount-display').textContent = prices.gstAmount.toFixed(6) + ' ETH';
+            document.getElementById('total-price-display').textContent = prices.totalPrice.toFixed(6) + ' ETH';
         }
 
         // Connect to MetaMask
@@ -377,7 +442,6 @@
                     return;
                 }
 
-                // Request account access
                 const accounts = await window.ethereum.request({
                     method: 'eth_requestAccounts'
                 });
@@ -387,7 +451,6 @@
                     return;
                 }
 
-                // Switch to correct network
                 await switchToEthereumNetwork();
 
                 userAccount = accounts[0];
@@ -437,7 +500,19 @@
             }
         }
 
-        // Purchase tokens
+        // Get ETH to USD conversion rate
+        async function getEthToUsdRate() {
+            try {
+                const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+                const data = await response.json();
+                return data.ethereum.usd;
+            } catch (error) {
+                console.error('Failed to fetch ETH price:', error);
+                return 2000; // Default fallback price
+            }
+        }
+
+        // Purchase tokens with backend integration
         async function purchaseTokens() {
             if (!connected) {
                 showAlert('Please connect your wallet first', 'warning');
@@ -451,13 +526,14 @@
                 return;
             }
 
-            const ethAmount = (tokenAmount * CONFIG.tokenPrice);
+            const prices = calculatePriceWithGST(tokenAmount);
+            const totalEthAmount = prices.totalPrice;
             
-            // Check if user has enough balance
+            // Check balance
             try {
                 const balance = await web3.eth.getBalance(userAccount);
                 const balanceInEth = parseFloat(web3.utils.fromWei(balance, 'ether'));
-                const requiredEth = ethAmount + 0.01; // Adding gas fee buffer
+                const requiredEth = totalEthAmount + 0.01;
                 
                 if (balanceInEth < requiredEth) {
                     showAlert(`Insufficient balance! You need at least ${requiredEth.toFixed(6)} ETH (including gas fees). Your current balance: ${balanceInEth.toFixed(6)} ETH`, 'error');
@@ -470,37 +546,70 @@
             
             try {
                 setButtonLoading(true);
-                showAlert('Please confirm the transaction in your MetaMask wallet...', 'warning');
+                showAlert(`Please confirm the transaction in your MetaMask wallet...<br><strong>Total Amount: ${totalEthAmount.toFixed(6)} ETH (including 18% GST)</strong>`, 'warning');
 
                 const transaction = {
                     from: userAccount,
                     to: CONFIG.contractAddress,
-                    value: web3.utils.toWei(ethAmount.toString(), 'ether'),
+                    value: web3.utils.toWei(totalEthAmount.toString(), 'ether'),
                     gas: CONFIG.gasLimit
                 };
 
                 const txHash = await web3.eth.sendTransaction(transaction);
                 
-                showAlert(`Transaction submitted successfully! 🎉<br>Transaction Hash: <code>${txHash.transactionHash}</code><br><a href="https://etherscan.io/tx/${txHash.transactionHash}" target="_blank">View on Etherscan</a>`, 'success');
-                console.log('Transaction hash:', txHash.transactionHash);
+                // Get USD conversion
+                const ethToUsd = await getEthToUsdRate();
+                const usdAmount = prices.totalPrice * ethToUsd;
 
-                // TODO: Add backend integration to record the purchase
-                // You might want to send the transaction details to your backend here
-                /*
-                fetch('/api/record-metamask-purchase', {
+                // **ACTIVE BACKEND INTEGRATION** - Save transaction to database
+                const response = await fetch('/api/record-metamask-purchase', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                     },
                     body: JSON.stringify({
+                        txn_id: txHash.transactionHash,
                         wallet_address: userAccount,
-                        token_amount: tokenAmount,
-                        eth_amount: ethAmount,
-                        transaction_hash: txHash.transactionHash
+                        tokens: tokenAmount,
+                        amount: prices.totalPrice.toFixed(6),
+                        to: 'ETH',
+                        base_amt: usdAmount.toFixed(2),
+                        base_price_eth: prices.basePrice.toFixed(6),
+                        gst_amount_eth: prices.gstAmount.toFixed(6),
+                        total_eth_amount: prices.totalPrice.toFixed(6),
+                        gst_rate: CONFIG.gstRate,
+                        transaction_hash: txHash.transactionHash,
+                        type: 'MetaMask Purchase',
+                        status: 'completed'
                     })
                 });
-                */
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    console.log('Transaction saved to database successfully');
+                    showAlert(`Transaction submitted successfully! 🎉<br>
+                        <strong>Purchase Details:</strong><br>
+                        • Tokens: ${tokenAmount} {{$settings->token_symbol}}<br>
+                        • Base Price: ${prices.basePrice.toFixed(6)} ETH<br>
+                        • GST (18%): ${prices.gstAmount.toFixed(6)} ETH<br>
+                        • Total Paid: ${prices.totalPrice.toFixed(6)} ETH<br>
+                        • USD Value: $${usdAmount.toFixed(2)}<br>
+                        <br>Transaction Hash: <code>${txHash.transactionHash}</code><br>
+                        <a href="https://etherscan.io/tx/${txHash.transactionHash}" target="_blank">View on Etherscan</a><br>
+                        <br><strong>Note:</strong> Transaction has been recorded and will appear in your transaction history.`, 'success');
+                    
+                    // Refresh the page after 5 seconds to update token balance
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 5000);
+                } else {
+                    console.error('Failed to save transaction to database');
+                    showAlert('Transaction completed but failed to record in database. Please contact support.', 'warning');
+                }
+                
+                console.log('Transaction hash:', txHash.transactionHash);
 
             } catch (error) {
                 console.error('Purchase error:', error);
@@ -524,11 +633,9 @@
 
             if (connected && userAccount) {
                 try {
-                    // Hide connect button, show purchase button
                     connectBtn.style.display = 'none';
                     purchaseBtn.style.display = 'block';
                     
-                    // Update wallet info
                     const balance = await web3.eth.getBalance(userAccount);
                     const ethBalance = web3.utils.fromWei(balance, 'ether');
                     const networkId = await web3.eth.net.getId();
@@ -537,13 +644,11 @@
                         userAccount.substring(0, 8) + '...' + userAccount.substring(34);
                     document.getElementById('wallet-balance').textContent = parseFloat(ethBalance).toFixed(6);
                     
-                    // Update network name
                     const networkName = networkId === 1 ? 'Ethereum Mainnet' : networkId === 11155111 ? 'Sepolia Testnet' : `Network ID: ${networkId}`;
                     document.getElementById('network-name').textContent = networkName;
                     
                     walletInfo.style.display = 'block';
 
-                    // Show warning if balance is too low
                     if (parseFloat(ethBalance) < 0.01) {
                         showAlert('⚠️ Your ETH balance is very low. You need ETH to make transactions and pay gas fees. Consider adding more ETH to your wallet.', 'warning');
                     }
@@ -553,7 +658,6 @@
                     showAlert('Failed to load wallet information. Please refresh the page.', 'error');
                 }
             } else {
-                // Show connect button, hide purchase button
                 connectBtn.style.display = 'block';
                 purchaseBtn.style.display = 'none';
                 walletInfo.style.display = 'none';
@@ -601,8 +705,7 @@
                 </div>
             `;
 
-            // Clear alert after 10 seconds for success/warning, 8 seconds for errors
-            const timeout = type === 'success' ? 10000 : 8000;
+            const timeout = type === 'success' ? 15000 : 8000;
             setTimeout(() => {
                 alertContainer.innerHTML = '';
             }, timeout);

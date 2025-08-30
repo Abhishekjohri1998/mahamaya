@@ -18,23 +18,41 @@ use App\Models\RoiLog;
 
 class ViewsController extends Controller
 {
-    public function dashboard_home(Request $request){
-        $settings = Settings::where('id','1')->first();
-        
-        // Check for users without ref link and update them with it
-        $users = User::whereNull('ref_link')->orWhere('ref_link', '')->get();
-        foreach($users as $user){
-            $user->update([
-                'ref_link' => $settings->site_url.'/ref/'.$user->username,
-            ]);
-        }
-       
-        return view('user.dashboard',[
-            'settings' => $settings,
-            'stage' => Stage::where('status', 'active')->first(),
-            'title' => "User Dashboard",
+public function dashboard_home(Request $request){
+    $user = Auth::user();
+    $settings = Settings::where('id','1')->first();
+    
+    // Check for users without ref link and update them with it
+    $users = User::whereNull('ref_link')->orWhere('ref_link', '')->get();
+    foreach($users as $u){
+        $u->update([
+            'ref_link' => $settings->site_url.'/ref/'.$u->username,
         ]);
     }
+
+    // Get active stage
+    $stage = Stage::where('status', 'active')->first();
+    
+    // Calculate total token value
+    $total = $user->tot_tk_bal * $settings->amt_usd;
+    
+    // Get recent MetaMask transactions
+    $recent_metamask_txn = Transactions::where('user', $user->id)
+        ->where('type', 'MetaMask Purchase')
+        ->orderByDesc('created_at')
+        ->limit(5)
+        ->get();
+
+    return view('user.dashboard', [
+        'user' => $user,
+        'settings' => $settings,
+        'stage' => $stage,
+        'total' => $total,
+        'recent_metamask_txn' => $recent_metamask_txn,
+        'title' => 'Dashboard'  // This fixes the undefined $title error
+    ]);
+}
+
 
     public function buytoken(){
         $set = Settings::where('id', '1')->first();
@@ -64,25 +82,29 @@ class ViewsController extends Controller
         ]);
     }
 
-    public function stake(){
-        $settings = Settings::where('id', '1')->first();
-        if (!$settings->usestake) {
-           return redirect()->back()->with('message', 'Invalid Destination');
-        }
-        $mystake = Staking::where('user_id', Auth::user()->id)->where('status', 'active')->first();
-        $roi = RoiLog::where('user_id', Auth::user()->id)->get();
-
-        $duration = $settings->duration;
-        $duraarray = json_decode($duration);
-
-        return view('user.staketoken',[
-            'settings' => $settings,
-            'mystake' => $mystake,
-            'rois' => $roi,
-            'duraarray' => $duraarray,
-            'title' => "Stake your token",
-        ]);
+public function stake(){
+    $user = Auth::user();
+    $settings = Settings::where('id', '1')->first();
+    
+    if (!$settings->usestake) {
+        return redirect()->back()->with('message', 'Invalid Destination');
     }
+    
+    $mystake = Staking::where('user_id', $user->id)->where('status', 'active')->first();
+    $roi = RoiLog::where('user_id', $user->id)->get();
+    $duration = $settings->duration;
+    $duraarray = json_decode($duration);
+
+    return view('user.staketoken', [
+        'user' => $user,
+        'settings' => $settings,
+        'mystake' => $mystake,
+        'rois' => $roi,
+        'duraarray' => $duraarray,
+        'title' => 'Stake Your Tokens'  // This fixes the undefined $title error
+    ]);
+}
+
 
     public function profile(){
         return view('profile.show',[
@@ -101,17 +123,22 @@ class ViewsController extends Controller
         }
     }
 
-    public function mytoken(){
-        $settings = Settings::where('id', '1')->first();
-        $user = User::where('id', Auth::user()->id)->first();
-        $total = $user->token_bal * $settings->amt_usd;
+public function mytoken(){
+    $user = Auth::user();
+    $settings = Settings::where('id', '1')->first();
+    $total = $user->token_bal * $settings->amt_usd;
+    
+    // Get recent MetaMask transactions for activity overview
+    $recent_metamask_txn = Transactions::where('user', $user->id)
+        ->where('type', 'MetaMask Purchase')
+        ->orderByDesc('created_at')
+        ->limit(3)
+        ->get();
 
-        return view('user.mytoken',[
-            'total' => $total,
-            'settings' => $settings,
-            'title' => "My Token Balances",
-        ]);
-    }
+    return view('user.mytoken', compact('user', 'settings', 'total', 'recent_metamask_txn') + ['title' => 'My Token Balance']);
+}
+
+
 
     public function kycinfo(){
         return view('user.kycinfo',[
@@ -191,6 +218,76 @@ class ViewsController extends Controller
             return redirect()->back();
         }
     }
+
+     // New method for MetaMask transaction recording
+public function recordMetaMaskPurchase(Request $request)
+{
+    try {
+        $validated = $request->validate([
+            'txn_id' => 'required|string',
+            'wallet_address' => 'required|string',
+            'tokens' => 'required|numeric|min:1',
+            'amount' => 'required|string',
+            'to' => 'required|string',
+            'base_amt' => 'required|string',
+            'base_price_eth' => 'required|string',
+            'gst_amount_eth' => 'required|string',
+            'total_eth_amount' => 'required|string',
+            'gst_rate' => 'required|numeric',
+            'transaction_hash' => 'required|string',
+            'type' => 'required|string',
+            'status' => 'required|string'
+        ]);
+
+        // Create transaction record
+        $transaction = Transactions::create([
+            'user' => Auth::id(),
+            'txn_id' => $validated['transaction_hash'],
+            'tokens' => $validated['tokens'],
+            'token_bonus' => '0',
+            'total_token' => $validated['tokens'],
+            'amount' => $validated['amount'],
+            'base_amt' => $validated['base_amt'],
+            'type' => $validated['type'],
+            'status' => $validated['status'],
+            'to' => $validated['to'],
+            'wallet_address' => $validated['wallet_address'],
+            'base_price_eth' => $validated['base_price_eth'],
+            'gst_amount_eth' => $validated['gst_amount_eth'],
+            'total_eth_amount' => $validated['total_eth_amount'],
+            'gst_rate' => $validated['gst_rate'],
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        // Update user's token balance
+        $user = Auth::user();
+        $user->tot_tk_bal += $validated['tokens'];
+        $user->save();
+
+        // Log activity
+        Activity::create([
+            'user' => Auth::id(),
+            'action' => 'MetaMask Token Purchase',
+            'description' => "Purchased {$validated['tokens']} tokens via MetaMask for {$validated['amount']} ETH",
+            'ip' => $request->ip(),
+            'created_at' => now()
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Transaction recorded successfully',
+            'transaction_id' => $transaction->id
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to record transaction: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
 
     // New method to handle MetaMask transaction logging
     public function storeMetaMaskTransaction(Request $request){

@@ -113,10 +113,46 @@ if (Auth::user()->dashboard_style == "light") {
                                             </p>
                                         </div>
 
+                                        <!-- Recent MetaMask Transactions Section -->
+                                        <?php if(isset($recent_metamask_txn) && $recent_metamask_txn->count() > 0): ?>
+                                        <div class="p-3 mt-3 border rounded bg-<?php echo e($bg == 'light' ? 'light' : 'secondary'); ?>">
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <h5 class="text-<?php echo e($text); ?> mb-0">
+                                                    <i class="fab fa-ethereum text-warning"></i> Recent MetaMask Purchases
+                                                </h5>
+                                                <a href="<?php echo e(route('transactions')); ?>" class="btn btn-sm btn-outline-primary">
+                                                    View All
+                                                </a>
+                                            </div>
+                                            
+                                            <?php $__currentLoopData = $recent_metamask_txn; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $txn): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                                                <div>
+                                                    <strong class="text-<?php echo e($text); ?>"><?php echo e(number_format($txn->tokens)); ?> <?php echo e($settings->token_symbol); ?></strong><br>
+                                                    <small class="text-muted">
+                                                        <?php echo e($txn->amount); ?> ETH 
+                                                        <?php if($txn->gst_amount_eth): ?>
+                                                            (inc. <?php echo e($txn->gst_amount_eth); ?> ETH GST)
+                                                        <?php endif; ?>
+                                                    </small>
+                                                </div>
+                                                <div class="text-right">
+                                                    <small class="text-<?php echo e($text); ?>"><?php echo e($txn->created_at->diffForHumans()); ?></small><br>
+                                                    <?php if($txn->txn_id): ?>
+                                                        <a href="https://etherscan.io/tx/<?php echo e($txn->txn_id); ?>" target="_blank" class="btn btn-xs btn-outline-info">
+                                                            <i class="fas fa-external-link-alt"></i>
+                                                        </a>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </div>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                        </div>
+                                        <?php endif; ?>
+
                                         <!-- Recent Transactions Overview -->
                                         <div class="p-3 mt-3 border rounded bg-<?php echo e($bg == 'light' ? 'light' : 'secondary'); ?>">
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <h5 class="text-<?php echo e($text); ?> mb-0">Recent Activity</h5>
+                                                <h5 class="text-<?php echo e($text); ?> mb-0">All Transaction Activity</h5>
                                                 <a href="<?php echo e(route('transactions')); ?>" class="btn btn-sm btn-outline-primary">
                                                     View All Transactions
                                                 </a>
@@ -124,22 +160,22 @@ if (Auth::user()->dashboard_style == "light") {
                                             <div class="mt-2">
                                                 <small class="text-<?php echo e($text); ?>">
                                                     <i class="fas fa-info-circle"></i> 
-                                                    Click "View All Transactions" to see your complete MetaMask and traditional payment history
+                                                    View your complete transaction history including MetaMask purchases, traditional payments, transfers, and bonuses
                                                 </small>
                                             </div>
                                         </div>
 
-                                        <!-- Token Distribution Chart (Optional) -->
+                                        <!-- Token Distribution Chart -->
                                         <div class="p-3 mt-3 border rounded bg-<?php echo e($bg == 'light' ? 'light' : 'secondary'); ?>">
                                             <h5 class="text-<?php echo e($text); ?>">Token Distribution</h5>
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="progress mb-2">
                                                         <div class="progress-bar bg-primary" role="progressbar" 
-                                                             style="width: <?php echo e(Auth::user()->token_bal > 0 ? (Auth::user()->token_bal / Auth::user()->tot_tk_bal * 100) : 0); ?>%">
+                                                             style="width: <?php echo e(Auth::user()->token_bal > 0 && Auth::user()->tot_tk_bal > 0 ? (Auth::user()->token_bal / Auth::user()->tot_tk_bal * 100) : 0); ?>%">
                                                         </div>
                                                     </div>
-                                                    <small class="text-<?php echo e($text); ?>">Purchased Tokens</small>
+                                                    <small class="text-<?php echo e($text); ?>">Purchased Tokens (<?php echo e(number_format((Auth::user()->token_bal / max(Auth::user()->tot_tk_bal, 1)) * 100, 1)); ?>%)</small>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="progress mb-2">
@@ -147,7 +183,7 @@ if (Auth::user()->dashboard_style == "light") {
                                                              style="width: <?php echo e(Auth::user()->tot_tk_bal > 0 ? ((Auth::user()->ref_bonus + Auth::user()->tk_bonus_bal + Auth::user()->roi_bal) / Auth::user()->tot_tk_bal * 100) : 0); ?>%">
                                                         </div>
                                                     </div>
-                                                    <small class="text-<?php echo e($text); ?>">Earned Tokens (Referral + Bonus + ROI)</small>
+                                                    <small class="text-<?php echo e($text); ?>">Earned Tokens (<?php echo e(number_format(((Auth::user()->ref_bonus + Auth::user()->tk_bonus_bal + Auth::user()->roi_bal) / max(Auth::user()->tot_tk_bal, 1)) * 100, 1)); ?>%)</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -156,20 +192,26 @@ if (Auth::user()->dashboard_style == "light") {
                                         <div class="p-3 mt-3 border rounded bg-<?php echo e($bg == 'light' ? 'light' : 'secondary'); ?>">
                                             <h5 class="text-<?php echo e($text); ?> mb-3">Quick Actions</h5>
                                             <div class="row">
-                                                <div class="col-md-4">
+                                                <div class="col-md-3">
                                                     <a href="<?php echo e(route('buytoken')); ?>" class="btn btn-primary btn-block">
                                                         <i class="fas fa-shopping-cart"></i><br>
-                                                        <small>Buy More Tokens</small>
+                                                        <small>Buy with Card/Bank</small>
                                                     </a>
                                                 </div>
-                                                <div class="col-md-4">
-                                                    <a href="#" data-toggle="modal" data-target="#transfermodal" class="btn btn-warning btn-block">
+                                                <div class="col-md-3">
+                                                    <a href="<?php echo e(route('buytoken')); ?>" class="btn btn-warning btn-block">
+                                                        <i class="fab fa-ethereum"></i><br>
+                                                        <small>Buy with MetaMask</small>
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <a href="#" data-toggle="modal" data-target="#transfermodal" class="btn btn-info btn-block">
                                                         <i class="fas fa-paper-plane"></i><br>
                                                         <small>Transfer Tokens</small>
                                                     </a>
                                                 </div>
-                                                <div class="col-md-4">
-                                                    <a href="<?php echo e(route('transactions')); ?>" class="btn btn-info btn-block">
+                                                <div class="col-md-3">
+                                                    <a href="<?php echo e(route('transactions')); ?>" class="btn btn-success btn-block">
                                                         <i class="fas fa-history"></i><br>
                                                         <small>View History</small>
                                                     </a>
@@ -186,20 +228,30 @@ if (Auth::user()->dashboard_style == "light") {
                         <!-- Wallet Information Card -->
                         <div class="card bg-<?php echo e($bg == 'light' ? 'white' : 'dark'); ?> border-<?php echo e($bg == 'light' ? 'light' : 'secondary'); ?> mb-3">
                             <div class="card-body">
-                                <h5 class="card-title text-<?php echo e($text); ?>">Wallet Information</h5>
+                                <h5 class="card-title text-<?php echo e($text); ?>">
+                                    <i class="fas fa-wallet"></i> Wallet Information
+                                </h5>
                                 <?php if(Auth::user()->wallet_address): ?>
                                     <p class="text-<?php echo e($text); ?>">
                                         <strong>Address:</strong><br>
-                                        <small class="text-muted"><?php echo e(Str::limit(Auth::user()->wallet_address, 20, '...')); ?></small>
+                                        <small class="text-muted font-monospace"><?php echo e(Str::limit(Auth::user()->wallet_address, 30, '...')); ?></small>
                                     </p>
-                                    <button class="btn btn-sm btn-outline-info" onclick="copyToClipboard('<?php echo e(Auth::user()->wallet_address); ?>')">
-                                        <i class="fas fa-copy"></i> Copy Address
-                                    </button>
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-sm btn-outline-info" onclick="copyToClipboard('<?php echo e(Auth::user()->wallet_address); ?>')">
+                                            <i class="fas fa-copy"></i> Copy Address
+                                        </button>
+                                        <a href="https://etherscan.io/address/<?php echo e(Auth::user()->wallet_address); ?>" target="_blank" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-external-link-alt"></i> View on Etherscan
+                                        </a>
+                                    </div>
                                 <?php else: ?>
-                                    <p class="text-danger">No wallet address added</p>
-                                    <a href="#" data-toggle="modal" data-target="#walletmodal" class="btn btn-warning btn-sm">
-                                        Add Wallet Address
-                                    </a>
+                                    <div class="text-center p-3">
+                                        <i class="fas fa-exclamation-triangle text-warning fa-2x mb-2"></i>
+                                        <p class="text-danger mb-2">No wallet address added</p>
+                                        <a href="#" data-toggle="modal" data-target="#walletmodal" class="btn btn-warning btn-sm">
+                                            <i class="fas fa-plus"></i> Add Wallet Address
+                                        </a>
+                                    </div>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -209,19 +261,49 @@ if (Auth::user()->dashboard_style == "light") {
                             <div class="card-body">
                                 <h5 class="card-title text-<?php echo e($text); ?>">Token Statistics</h5>
                                 <ul class="list-unstyled">
-                                    <li class="text-<?php echo e($text); ?>">
+                                    <li class="text-<?php echo e($text); ?> mb-2">
                                         <i class="fas fa-coins text-primary"></i> 
-                                        Current Price: <strong>$<?php echo e($settings->amt_usd ?? '0.00'); ?></strong>
+                                        Current Price: <strong>$<?php echo e(number_format($settings->amt_usd ?? 0, 2)); ?></strong>
                                     </li>
-                                    <li class="text-<?php echo e($text); ?>">
+                                    <li class="text-<?php echo e($text); ?> mb-2">
                                         <i class="fas fa-chart-line text-success"></i> 
-                                        Your Holdings: <strong><?php echo e(number_format(Auth::user()->tot_tk_bal ?? 0)); ?></strong>
+                                        Your Holdings: <strong><?php echo e(number_format(Auth::user()->tot_tk_bal ?? 0)); ?> <?php echo e($settings->token_symbol); ?></strong>
                                     </li>
-                                    <li class="text-<?php echo e($text); ?>">
+                                    <li class="text-<?php echo e($text); ?> mb-2">
                                         <i class="fas fa-percentage text-info"></i> 
                                         Portfolio Value: <strong>$<?php echo e(number_format($total)); ?></strong>
                                     </li>
+                                    <li class="text-<?php echo e($text); ?>">
+                                        <i class="fab fa-ethereum text-warning"></i> 
+                                        MetaMask Ready: 
+                                        <?php if(Auth::user()->wallet_address): ?>
+                                            <strong class="text-success">Yes</strong>
+                                        <?php else: ?>
+                                            <strong class="text-danger">Setup Required</strong>
+                                        <?php endif; ?>
+                                    </li>
                                 </ul>
+                            </div>
+                        </div>
+
+                        <!-- Purchase Methods Card -->
+                        <div class="card bg-<?php echo e($bg == 'light' ? 'white' : 'dark'); ?> border-<?php echo e($bg == 'light' ? 'light' : 'secondary'); ?> mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title text-<?php echo e($text); ?>">Purchase Methods</h5>
+                                <div class="row">
+                                    <div class="col-6 text-center">
+                                        <a href="<?php echo e(route('buytoken')); ?>" class="btn btn-outline-primary btn-block">
+                                            <i class="fas fa-credit-card"></i><br>
+                                            <small>Traditional</small>
+                                        </a>
+                                    </div>
+                                    <div class="col-6 text-center">
+                                        <a href="<?php echo e(route('buytoken')); ?>" class="btn btn-outline-warning btn-block">
+                                            <i class="fab fa-ethereum"></i><br>
+                                            <small>MetaMask</small>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -238,11 +320,37 @@ if (Auth::user()->dashboard_style == "light") {
     <script>
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(function() {
-                alert('Wallet address copied to clipboard!');
-            }, function(err) {
+                // Create a temporary notification
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-success alert-dismissible fade show position-fixed';
+                alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; max-width: 300px;';
+                alertDiv.innerHTML = `
+                    <i class="fas fa-check-circle"></i> Wallet address copied to clipboard!
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span>&times;</span>
+                    </button>
+                `;
+                document.body.appendChild(alertDiv);
+                
+                // Auto-remove after 3 seconds
+                setTimeout(() => {
+                    if (alertDiv.parentNode) {
+                        alertDiv.parentNode.removeChild(alertDiv);
+                    }
+                }, 3000);
+            }).catch(function(err) {
                 console.error('Could not copy text: ', err);
+                alert('Copy failed. Please copy manually: ' + text);
             });
         }
+
+        // Auto-refresh token data every 30 seconds to show updated balances
+        setInterval(function() {
+            // Only refresh if user seems active (has moved mouse recently)
+            if (document.hasFocus()) {
+                location.reload();
+            }
+        }, 30000);
     </script>
 <?php $__env->stopSection(); ?>
 
