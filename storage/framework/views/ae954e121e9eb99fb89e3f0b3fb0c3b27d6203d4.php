@@ -179,28 +179,14 @@
             margin: 10px 0;
             font-size: 0.9em;
         }
-
-        .testnet-notice {
-            background: rgba(74, 144, 226, 0.1);
-            border: 2px solid rgba(74, 144, 226, 0.3);
-            border-radius: 8px;
-            padding: 15px;
-            margin: 10px 0;
-        }
     </style>
 
     <div class="row">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Buy <?php echo e($settings->token_symbol); ?> Tokens with MetaMask (Sepolia Testnet)</h5>
-                    <p class="card-text">Connect your MetaMask wallet to purchase <?php echo e($settings->token_symbol); ?> tokens directly with test Ethereum on Sepolia Testnet. Safe testing environment with free test ETH.</p>
-                    
-                    <!-- Sepolia Testnet Notice -->
-                    <div class="testnet-notice">
-                        <h6><i class="fas fa-flask text-info"></i> <strong>Testing Mode - Sepolia Testnet</strong></h6>
-                        <p class="mb-0">This is running on Sepolia Test Network. No real money will be spent. Get test ETH from <a href="https://sepoliafaucet.com/" target="_blank">Sepolia Faucet</a> or <a href="https://infura.io/faucet/sepolia" target="_blank">Infura Faucet</a>.</p>
-                    </div>
+                    <h5 class="card-title">Buy <?php echo e($settings->token_symbol); ?> Tokens with MetaMask</h5>
+                    <p class="card-text">Connect your MetaMask wallet to purchase <?php echo e($settings->token_symbol); ?> tokens directly with Ethereum. Secure, fast, and decentralized.</p>
                     
                     <!-- MetaMask Connection Section -->
                     <div class="row mb-4">
@@ -208,8 +194,8 @@
                             <div class="card metamask-card">
                                 <div class="card-body text-center py-4">
                                     <img src="data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 212 189' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpolygon fill='%23E17726' stroke='%23E17726' stroke-width='.25' points='20.133 1 88.5 59.21 103.113 27.84'/%3E%3Cpolygon fill='%23E27625' stroke='%23E27625' stroke-width='.25' points='191.867 1 123.067 59.71 108.887 27.84'/%3E%3Cpolygon fill='%23E27625' stroke='%23E27625' stroke-width='.25' points='68.267 76.58 61.467 87.41 88.033 88.99 88.967 61.83'/%3E%3Cpolygon fill='%23E27625' stroke='%23E27625' stroke-width='.25' points='124.067 61.83 124.933 88.99 151.533 87.41 144.733 76.58'/%3E%3C/g%3E%3C/svg%3E" alt="MetaMask" class="mb-3">
-                                    <h6 class="mb-2"><i class="fab fa-ethereum"></i> <strong>MetaMask Sepolia Payment</strong></h6>
-                                    <p class="text-muted mb-0">Connect your MetaMask wallet to test token purchases on Sepolia</p>
+                                    <h6 class="mb-2"><i class="fab fa-ethereum"></i> <strong>MetaMask Wallet Payment</strong></h6>
+                                    <p class="text-muted mb-0">Connect your MetaMask wallet to purchase tokens instantly</p>
                                 </div>
                             </div>
                         </div>
@@ -224,19 +210,19 @@
                             <div class="col-md-6">
                                 <p><strong><i class="fas fa-wallet"></i> Connected Wallet:</strong><br>
                                 <code id="wallet-address" class="text-success"></code></p>
-                                <p><strong><i class="fas fa-coins"></i> Sepolia ETH Balance:</strong> <span id="wallet-balance" class="text-primary"></span> ETH</p>
+                                <p><strong><i class="fas fa-coins"></i> ETH Balance:</strong> <span id="wallet-balance" class="text-primary"></span> ETH</p>
                             </div>
                             <div class="col-md-6">
                                 <p><strong><i class="fas fa-network-wired"></i> Network:</strong> <span id="network-name" class="text-info"></span></p>
-                                <p><strong><i class="fas fa-tag"></i> Token Price:</strong> <span class="text-warning">0.001 Test ETH per <?php echo e($settings->token_symbol); ?></span></p>
+                                <p><strong><i class="fas fa-tag"></i> Token Price:</strong> <span class="text-warning">0.001 ETH per <?php echo e($settings->token_symbol); ?></span></p>
                             </div>
                         </div>
                     </div>
 
                     <!-- Token Purchase Calculator -->
                     <div class="token-calculation">
-                        <h5 class="card-title mb-4"><i class="fas fa-calculator"></i> Token Purchase Calculator (Sepolia)</h5>
-                        <p class="card-text">Enter the number of <?php echo e($settings->token_symbol); ?> tokens you want to test purchase. The ETH amount will be calculated automatically with 18% GST included.</p>
+                        <h5 class="card-title mb-4"><i class="fas fa-calculator"></i> Token Purchase Calculator</h5>
+                        <p class="card-text">Enter the number of <?php echo e($settings->token_symbol); ?> tokens you want to purchase. The ETH amount will be calculated automatically with 18% GST included.</p>
                         
                         <div class="row align-items-center">
                             <div class="col-md-12">
@@ -260,7 +246,7 @@
 
                         <!-- Price Breakdown with GST -->
                         <div class="price-breakdown">
-                            <h6 class="mb-3"><i class="fas fa-receipt text-success"></i> Price Breakdown (Sepolia ETH)</h6>
+                            <h6 class="mb-3"><i class="fas fa-receipt text-success"></i> Price Breakdown</h6>
                             
                             <div class="breakdown-row">
                                 <span>Base Price (<span id="tokens-display">100</span> tokens × 0.001 ETH):</span>
@@ -299,15 +285,15 @@
                         <!-- Purchase Buttons -->
                         <div class="text-center">
                             <button id="connect-btn" class="metamask-btn mb-3" onclick="connectWallet()">
-                                <i class="fab fa-ethereum"></i> Connect MetaMask to Sepolia Testnet
+                                <i class="fab fa-ethereum"></i> Connect MetaMask Wallet
                             </button>
                             <button id="purchase-btn" class="metamask-btn mb-3" onclick="purchaseTokens()" style="display: none;">
-                                <span id="btn-text"><i class="fas fa-shopping-cart"></i> Test Purchase Tokens Now</span>
+                                <span id="btn-text"><i class="fas fa-shopping-cart"></i> Purchase Tokens Now</span>
                             </button>
                         </div>
 
                         <div class="text-center">
-                            <p class="text-info mb-0"><i class="fas fa-info-circle"></i> Test tokens will be recorded in your account after successful Sepolia transaction confirmation.</p>
+                            <p class="text-info mb-0"><i class="fas fa-info-circle"></i> Tokens will be transferred to your wallet immediately after successful payment confirmation on the blockchain.</p>
                         </div>
                     </div>
                 </div>
@@ -322,7 +308,7 @@
                         <div class="card bg-danger">
                             <div class="card-body">
                                 <i class="fas fa-exclamation-triangle mb-2"></i>
-                                <span class="card-text d-block">Add your wallet address before testing</span>
+                                <span class="card-text d-block">Add your wallet address before you buy tokens</span>
                                 <span class="float-right"><i class="fas fa-arrow-right"></i></span>
                             </div>
                         </div>
@@ -353,46 +339,28 @@
                     </div>
                 </div>
 
-                <!-- Sepolia Test ETH Faucets -->
                 <div class="col-12 mb-3">
-                    <div class="card bg-info text-white">
+                    <div class="card bg-<?php echo e($bg); ?> border-warning">
                         <div class="card-body">
-                            <h6 class="card-title"><i class="fas fa-faucet"></i> Get Sepolia Test ETH</h6>
-                            <p class="small mb-2">Get free test ETH for Sepolia testnet:</p>
-                            <div class="d-flex flex-wrap gap-2">
-                                <a href="https://sepoliafaucet.com/" target="_blank" class="btn btn-light btn-sm">
-                                    <i class="fas fa-external-link-alt"></i> Sepolia Faucet
-                                </a>
-                                <a href="https://infura.io/faucet/sepolia" target="_blank" class="btn btn-light btn-sm">
-                                    <i class="fas fa-external-link-alt"></i> Infura Faucet
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-12 mb-3">
-                    <div class="card bg-<?php echo e($bg); ?> border-info">
-                        <div class="card-body">
-                            <h6 class="card-title text-info"><i class="fas fa-shield-alt"></i> Sepolia Testing</h6>
+                            <h6 class="card-title text-warning"><i class="fas fa-shield-alt"></i> Security Notice</h6>
                             <ul class="list-unstyled mb-0 small">
-                                <li><i class="fas fa-check text-success"></i> Running on Sepolia Test Network</li>
-                                <li><i class="fas fa-check text-success"></i> Uses free Sepolia test ETH</li>
-                                <li><i class="fas fa-check text-success"></i> No real money transactions</li>
-                                <li><i class="fas fa-check text-success"></i> More stable than Goerli</li>
-                                <li><i class="fas fa-check text-success"></i> 18% GST calculation included</li>
+                                <li><i class="fas fa-check text-success"></i> Always verify the contract address</li>
+                                <li><i class="fas fa-check text-success"></i> Ensure you're on the correct network</li>
+                                <li><i class="fas fa-check text-success"></i> Keep sufficient ETH for gas fees</li>
+                                <li><i class="fas fa-check text-success"></i> Double-check transaction details</li>
+                                <li><i class="fas fa-check text-success"></i> 18% GST is included in total amount</li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
                 <div class="col-12">
-                    <div class="card bg-<?php echo e($bg); ?> border-warning">
+                    <div class="card bg-<?php echo e($bg); ?> border-info">
                         <div class="card-body">
-                            <h6 class="card-title text-warning"><i class="fas fa-question-circle"></i> Need Help?</h6>
-                            <p class="small mb-2">Having trouble with MetaMask or Sepolia testnet?</p>
-                            <a href="https://metamask.io/faqs/" target="_blank" class="btn btn-outline-warning btn-sm">
-                                <i class="fas fa-external-link-alt"></i> MetaMask Help
+                            <h6 class="card-title text-info"><i class="fas fa-question-circle"></i> Need Help?</h6>
+                            <p class="small mb-2">Having trouble with MetaMask?</p>
+                            <a href="https://metamask.io/faqs/" target="_blank" class="btn btn-outline-info btn-sm">
+                                <i class="fas fa-external-link-alt"></i> MetaMask Help Center
                             </a>
                         </div>
                     </div>
@@ -404,14 +372,14 @@
     <!-- Web3 and MetaMask Integration Script -->
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
     <script>
-        // **UPDATED CONFIGURATION FOR SEPOLIA TESTNET**
+        // Configuration
         const CONFIG = {
-            contractAddress: '9615666ceef74a58b3f46782c9974678', // Replace with your Sepolia test contract
-            chainId: '9615666ceef74a58b3f46782c9974678', // Sepolia Testnet Chain ID
-            chainName: 'Sepolia Test Network',
+            contractAddress: '0xf66cc5B1a36f97996b6feced5C6FC6C2a96225CA',
+            chainId: '0x1', // Ethereum Mainnet
+            chainName: 'Ethereum Mainnet',
             tokenPrice: 0.001,
             gstRate: 0.18,
-            rpcUrl: 'https://sepolia.infura.io/v3/9615666ceef74a58b3f46782c9974678', // Replace with your Infura project ID
+            rpcUrl: 'https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID',
             gasLimit: 100000
         };
 
@@ -448,7 +416,7 @@
                     }
                 } else {
                     console.log('MetaMask not detected');
-                    showAlert('Please install MetaMask extension to test token purchases. <a href="https://metamask.io/" target="_blank">Download MetaMask</a>', 'warning');
+                    showAlert('Please install MetaMask extension to purchase tokens. <a href="https://metamask.io/" target="_blank">Download MetaMask</a>', 'warning');
                 }
             } catch (error) {
                 console.error('Web3 initialization error:', error);
@@ -488,45 +456,7 @@
             document.getElementById('total-price-display').textContent = prices.totalPrice.toFixed(6) + ' ETH';
         }
 
-        // **UPDATED: Function to switch to Sepolia Testnet**
-        async function switchToSepoliaTestnet() {
-            const sepoliaConfig = {
-                chainId: CONFIG.chainId,
-                chainName: CONFIG.chainName,
-                nativeCurrency: {
-                    name: 'Sepolia Ether',
-                    symbol: 'ETH',
-                    decimals: 18
-                },
-                rpcUrls: [CONFIG.rpcUrl],
-                blockExplorerUrls: ['https://sepolia.etherscan.io/']
-            };
-
-            try {
-                // Try to switch to Sepolia testnet
-                await window.ethereum.request({
-                    method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: CONFIG.chainId }]
-                });
-            } catch (switchError) {
-                // This error code indicates that the chain has not been added to MetaMask
-                if (switchError.code === 4902) {
-                    try {
-                        // Add Sepolia testnet to MetaMask
-                        await window.ethereum.request({
-                            method: 'wallet_addEthereumChain',
-                            params: [sepoliaConfig]
-                        });
-                    } catch (addError) {
-                        throw new Error('Failed to add Sepolia testnet to MetaMask');
-                    }
-                } else {
-                    throw switchError;
-                }
-            }
-        }
-
-        // **UPDATED: Connect to MetaMask**
+        // Connect to MetaMask
         async function connectWallet() {
             try {
                 if (typeof window.ethereum === 'undefined') {
@@ -543,25 +473,56 @@
                     return;
                 }
 
-                // **IMPORTANT: Switch to Sepolia testnet**
-                await switchToSepoliaTestnet();
+                await switchToEthereumNetwork();
 
                 userAccount = accounts[0];
                 connected = true;
                 updateUI();
-                showAlert('Wallet connected to Sepolia testnet successfully! You can now test token purchases with Sepolia test ETH.', 'success');
+                showAlert('Wallet connected successfully! You can now purchase tokens.', 'success');
 
             } catch (error) {
                 console.error('Error connecting wallet:', error);
                 if (error.code === 4001) {
-                    showAlert('Connection rejected by user. Please connect your wallet to test purchases.', 'warning');
+                    showAlert('Connection rejected by user. Please connect your wallet to purchase tokens.', 'warning');
                 } else {
                     showAlert('Failed to connect wallet: ' + error.message, 'error');
                 }
             }
         }
 
-        // Get ETH to USD conversion rate (for test purposes)
+        // Switch to Ethereum network
+        async function switchToEthereumNetwork() {
+            try {
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: CONFIG.chainId }]
+                });
+            } catch (switchError) {
+                if (switchError.code === 4902) {
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_addEthereumChain',
+                            params: [{
+                                chainId: CONFIG.chainId,
+                                chainName: CONFIG.chainName,
+                                rpcUrls: [CONFIG.rpcUrl],
+                                nativeCurrency: {
+                                    name: 'ETH',
+                                    symbol: 'ETH',
+                                    decimals: 18
+                                }
+                            }]
+                        });
+                    } catch (addError) {
+                        throw new Error('Failed to add Ethereum network');
+                    }
+                } else {
+                    throw switchError;
+                }
+            }
+        }
+
+        // Get ETH to USD conversion rate
         async function getEthToUsdRate() {
             try {
                 const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
@@ -573,10 +534,10 @@
             }
         }
 
-        // **UPDATED: Purchase tokens with Sepolia testnet integration**
+        // Purchase tokens with backend integration
         async function purchaseTokens() {
             if (!connected) {
-                showAlert('Please connect your wallet to Sepolia testnet first', 'warning');
+                showAlert('Please connect your wallet first', 'warning');
                 await connectWallet();
                 return;
             }
@@ -590,24 +551,24 @@
             const prices = calculatePriceWithGST(tokenAmount);
             const totalEthAmount = prices.totalPrice;
             
-            // Check Sepolia test ETH balance
+            // Check balance
             try {
                 const balance = await web3.eth.getBalance(userAccount);
                 const balanceInEth = parseFloat(web3.utils.fromWei(balance, 'ether'));
                 const requiredEth = totalEthAmount + 0.01;
                 
                 if (balanceInEth < requiredEth) {
-                    showAlert(`Insufficient Sepolia test ETH! You need at least ${requiredEth.toFixed(6)} test ETH (including gas fees). Your current balance: ${balanceInEth.toFixed(6)} test ETH. <br><a href="https://sepoliafaucet.com/" target="_blank">Get Sepolia test ETH</a> or <a href="https://infura.io/faucet/sepolia" target="_blank">Infura Faucet</a>`, 'error');
+                    showAlert(`Insufficient balance! You need at least ${requiredEth.toFixed(6)} ETH (including gas fees). Your current balance: ${balanceInEth.toFixed(6)} ETH`, 'error');
                     return;
                 }
             } catch (error) {
-                showAlert('Failed to check Sepolia test ETH balance. Please try again.', 'error');
+                showAlert('Failed to check balance. Please try again.', 'error');
                 return;
             }
             
             try {
                 setButtonLoading(true);
-                showAlert(`Please confirm the Sepolia TEST transaction in your MetaMask wallet...<br><strong>Total Amount: ${totalEthAmount.toFixed(6)} Sepolia test ETH (including 18% GST)</strong>`, 'warning');
+                showAlert(`Please confirm the transaction in your MetaMask wallet...<br><strong>Total Amount: ${totalEthAmount.toFixed(6)} ETH (including 18% GST)</strong>`, 'warning');
 
                 const transaction = {
                     from: userAccount,
@@ -618,11 +579,11 @@
 
                 const txHash = await web3.eth.sendTransaction(transaction);
                 
-                // Get USD conversion for display
+                // Get USD conversion
                 const ethToUsd = await getEthToUsdRate();
                 const usdAmount = prices.totalPrice * ethToUsd;
 
-                // **BACKEND INTEGRATION** - Save Sepolia test transaction to database
+                // **ACTIVE BACKEND INTEGRATION** - Save transaction to database
                 const response = await fetch('/api/record-metamask-purchase', {
                     method: 'POST',
                     headers: {
@@ -641,7 +602,7 @@
                         total_eth_amount: prices.totalPrice.toFixed(6),
                         gst_rate: CONFIG.gstRate,
                         transaction_hash: txHash.transactionHash,
-                        type: 'MetaMask Sepolia Test Purchase',
+                        type: 'MetaMask Purchase',
                         status: 'completed'
                     })
                 });
@@ -649,37 +610,37 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    console.log('Sepolia test transaction saved to database successfully');
-                    showAlert(`Sepolia test transaction submitted successfully! 🎉<br>
-                        <strong>Test Purchase Details:</strong><br>
+                    console.log('Transaction saved to database successfully');
+                    showAlert(`Transaction submitted successfully! 🎉<br>
+                        <strong>Purchase Details:</strong><br>
                         • Tokens: ${tokenAmount} <?php echo e($settings->token_symbol); ?><br>
-                        • Base Price: ${prices.basePrice.toFixed(6)} Sepolia test ETH<br>
-                        • GST (18%): ${prices.gstAmount.toFixed(6)} Sepolia test ETH<br>
-                        • Total Paid: ${prices.totalPrice.toFixed(6)} Sepolia test ETH<br>
+                        • Base Price: ${prices.basePrice.toFixed(6)} ETH<br>
+                        • GST (18%): ${prices.gstAmount.toFixed(6)} ETH<br>
+                        • Total Paid: ${prices.totalPrice.toFixed(6)} ETH<br>
                         • USD Value: $${usdAmount.toFixed(2)}<br>
                         <br>Transaction Hash: <code>${txHash.transactionHash}</code><br>
-                        <a href="https://sepolia.etherscan.io/tx/${txHash.transactionHash}" target="_blank">View on Sepolia Etherscan</a><br>
-                        <br><strong>Note:</strong> Sepolia test transaction has been recorded and will appear in your transaction history.`, 'success');
+                        <a href="https://etherscan.io/tx/${txHash.transactionHash}" target="_blank">View on Etherscan</a><br>
+                        <br><strong>Note:</strong> Transaction has been recorded and will appear in your transaction history.`, 'success');
                     
                     // Refresh the page after 5 seconds to update token balance
                     setTimeout(() => {
                         window.location.reload();
                     }, 5000);
                 } else {
-                    console.error('Failed to save Sepolia test transaction to database');
-                    showAlert('Sepolia test transaction completed but failed to record in database. Please contact support.', 'warning');
+                    console.error('Failed to save transaction to database');
+                    showAlert('Transaction completed but failed to record in database. Please contact support.', 'warning');
                 }
                 
-                console.log('Sepolia test transaction hash:', txHash.transactionHash);
+                console.log('Transaction hash:', txHash.transactionHash);
 
             } catch (error) {
-                console.error('Sepolia test purchase error:', error);
+                console.error('Purchase error:', error);
                 if (error.code === 4001) {
-                    showAlert('Sepolia test transaction rejected by user. The test purchase was cancelled.', 'warning');
+                    showAlert('Transaction rejected by user. The purchase was cancelled.', 'warning');
                 } else if (error.message.includes('insufficient funds')) {
-                    showAlert('Insufficient funds for gas fees. Please add more Sepolia test ETH to your wallet from the faucets.', 'error');
+                    showAlert('Insufficient funds for gas fees. Please add more ETH to your wallet.', 'error');
                 } else {
-                    showAlert('Sepolia test transaction failed: ' + error.message, 'error');
+                    showAlert('Transaction failed: ' + error.message, 'error');
                 }
             } finally {
                 setButtonLoading(false);
@@ -705,13 +666,13 @@
                         userAccount.substring(0, 8) + '...' + userAccount.substring(34);
                     document.getElementById('wallet-balance').textContent = parseFloat(ethBalance).toFixed(6);
                     
-                    const networkName = networkId === 11155111 ? 'Sepolia Test Network' : networkId === 5 ? 'Goerli Testnet' : `Network ID: ${networkId}`;
+                    const networkName = networkId === 1 ? 'Ethereum Mainnet' : networkId === 11155111 ? 'Sepolia Testnet' : `Network ID: ${networkId}`;
                     document.getElementById('network-name').textContent = networkName;
                     
                     walletInfo.style.display = 'block';
 
                     if (parseFloat(ethBalance) < 0.01) {
-                        showAlert('⚠️ Your Sepolia test ETH balance is very low. You need test ETH to make transactions and pay gas fees. <a href="https://sepoliafaucet.com/" target="_blank">Get Sepolia test ETH</a>', 'warning');
+                        showAlert('⚠️ Your ETH balance is very low. You need ETH to make transactions and pay gas fees. Consider adding more ETH to your wallet.', 'warning');
                     }
                     
                 } catch (error) {
@@ -732,10 +693,10 @@
             
             if (loading) {
                 btn.disabled = true;
-                btnText.innerHTML = '<div class="loading"></div> Processing Sepolia Test Transaction...';
+                btnText.innerHTML = '<div class="loading"></div> Processing Transaction...';
             } else {
                 btn.disabled = false;
-                btnText.innerHTML = '<i class="fas fa-shopping-cart"></i> Test Purchase Tokens Now';
+                btnText.innerHTML = '<i class="fas fa-shopping-cart"></i> Purchase Tokens Now';
             }
         }
 
@@ -778,7 +739,7 @@
                 if (accounts.length === 0) {
                     connected = false;
                     userAccount = null;
-                    showAlert('Wallet disconnected. Please reconnect to continue testing on Sepolia.', 'warning');
+                    showAlert('Wallet disconnected. Please reconnect to continue.', 'warning');
                 } else {
                     userAccount = accounts[0];
                     connected = true;

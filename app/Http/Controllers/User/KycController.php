@@ -70,6 +70,6 @@ class KycController extends Controller
         $newdoc->status = 'pending';
         $newdoc->user = Auth::user()->id;
         $newdoc->save();
-        return redirect()->back()->with('success',"Verification document succesffully submitted and under review");
+        return redirect()->back()->with('success',"Verification document successfully submitted and under review");
     }
 }
