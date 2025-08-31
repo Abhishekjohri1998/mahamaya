@@ -11,9 +11,11 @@
                    <div class="col-md-12">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">Transactions List</h5>
+                                <h5 class="card-title">
+                                    <i class="fas fa-history"></i> My Transactions
+                                </h5>
                                 <div class="table-responsive"> 
-                                    <table class="table" id="ttable"> 
+                                    <table class="table table-hover" id="ttable"> 
                                         <thead> 
                                             <tr> 
                                                 <th>TRANX NO.</th>
@@ -29,53 +31,96 @@
                                             </tr> 
                                         </thead> 
                                         <tbody> 
-                                            @foreach ($recent_txn as $txn)
+                                            @forelse ($recent_txn as $txn)
                                                <tr> 
                                                 <td>
-                                                    <small>{{substr($txn->txn_id, 0, 10)}}...</small>
+                                                    <small><code>{{substr($txn->txn_id, 0, 10)}}...</code></small>
                                                 </td>
                                                 <td>
                                                     @if($txn->wallet_address)
-                                                        <small>{{substr($txn->wallet_address, 0, 6)}}...{{substr($txn->wallet_address, -4)}}</small>
+                                                        <small><code>{{substr($txn->wallet_address, 0, 6)}}...{{substr($txn->wallet_address, -4)}}</code></small>
                                                     @else
-                                                        N/A
+                                                        <span class="text-muted">N/A</span>
                                                     @endif
                                                 </td>
-                                                <td>{{number_format($txn->tokens)}} {{$settings->token_symbol}}</td> 
-                                                <td>{{$txn->amount}} {{$txn->to}}</td>
-                                                <td>${{number_format($txn->base_amt, 2)}} USD</td>
+                                                <td>
+                                                    <strong>{{number_format($txn->tokens)}}</strong> {{$settings->token_symbol}}
+                                                </td> 
+                                                <td>
+                                                    <span class="text-primary">{{$txn->amount}} {{$txn->to}}</span>
+                                                </td>
+                                                <td>
+                                                    <span class="text-success">${{number_format($txn->base_amt, 2)}} USD</span>
+                                                </td>
                                                 <td>
                                                     @if($txn->gst_amount_eth)
-                                                        {{$txn->gst_amount_eth}} ETH
+                                                        <span class="text-warning">{{$txn->gst_amount_eth}} ETH</span>
                                                     @else
-                                                        N/A
+                                                        <span class="text-muted">N/A</span>
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <span class="badge badge-info">{{$txn->type}}</span>
+                                                    @if($txn->type == 'MetaMask Purchase')
+                                                        <span class="badge badge-info">
+                                                            <i class="fab fa-ethereum"></i> {{$txn->type}}
+                                                        </span>
+                                                    @else
+                                                        <span class="badge badge-secondary">{{$txn->type}}</span>
+                                                    @endif
                                                 </td>
-                                                <td>{{\Carbon\Carbon::parse($txn->created_at)->toDayDateTimeString()}}</td>
+                                                <td>
+                                                    <small>{{\Carbon\Carbon::parse($txn->created_at)->format('M d, Y g:i A')}}</small>
+                                                </td>
                                                 <td>
                                                     @if ($txn->status == "pending")
-                                                        <span class="badge badge-warning">{{$txn->status}}</span>
+                                                        <span class="badge badge-warning">
+                                                            <i class="fas fa-clock"></i> {{$txn->status}}
+                                                        </span>
+                                                    @elseif ($txn->status == "completed")
+                                                        <span class="badge badge-success">
+                                                            <i class="fas fa-check"></i> {{$txn->status}}
+                                                        </span>
                                                     @else
-                                                        <span class="badge badge-success">{{$txn->status}}</span>
+                                                        <span class="badge badge-danger">
+                                                            <i class="fas fa-times"></i> {{$txn->status}}
+                                                        </span>
                                                     @endif
                                                 </td>
                                                 <td>
                                                     @if($txn->type == 'MetaMask Purchase' && $txn->txn_id)
-                                                        <a href="https://etherscan.io/tx/{{$txn->txn_id}}" target="_blank" class="btn btn-sm btn-outline-primary">
-                                                            <i class="fas fa-external-link-alt"></i> View
-                                                        </a>
+                                                        @if($txn->to == 'ETH')
+                                                            <a href="https://etherscan.io/tx/{{$txn->txn_id}}" target="_blank" 
+                                                               class="btn btn-sm btn-outline-primary" title="View on Etherscan">
+                                                                <i class="fas fa-external-link-alt"></i> View
+                                                            </a>
+                                                        @elseif($txn->to == 'Sepolia ETH')
+                                                            <a href="https://sepolia.etherscan.io/tx/{{$txn->txn_id}}" target="_blank" 
+                                                               class="btn btn-sm btn-outline-info" title="View on Sepolia Etherscan">
+                                                                <i class="fas fa-external-link-alt"></i> Sepolia
+                                                            </a>
+                                                        @endif
                                                     @else
-                                                        N/A
+                                                        <span class="text-muted">N/A</span>
                                                     @endif
                                                 </td>
                                             </tr>  
-                                            @endforeach
+                                            @empty
+                                            <tr>
+                                                <td colspan="10" class="text-center py-4">
+                                                    <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                                                    <p class="text-muted">No transactions found</p>
+                                                </td>
+                                            </tr>
+                                            @endforelse
                                         </tbody> 
                                     </table>
                                 </div>
+
+                                @if(method_exists($recent_txn, 'links'))
+                                    <div class="d-flex justify-content-center">
+                                        {{ $recent_txn->links() }}
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>  

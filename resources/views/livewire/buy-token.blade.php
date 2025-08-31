@@ -1,4 +1,4 @@
-<div>
+KycStatusMail.php<div>
     <?php
     if (Auth::user()->dashboard_style == "light") {
         $bg="light";

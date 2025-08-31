@@ -31,11 +31,56 @@ class Transactions extends Model
         'gst_rate'               // New field for MetaMask
     ];
 
-    public function tuser(){
-        return $this->belongsTo(User::class, 'user');
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
+    /**
+     * Get the user that owns the transaction
+     */
+    public function tuser()
+    {
+        return $this->belongsTo(User::class, 'user', 'id');
     }
 
-    public function stage(){
-        return $this->belongsTo(Stage::class, 'stage', 'id');
+    /**
+     * Get the stage that the transaction belongs to
+     */
+    public function stage()
+    {
+        return $this->belongsTo(Stage::class, 'stage', 'stage_name');
+    }
+
+    /**
+     * Alternative user relationship
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user', 'id');
+    }
+
+    /**
+     * Scope for MetaMask transactions
+     */
+    public function scopeMetaMask($query)
+    {
+        return $query->where('type', 'like', '%MetaMask%');
+    }
+
+    /**
+     * Scope for pending transactions
+     */
+    public function scopePending($query)
+    {
+        return $query->where('status', 'pending');
+    }
+
+    /**
+     * Scope for completed transactions
+     */
+    public function scopeCompleted($query)
+    {
+        return $query->where('status', 'completed');
     }
 }
