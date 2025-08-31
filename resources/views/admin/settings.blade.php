@@ -1,4 +1,3 @@
-
 @extends('layouts.app')
 @section('content')
     @include('admin.topmenu')
@@ -8,12 +7,12 @@
         <div class="page-inner">
             <x-danger-alert/>
             <x-success-alert/>
-            <!-- Beginning of  Dashboard Stats  -->
+            
             @if(count($errors) > 0)
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="alert alert-danger alert-dismissable" role="alert" >
-                        <button type="button" clsass="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <div class="alert alert-danger alert-dismissable" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                         @foreach ($errors->all() as $error)
                         <i class="fa fa-warning"></i> {{ $error }}
                         @endforeach
@@ -21,6 +20,7 @@
                 </div>
             </div>
             @endif
+            
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
@@ -46,16 +46,16 @@
                                 <div class="tab-pane fade show active" id="ico">
                                     @include('admin.settings.ico_settings')
                                 </div>
-                                <div class="tab-pane fade show" id="webset">
+                                <div class="tab-pane fade" id="webset">
                                     @include('admin.settings.web_settings')
                                 </div>
-                                <div class="tab-pane fade show" id="refset">
+                                <div class="tab-pane fade" id="refset">
                                     @include('admin.settings.referral')
                                 </div>
-                                <div class="tab-pane fade show" id="pset">
+                                <div class="tab-pane fade" id="pset">
                                     @include('admin.settings.payment')
                                 </div>
-                                <div class="tab-pane fade show" id="othset">
+                                <div class="tab-pane fade" id="othset">
                                     @include('admin.settings.staking')
                                 </div>
                             </div>

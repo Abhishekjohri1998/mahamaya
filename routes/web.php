@@ -25,47 +25,101 @@ use App\Http\Controllers\SocialLoginController;
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
 */
 
-// Serve the first website landing page at root URL
+// FIXED Landing page route with error handling and defaults
 Route::get('/', function () {
-    return view('landing'); // create resources/views/landing.blade.php with first site HTML content
-})->name('landing');
+    try {
+        $settings = Settings::first();
+        
+        // Create default settings if none exist
+        if (!$settings) {
+            $settings = new Settings();
+            $settings->site_name = 'Prechain';
+            $settings->site_email = 'admin@prechain.com';
+            $settings->token_symbol = 'PRC';
+            $settings->phone = '+1-555-0123';
+            $settings->address = '123 Blockchain St, Crypto City';
+            $settings->site_url = url('/');
+            $settings->sales_start_date = now()->addDays(30);
+            $settings->logo = '';
+            $settings->favicon = '';
+            $settings->livechat = '';
+            $settings->whitepaper = '';
+            $settings->annoucement = '';
+            $settings->email_verify = 'false';
+            $settings->social = 'yes';
+            $settings->install_type = 'Main-Domain';
+            $settings->captcha = 'false';
+            $settings->pay_methods = json_encode(['BTC', 'ETH', 'USDT']);
+            $settings->usestake = false;
+            $settings->ref_com = 5;
+            $settings->kyc_verification = 'false';
+            $settings->save();
+        }
+        
+        // Ensure required fields have defaults
+        if (!$settings->sales_start_date) {
+            $settings->sales_start_date = now()->addDays(30);
+            $settings->save();
+        }
+        
+        return view('landing', compact('settings'));
+        
+    } catch (\Exception $e) {
+        // Log error for debugging
+        \Log::error('Landing page error: ' . $e->getMessage());
+        
+        // Create minimal settings object for emergency fallback
+        $settings = (object) [
+            'site_name' => 'Prechain',
+            'site_email' => 'admin@prechain.com',
+            'token_symbol' => 'PRC',
+            'phone' => '+1-555-0123',
+            'address' => '123 Blockchain St, Crypto City',
+            'site_url' => url('/'),
+            'sales_start_date' => now()->addDays(30),
+            'logo' => '',
+            'favicon' => '',
+            'livechat' => ''
+        ];
+        
+        return view('landing', compact('settings'));
+    }
+})->name('homepage');
 
-// Route for ICO system home page (the second website)
+// Alternative route for backward compatibility
 Route::get('/home', [ViewsController::class, 'homepage'])->name('home');
 
-//activate and deactivate Prechain
+// Activation routes
 Route::any('/activate', function () {
-    return view('activate.index', [
-        'settings' => Settings::where('id', '1')->first(),
-    ]);
+    $settings = Settings::first();
+    if (!$settings) {
+        $settings = (object) ['site_name' => 'Prechain'];
+    }
+    return view('activate.index', compact('settings'));
 });
 
 Route::any('/revoke', function () {
     return view('revoke.index');
 });
 
-Route::post('sendcontact',  [Controller::class, 'sendContact'])->name('enquiry');
-
+// Contact and referral routes (Fixed route name)
+Route::post('/enquiry', [Controller::class, 'sendContact'])->name('enquiry');
 Route::get('/ref/{id}', [ViewsController::class, 'ref'])->name('refer');
 Route::get('/setroi', [Controller::class, 'getRoi'])->name('getroi');
 
-// Socialite login 
+// Socialite login routes
 Route::get('/auth/{social}/redirect', [SocialLoginController::class, 'redirect'])
     ->where('social', 'twitter|facebook|linkedin|google|github|bitbucket')->name('social.redirect');
 
 Route::get('/auth/{social}/callback', [SocialLoginController::class, 'authenticate'])
     ->where('social', 'twitter|facebook|linkedin|google|github|bitbucket')->name('social.callback');
 
+// Email verification routes
 Route::get('/verify-email', function () {
     return view('auth.verify-email');
-})->middleware('auth')->name('verification.notice');;
+})->middleware('auth')->name('verification.notice');
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
@@ -95,11 +149,15 @@ Route::middleware(['auth:sanctum', 'verified', 'status'])->prefix('dashboard/use
     Route::get('buytoken/payment', [ViewsController::class, 'payment'])->name('payment');
     Route::get('transfer/success', [ViewsController::class, 'tsuccess'])->name('tsuccess');
 
+    // MetaMask transaction handling
+    Route::post('metamask-transaction', [ViewsController::class, 'storeMetaMaskTransaction'])->name('metamask.transaction');
+
     // Profile Update
     Route::put('update-profile', [ProfileController::class, 'updateprofile'])->name('profile.update');
     Route::put('update-wallet-address', [ProfileController::class, 'updatewallet'])->name('wallet.update');
     Route::put('update-password', [ProfileController::class, 'updatepassword'])->name('password.update');
 
+    // KYC and Payment
     Route::post('submit-kyc', [KycController::class, 'submitkyc'])->name('submitkyc');
     Route::get('cancel-payment', [PaymentController::class, 'cancelpayment'])->name('cancelpayment');
     Route::get('api-check', [PaymentController::class, 'apicheck']);
@@ -112,10 +170,7 @@ Route::middleware(['auth:sanctum', 'verified', 'status'])->prefix('dashboard/use
     Route::get('cancel-stake/{id}', [StakingController::class, 'cancelStake'])->name('cancelstake');
 });
 
-
-// Admin routes starts here
-
-// Admin Login
+// Admin login routes
 Route::prefix('adminlogin')->group(function () {
     Route::get('login', [LoginController::class, 'showLoginForm'])->name('adminloginform');
     Route::post('login', [LoginController::class, 'adminlogin'])->name('adminlogin');
@@ -123,7 +178,7 @@ Route::prefix('adminlogin')->group(function () {
     Route::get('dashboard', [LoginController::class, 'validate_admin'])->name('validate_admin');
 });
 
-
+// Admin protected routes
 Route::middleware(['isadmin'])->prefix('admin')->group(function () {
     // Dashboard
     Route::get('dashboard', [AdminViewsController::class, 'dashboard_admin'])->name('admin.dashboard');
@@ -148,11 +203,12 @@ Route::middleware(['isadmin'])->prefix('admin')->group(function () {
     Route::get('view-kyc-documents/{id}', [AdminViewsController::class, 'viewDoc'])->name('viewkycimg');
     Route::get('user-details/{id}', [AdminViewsController::class, 'viewuser'])->name('viewuser');
 
+    // Admin Profile Management
     Route::post('update-profile', [ManageAdminController::class, 'updateProfile'])->name('upadprofile');
     Route::get('adminprofile', [AdminViewsController::class, 'adminProfile'])->name('adminprofile');
     Route::post('adminupdatepass', [ManageAdminController::class, 'adminupdatepass'])->name('adminupdatepass');
 
-    // Settings routes
+    // Settings routes (Fixed and organized)
     Route::post('save-ico', [SettingsController::class, 'saveico'])->name('saveico');
     Route::post('save-pay-option', [SettingsController::class, 'savepayoption'])->name('savepayoption');
     Route::post('save-web-settings', [SettingsController::class, 'savewebsettings'])->name('savewebsettings');
@@ -162,7 +218,7 @@ Route::middleware(['isadmin'])->prefix('admin')->group(function () {
     Route::put('save-kyc-settings', [SettingsController::class, 'savekycset'])->name('savekycset');
     Route::put('save-staking-settings', [SettingsController::class, 'savestakeset'])->name('savestakeset');
 
-    //Transaction Actions
+    // Transaction Actions
     Route::get('confirm-tranx/{id}', [TransactionController::class, 'confirmtran'])->name('confirmtran');
     Route::get('cancel-tranx/{id}', [TransactionController::class, 'canceltran'])->name('canceltran');
     Route::post('add-token', [TransactionController::class, 'addtoken'])->name('addtoken');
@@ -178,9 +234,14 @@ Route::middleware(['isadmin'])->prefix('admin')->group(function () {
     Route::post('send_email', [UsersActionController::class, 'sendmail'])->name('sendmail');
     Route::post('adduser', [UsersActionController::class, 'adduser'])->name('adduser');
 
-    // kyc controller
+    // KYC controller
     Route::get('file-download/{file}', [AdKycController::class, 'downloadfile'])->name('file.download');
     Route::get('accept-verification/{id}', [AdKycController::class, 'accept'])->name('accept.ve');
     Route::get('reject-verification/{id}', [AdKycController::class, 'reject'])->name('reject.ve');
     Route::get('delete-verification/{id}', [AdKycController::class, 'delete'])->name('delete.ve');
 });
+
+// ROI Processing Route (For cron job or manual trigger)
+Route::get('/process-roi', [Controller::class, 'getRoi'])
+    ->middleware('throttle:1,1') // Limit to once per minute
+    ->name('process.roi');

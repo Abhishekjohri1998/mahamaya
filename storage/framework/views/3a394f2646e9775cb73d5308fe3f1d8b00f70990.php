@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,7 +8,6 @@
     <title><?php echo e($settings->site_name); ?> - Bitcoin and Cryptocurrency ICO System</title>
     <meta name="description" content="<?php echo e($settings->site_name); ?> is a Bitcoin and Cryptocurrency ICO System." />
     <meta name="keywords" content="bitcoin, ethereum, monero, ico, token, free token, btc, eth" />
-
 
     <link rel="icon" href="<?php echo e(asset('storage/app/public/'. $settings->favicon)); ?>" type="image/png"/>
 
@@ -20,14 +18,84 @@
     <!-- Custom CSS -->
     <link href="<?php echo e(asset('front/assets/css/styles.css')); ?>" rel="stylesheet" type="text/css">
 
+<style>
+    /* Fix for header overlap - adjust margin-top as needed */
+    body {
+        margin-top: 80px; /* Add space to prevent header overlap */
+    }
+    
+    .welcome-area {
+        padding-top: 20px; /* Additional padding for welcome section */
+    }
+
+    /* Additional spacing for sections to avoid overlap */
+    .section {
+        scroll-margin-top: 80px; /* For smooth scrolling with fixed header */
+    }
+    
+    /* Header adjustments - ALWAYS VISIBLE */
+    .header-area {
+        position: fixed !important;
+        top: 0 !important; /* Always at top, never hide */
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background: white;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: none !important; /* Remove transition that may hide header */
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+    }
+    
+    /* FORCE NAVIGATION MENU TO ALWAYS BE VISIBLE */
+    .nav, .main-nav, .header-area nav {
+        top: 0 !important;
+        transform: translateY(0) !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transition: none !important;
+    }
+    
+    /* Prevent menu items from being hidden */
+    .nav li, .main-nav li, .header-area nav ul li {
+        opacity: 1 !important;
+        visibility: visible !important;
+        display: block !important;
+    }
+
+    /* Information display styling */
+    .info-display {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 20px;
+        border-radius: 12px;
+        margin: 15px 0;
+        border: 2px solid rgba(0, 123, 255, 0.2);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .token-info-text {
+        color: #333;
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+    
+    .countdown-info {
+        text-align: center;
+        background: linear-gradient(135deg, rgba(0, 123, 255, 0.1), rgba(40, 167, 69, 0.1));
+        padding: 25px;
+        border-radius: 15px;
+        margin: 20px 0;
+    }
+</style>
 
 </head>
 
 <body>
 
     <script>
-		{<?php echo $settings->livechat; ?>}	
-	</script>
+        {<?php echo $settings->livechat; ?>}	
+    </script>
 
     <!-- ***** Header Area Start ***** -->
     <header class="header-area">
@@ -40,10 +108,7 @@
                             <img src="<?php echo e(asset('front/assets/images/mahamaya-logo.png')); ?>" class="light-logo" alt="<?php echo e($settings->site_name); ?>" />
                             <img src="<?php echo e(asset('front/assets/images/mahamaya-logo.png')); ?>" class="dark-logo" alt="<?php echo e($settings->site_name); ?>" />
                         </a>
-
                         <!-- ***** Logo End ***** -->
-
-
 
                         <!-- ***** Menu Start ***** -->
                         <ul class="nav">
@@ -67,9 +132,8 @@
     </header>
     <!-- ***** Header Area End ***** -->
 
-
-    <!-- ***** Wellcome Area Start ***** -->
-    <section class="welcome-area bg-top-right" id="welcome-1">
+    <!-- ***** Welcome Area Start ***** -->
+    <section class="welcome-area bg-top-right section" id="welcome-1">
         <div class="header-token basic">
             <div class="container">
                 <div class="row">
@@ -83,37 +147,41 @@
                     <div class="col-lg-6 col-md-12 col-sm-12 col-12 align-self-center">
                         <div class="box">
                             <div class="token">
-                                <h6 class="title"><span class="text-primary"><?php echo e($settings->site_name); ?></span> ICO SALE IS OPEN
-                                </h6>
+                                <h6 class="title"><span class="text-primary"><?php echo e($settings->site_name); ?></span> ICO SALE IS OPEN</h6>
+                                
                                 <!-- ***** Countdown Start ***** -->
                                 <ul class="countdown" id="countdown">
                                     <li>
-                                        <span class="days" id="dayls"></span>
+                                        <span class="days" id="dayls">0</span>
                                         <p class="days_ref">days</p>
                                     </li>
                                     <li class="seperator"></li>
                                     <li>
-                                        <span class="hours" id="hours"></span>
+                                        <span class="hours" id="hours">0</span>
                                         <p class="hours_ref">hours</p>
                                     </li>
                                     <li class="seperator"></li>
                                     <li>
-                                        <span class="minutes" id="minutes"></span>
+                                        <span class="minutes" id="minutes">0</span>
                                         <p class="minutes_ref">minutes</p>
                                     </li>
                                     <li class="seperator"></li>
                                     <li>
-                                        <span class="seconds" id="seconds"></span>
+                                        <span class="seconds" id="seconds">0</span>
                                         <p class="seconds_ref">seconds</p>
                                     </li>
                                 </ul>
                                 <!-- ***** Countdown End ***** -->
                                 
-                                <div class="token-input">
-                                    <input type="text" placeholder="100" data-step="100" />
-                                    <i class="fa fa-plus"></i>
-                                    <i class="fa fa-minus"></i>
-                                    <button>PURCHASE TOKEN NOW</button>
+                                <!-- Information Display -->
+                                <div class="info-display">
+                                    <div class="token-info-text text-center">
+                                        <h6 class="mb-3"><i class="fas fa-info-circle text-primary"></i> Token Sale Information</h6>
+                                        <p class="mb-2"><strong>Token Symbol:</strong> <?php echo e($settings->site_name); ?></p>
+                                        <p class="mb-2"><strong>Platform:</strong> Ethereum Blockchain</p>
+                                        <p class="mb-2"><strong>Token Standard:</strong> ERC-20</p>
+                                       <p class="mb-0"><strong>Status:</strong> <span class="sale-status text-success">Sale Active</span></p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -128,9 +196,7 @@
             </a>
         </div>
     </section>
-    <!-- ***** Wellcome Area End ***** -->
-
-
+    <!-- ***** Welcome Area End ***** -->
 
     <!-- ***** What is ICO Start ***** -->
     <section class="section bg-bottom" id="what-is-ico">
@@ -179,9 +245,7 @@
                     </div>
                     <div class="left-text">
                         <p class="dark"><?php echo e($settings->site_name); ?> (<?php echo e($settings->site_name); ?>) is an open source, Bitcoin-like digital currency
-                            which uses
-                            a
-                            proof of work script algorithm.</p>
+                            which uses a proof of work script algorithm.</p>
                         <p>The genesis block was mined on March 1st, 2014. The total number of mineable <?php echo e($settings->site_name); ?> is
                             245,465,283. The mining of <?php echo e($settings->site_name); ?> is divided into Epochs: each Epoch mines 36000 blocks of
                             coins and is targeted to last approximately 25 days. </p>
@@ -272,61 +336,50 @@
                             </div>
                             <!-- ***** Token Progress and Info End ***** -->
 
-                            <!-- ***** Token Countdown and Payment Start ***** -->
+                            <!-- ***** Token Countdown and Information Start ***** -->
                             <div class="col-lg-6 col-md-6 cols-m-12">
                                 <div class="token">
                                     <h6 class="title">ICO SALE IS OPEN</h6>
                                     <!-- ***** Countdown Start ***** -->
                                     <ul class="countdown">
                                         <li>
-                                            <span class="days" id="daylss"></span>
+                                            <span class="days" id="daylss">0</span>
                                             <p class="days_ref">days</p>
                                         </li>
                                         <li class="seperator"></li>
                                         <li>
-                                            <span class="hours" id="hourss"></span>
+                                            <span class="hours" id="hourss">0</span>
                                             <p class="hours_ref">hours</p>
                                         </li>
                                         <li class="seperator"></li>
                                         <li>
-                                            <span class="minutes" id="minutess"></span>
+                                            <span class="minutes" id="minutess">0</span>
                                             <p class="minutes_ref">minutes</p>
                                         </li>
                                         <li class="seperator"></li>
                                         <li>
-                                            <span class="seconds" id="secondss"></span>
+                                            <span class="seconds" id="secondss">0</span>
                                             <p class="seconds_ref">seconds</p>
                                         </li>
                                     </ul>
                                     <!-- ***** Countdown End ***** -->
-                                    <div class="token-payment">
-                                        <span>Select Payment Method</span>
-                                        <div class="radios">
-                                            <div class="form-radio">
-                                                <input type="radio" id="check1" name="payment" checked="" />
-                                                <label for="check1">
-                                                    <i class="fa fa-bitcoin"></i>
-                                                </label>
-                                            </div>
-                                            <div class="form-radio">
-                                                <input type="radio" id="check2" name="payment" />
-                                                <label for="check2">
-                                                    <i class="fa fa-paypal"></i>
-                                                </label>
-                                            </div>
-                                            <div class="form-radio">
-                                                <input type="radio" id="check3" name="payment" />
-                                                <label for="check3">
-                                                    <i class="fa fa-cc-visa"></i>
-                                                </label>
-                                            </div>
+                                    
+                                    <!-- Information Section -->
+                                    <div class="countdown-info">
+                                        <h6 class="mb-3 text-primary"><i class="fas fa-rocket"></i> Join Our Token Sale</h6>
+                                        <p class="mb-3">To participate in our token sale and purchase <?php echo e($settings->site_name); ?> tokens, please visit our secure purchase portal.</p>
+                                        <div class="mb-3">
+                                            <p class="mb-2"><strong><i class="fas fa-shield-alt text-success"></i> Secure Platform</strong></p>
+                                            <p class="mb-2"><strong><i class="fas fa-clock text-info"></i> 24/7 Support</strong></p>
+                                            <p class="mb-0"><strong><i class="fas fa-gem text-warning"></i> Premium Tokens</strong></p>
                                         </div>
-                                        <a href="dark-block-explorer.html" class="btn-primary-line">PURCHASE TOKEN
-                                            NOW</a>
+                                        <a href="/login" class="btn btn-primary btn-lg">
+                                            <i class="fas fa-sign-in-alt"></i> Access Purchase Portal
+                                        </a>
                                     </div>
                                 </div>
                             </div>
-                            <!-- ***** Token Countdown and Payment End ***** -->
+                            <!-- ***** Token Countdown and Information End ***** -->
                         </div>
                     </div>
                 </div>
@@ -679,7 +732,7 @@
                             <div id="collapse-3" class="accordion-collapse collapse" aria-labelledby="heading-3"
                                 data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-                                    <p>Donec tempus sodales dolor, at efficitur enim posuere auctor. Nam et nisi eu
+                                    <p>Donec tempus sodales dolor, at efficiur enim posuere auctor. Nam et nisi eu
                                         purus tempor faucibus aliquet vitae orci. Curabitur sollicitudin leo et magna
                                         pharetra efficitur. Nullam et scelerisque lectus. Orci varius natoque penatibus
                                         et magnis dis parturient montes, nascetur ridiculus mus. Quisque faucibus sit
@@ -864,13 +917,8 @@
                                     <button class="btn-secondary-box">Submit</button>
                                 </div>
                             </form>
-
-                            
                         </div>
-
-
                     </div>
-
                 </div>
             </div>
         </div>
@@ -878,7 +926,6 @@
         <div class="footer-bottom">
             <div class="container">
                 <div class="row">
-
                     <div class="col-lg-5">
                         <p class="copyright"><?php echo e(date('Y')); ?> © <?php echo e($settings->site_name); ?> - Bitcoin and Cryptocurrency ICO System </p>
                     </div>
@@ -887,7 +934,6 @@
         </div>
     </footer>
     <!-- ***** Contact & Footer End ***** -->
-
 
     <!-- jQuery -->
     <script src="<?php echo e(asset('front/assets/js/jquery-3.6.0.min.js')); ?>"></script>
@@ -905,52 +951,125 @@
     <!-- Global Init -->
     <script src="<?php echo e(asset('front/assets/js/particle-dark.js')); ?>"></script>
     <script src="<?php echo e(asset('front/assets/js/custom.js')); ?>"></script>
-    <script type="text/javascript">
-        // Set the date we're counting down to
-        var setDate = "<?php echo e($settings->sales_start_date); ?>";
 
-        var countDownDate = new Date(setDate).getTime();
-        // Update the count down every 1 second
-        var x = setInterval(function() {
-        // Get today's date and time
-        var now = new Date().getTime();
-        // Find the distance between now and the count down date
-        var distance = countDownDate - now;
-        // Time calculations for days, hours, minutes and seconds
-        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-        // Display the result in the element with id="demo"
-        document.getElementById("dayls").innerHTML = days;
-        document.getElementById("hours").innerHTML = hours;
-        document.getElementById("minutes").innerHTML = minutes;
-        document.getElementById('seconds').innerHTML = seconds;
-
-        document.getElementById("daylss").innerHTML = days;
-        document.getElementById("hourss").innerHTML = hours;
-        document.getElementById("minutess").innerHTML = minutes;
-        document.getElementById('secondss').innerHTML = seconds;
-
-
-        // If the count down is finished, write some text
-        if (distance < 0) {
-            clearInterval(x);
-            document.getElementById("dayls").innerHTML = 0;
-            document.getElementById("hours").innerHTML = 0;
-            document.getElementById("minutes").innerHTML = 0;
-            document.getElementById('seconds').innerHTML = 0;
-            document.getElementById("daylss").innerHTML = 0;
-            document.getElementById("hourss").innerHTML = 0;
-            document.getElementById("minutess").innerHTML = 0;
-            document.getElementById('secondss').innerHTML = 0;
+<script type="text/javascript">
+    // Force header to always be visible - this overrides any hiding behavior
+    function forceHeaderVisible() {
+        const header = document.querySelector('.header-area');
+        const nav = document.querySelector('.main-nav');
+        const navItems = document.querySelectorAll('.nav li');
+        
+        if (header) {
+            header.style.position = 'fixed';
+            header.style.top = '0';
+            header.style.zIndex = '1000';
+            header.style.visibility = 'visible';
+            header.style.opacity = '1';
+            header.style.pointerEvents = 'auto';
+            header.style.left = '0';
+            header.style.right = '0';
+            header.style.background = 'white';
+            header.style.transform = 'translateY(0)';
         }
-        }, 1000);
-    </script>
+        
+        if (nav) {
+            nav.style.top = '0';
+            nav.style.opacity = '1';
+            nav.style.visibility = 'visible';
+            nav.style.transform = 'translateY(0)';
+        }
+        
+        navItems.forEach(item => {
+            item.style.opacity = '1';
+            item.style.visibility = 'visible';
+            item.style.display = 'block';
+        });
+    }
+
+    // Override scroll behavior to always keep header visible
+    window.addEventListener('scroll', forceHeaderVisible);
+    window.addEventListener('load', function() {
+        forceHeaderVisible();
+        initCountdown();
+    });
+    window.addEventListener('resize', forceHeaderVisible);
+    setInterval(forceHeaderVisible, 100);
+
+    // Initialize countdown timer with admin-set date
+    function initCountdown() {
+        <?php
+            $salesDate = $settings->sales_start_date ?? now()->addDays(30);
+            $salesTimestamp = strtotime($salesDate) * 1000;
+        ?>
+        
+        const countdownDate = <?php echo e($salesTimestamp); ?>;
+        
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = countdownDate - now;
+            
+            if (distance < 0) {
+                // Sale has ended - update all countdown elements
+                const countdownElements = ['dayls', 'hours', 'minutes', 'seconds', 'daylss', 'hourss', 'minutess', 'secondss'];
+                countdownElements.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) element.innerHTML = 0;
+                });
+                
+                // Update status elements
+                const statusElements = document.querySelectorAll('.sale-status');
+                statusElements.forEach(element => {
+                    element.innerHTML = '<span class="text-danger">Sale Ended</span>';
+                });
+                
+                // Update info display status
+                const infoStatusElements = document.querySelectorAll('.info-display .text-success');
+                infoStatusElements.forEach(element => {
+                    element.innerHTML = 'Sale Ended';
+                    element.className = 'text-danger';
+                });
+                
+                clearInterval(countdownInterval);
+                return;
+            }
+            
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Update first countdown (welcome section)
+            const firstCountdown = ['dayls', 'hours', 'minutes', 'seconds'];
+            const values = [days, hours, minutes, seconds];
+            
+            firstCountdown.forEach((id, index) => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.innerHTML = values[index] >= 0 ? values[index] : 0;
+                }
+            });
+
+            // Update second countdown (token sale section)
+            const secondCountdown = ['daylss', 'hourss', 'minutess', 'secondss'];
+            secondCountdown.forEach((id, index) => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.innerHTML = values[index] >= 0 ? values[index] : 0;
+                }
+            });
+        }
+        
+        // Start the countdown
+        updateCountdown();
+        const countdownInterval = setInterval(updateCountdown, 1000);
+    }
+
+    // Initialize when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        initCountdown();
+    });
+</script>
+
 </body>
-
-
-
 </html>
 <?php /**PATH D:\Mahamaya\mahamaya\resources\views/home/index.blade.php ENDPATH**/ ?>

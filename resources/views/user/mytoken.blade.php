@@ -6,67 +6,328 @@ if (Auth::user()->dashboard_style == "light") {
     $bg="dark";
     $text = "light";
 }
-
 ?>
 
 @extends('layouts.app')
-    @section('content')
-        @include('user.topmenu')
-        @include('user.sidebar')
-        <div class="main-panel bg-{{$bg}}">
-            <div class="content bg-{{$bg}}">
-                <div class="page-inner">
-                    <x-danger-alert/>
-                    <x-success-alert/>
-                    <div class="row">
-                       <div class="col-md-8">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="card">
-                                        <div class="p-4 card-body">
-                                            <h3 class="card-title">My {{$settings->token_symbol}} Token</h3>
-                                            <div class="p-3 mt-3 border rounded">
-                                               <h5>Token Purchased</h5> 
-                                               <h1 class="text-secondary d-inline">{{number_format(Auth::user()->token_bal)}} {{$settings->token_symbol}}</h1>
-                                               <a href="{{route('buytoken')}}" class="float-right p-2 btn btn-primary">Buy More Token</a>  &nbsp; &nbsp;
-                                               <p>Equivalent to {{number_format($total)}} USD</p>
+@section('content')
+    @include('user.topmenu')
+    @include('user.sidebar')
+    <div class="main-panel bg-{{$bg}}">
+        <div class="content bg-{{$bg}}">
+            <div class="page-inner">
+                <x-danger-alert/>
+                <x-success-alert/>
+                
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card bg-{{$bg == 'light' ? 'white' : 'dark'}} border-{{$bg == 'light' ? 'light' : 'secondary'}}">
+                                    <div class="p-4 card-body">
+                                        <h3 class="card-title text-{{$text}}">My {{$settings->token_symbol}} Token Portfolio</h3>
+                                        
+                                        <!-- Token Purchased Section -->
+                                        <div class="p-3 mt-3 border rounded bg-{{$bg == 'light' ? 'light' : 'secondary'}}">
+                                            <h5 class="text-{{$text}}">Token Purchased</h5> 
+                                            <h1 class="text-primary d-inline">{{number_format(Auth::user()->token_bal ?? 0)}} {{$settings->token_symbol}}</h1>
+                                            <div class="float-right">
+                                                <a href="{{route('buytoken')}}" class="p-2 btn btn-primary">
+                                                    <i class="fas fa-plus"></i> Buy More Tokens
+                                                </a>
                                             </div>
+                                            <div class="clearfix"></div>
+                                            <p class="mt-2 text-{{$text}}">
+                                                <i class="fas fa-dollar-sign"></i> 
+                                                Equivalent to <strong>{{number_format($total)}} USD</strong>
+                                            </p>
+                                        </div>
 
-                                            <div class="p-3 mt-3 border rounded">
+                                        <!-- Total Token Balance Section -->
+                                        <div class="p-3 mt-3 border rounded bg-{{$bg == 'light' ? 'light' : 'secondary'}}">
+                                            <div class="d-flex justify-content-between align-items-center">
                                                 <div>
-                                                    <h5 class="d-block">Total Token Balance</h5> 
-                                                    <h1 class="text-secondary d-inline">{{number_format(Auth::user()->tot_tk_bal)}} {{$settings->token_symbol}}</h1> 
-                                                    <a href="#" data-toggle="modal" data-target="#transfermodal" class="float-right p-2 btn btn-danger"><i class="fas fa-reply"></i> Transfer</a> 
+                                                    <h5 class="text-{{$text}} mb-2">Total Token Balance</h5> 
+                                                    <h1 class="text-success d-inline">{{number_format(Auth::user()->tot_tk_bal ?? 0)}} {{$settings->token_symbol}}</h1>
                                                 </div>
-                                                
-                                                <div class="mr-2 d-inline mr-md-4">
-                                                    <span><strong>Referral Token:</strong> </span> 
-                                                    <span>{{number_format(Auth::user()->ref_bonus)}} {{$settings->token_symbol}}</span> 
+                                                <div>
+                                                    <a href="#" data-toggle="modal" data-target="#transfermodal" class="btn btn-warning">
+                                                        <i class="fas fa-exchange-alt"></i> Transfer
+                                                    </a>
                                                 </div>
-                                                <div class="mr-2 d-inline mr-md-4">
-                                                    <span> <strong>Bonuses Token: </strong> </span> 
-                                                    <span>{{number_format(Auth::user()->tk_bonus_bal)}} {{$settings->token_symbol}}</span>
+                                            </div>
+                                            
+                                            <!-- Token Breakdown -->
+                                            <div class="row mt-3">
+                                                <div class="col-md-4">
+                                                    <div class="text-center p-2 border rounded bg-{{$bg == 'light' ? 'white' : 'dark'}}">
+                                                        <span class="text-{{$text}}"><strong>Referral Tokens</strong></span><br>
+                                                        <span class="text-info">{{number_format(Auth::user()->ref_bonus ?? 0)}} {{$settings->token_symbol}}</span>
+                                                    </div>
                                                 </div>
-                                                <div class="d-inline">
-                                                    <span> <strong>ROI Token: </strong> </span> 
-                                                    <span>{{number_format(Auth::user()->roi_bal,2, '.', ',')}} {{$settings->token_symbol}}</span>
+                                                <div class="col-md-4">
+                                                    <div class="text-center p-2 border rounded bg-{{$bg == 'light' ? 'white' : 'dark'}}">
+                                                        <span class="text-{{$text}}"><strong>Bonus Tokens</strong></span><br>
+                                                        <span class="text-warning">{{number_format(Auth::user()->tk_bonus_bal ?? 0)}} {{$settings->token_symbol}}</span>
+                                                    </div>
                                                 </div>
-                                             </div>
-                                             <div class="p-3 mt-3 border rounded">
-                                                <h5>Total Contributed</h5> 
-                                                <h1 class="text-info">{{number_format($total)}} USD</h1>
-                                             </div>
+                                                <div class="col-md-4">
+                                                    <div class="text-center p-2 border rounded bg-{{$bg == 'light' ? 'white' : 'dark'}}">
+                                                        <span class="text-{{$text}}"><strong>ROI Tokens</strong></span><br>
+                                                        <span class="text-success">{{number_format(Auth::user()->roi_bal ?? 0, 2, '.', ',')}} {{$settings->token_symbol}}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Total Contributed Section -->
+                                        <div class="p-3 mt-3 border rounded bg-{{$bg == 'light' ? 'light' : 'secondary'}}">
+                                            <h5 class="text-{{$text}}">Total Contributed</h5> 
+                                            <h1 class="text-info">
+                                                <i class="fas fa-chart-line"></i> 
+                                                {{number_format($total)}} USD
+                                            </h1>
+                                            <p class="text-{{$text}} mb-0">
+                                                Your total investment in {{$settings->token_symbol}} tokens
+                                            </p>
+                                        </div>
+
+                                        <!-- Recent MetaMask Transactions Section -->
+                                        @if(isset($recent_metamask_txn) && $recent_metamask_txn->count() > 0)
+                                        <div class="p-3 mt-3 border rounded bg-{{$bg == 'light' ? 'light' : 'secondary'}}">
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <h5 class="text-{{$text}} mb-0">
+                                                    <i class="fab fa-ethereum text-warning"></i> Recent MetaMask Purchases
+                                                </h5>
+                                                <a href="{{route('transactions')}}" class="btn btn-sm btn-outline-primary">
+                                                    View All
+                                                </a>
+                                            </div>
+                                            
+                                            @foreach($recent_metamask_txn as $txn)
+                                            <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                                                <div>
+                                                    <strong class="text-{{$text}}">{{number_format($txn->tokens)}} {{$settings->token_symbol}}</strong><br>
+                                                    <small class="text-muted">
+                                                        {{$txn->amount}} ETH 
+                                                        @if($txn->gst_amount_eth)
+                                                            (inc. {{$txn->gst_amount_eth}} ETH GST)
+                                                        @endif
+                                                    </small>
+                                                </div>
+                                                <div class="text-right">
+                                                    <small class="text-{{$text}}">{{$txn->created_at->diffForHumans()}}</small><br>
+                                                    @if($txn->txn_id)
+                                                        <a href="https://etherscan.io/tx/{{$txn->txn_id}}" target="_blank" class="btn btn-xs btn-outline-info">
+                                                            <i class="fas fa-external-link-alt"></i>
+                                                        </a>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            @endforeach
+                                        </div>
+                                        @endif
+
+                                        <!-- Recent Transactions Overview -->
+                                        <div class="p-3 mt-3 border rounded bg-{{$bg == 'light' ? 'light' : 'secondary'}}">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <h5 class="text-{{$text}} mb-0">All Transaction Activity</h5>
+                                                <a href="{{route('transactions')}}" class="btn btn-sm btn-outline-primary">
+                                                    View All Transactions
+                                                </a>
+                                            </div>
+                                            <div class="mt-2">
+                                                <small class="text-{{$text}}">
+                                                    <i class="fas fa-info-circle"></i> 
+                                                    View your complete transaction history including MetaMask purchases, traditional payments, transfers, and bonuses
+                                                </small>
+                                            </div>
+                                        </div>
+
+                                        <!-- Token Distribution Chart -->
+                                        <div class="p-3 mt-3 border rounded bg-{{$bg == 'light' ? 'light' : 'secondary'}}">
+                                            <h5 class="text-{{$text}}">Token Distribution</h5>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="progress mb-2">
+                                                        <div class="progress-bar bg-primary" role="progressbar" 
+                                                             style="width: {{Auth::user()->token_bal > 0 && Auth::user()->tot_tk_bal > 0 ? (Auth::user()->token_bal / Auth::user()->tot_tk_bal * 100) : 0}}%">
+                                                        </div>
+                                                    </div>
+                                                    <small class="text-{{$text}}">Purchased Tokens ({{number_format((Auth::user()->token_bal / max(Auth::user()->tot_tk_bal, 1)) * 100, 1)}}%)</small>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="progress mb-2">
+                                                        <div class="progress-bar bg-success" role="progressbar" 
+                                                             style="width: {{Auth::user()->tot_tk_bal > 0 ? ((Auth::user()->ref_bonus + Auth::user()->tk_bonus_bal + Auth::user()->roi_bal) / Auth::user()->tot_tk_bal * 100) : 0}}%">
+                                                        </div>
+                                                    </div>
+                                                    <small class="text-{{$text}}">Earned Tokens ({{number_format(((Auth::user()->ref_bonus + Auth::user()->tk_bonus_bal + Auth::user()->roi_bal) / max(Auth::user()->tot_tk_bal, 1)) * 100, 1)}}%)</small>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Quick Actions -->
+                                        <div class="p-3 mt-3 border rounded bg-{{$bg == 'light' ? 'light' : 'secondary'}}">
+                                            <h5 class="text-{{$text}} mb-3">Quick Actions</h5>
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <a href="{{route('buytoken')}}" class="btn btn-primary btn-block">
+                                                        <i class="fas fa-shopping-cart"></i><br>
+                                                        <small>Buy with Card/Bank</small>
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <a href="{{route('buytoken')}}" class="btn btn-warning btn-block">
+                                                        <i class="fab fa-ethereum"></i><br>
+                                                        <small>Buy with MetaMask</small>
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <a href="#" data-toggle="modal" data-target="#transfermodal" class="btn btn-info btn-block">
+                                                        <i class="fas fa-paper-plane"></i><br>
+                                                        <small>Transfer Tokens</small>
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <a href="{{route('transactions')}}" class="btn btn-success btn-block">
+                                                        <i class="fas fa-history"></i><br>
+                                                        <small>View History</small>
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            @include('user.include.sideaction')
-                        </div>   
                     </div>
+                    
+                    <div class="col-md-4">
+                        <!-- Wallet Information Card -->
+                        <div class="card bg-{{$bg == 'light' ? 'white' : 'dark'}} border-{{$bg == 'light' ? 'light' : 'secondary'}} mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title text-{{$text}}">
+                                    <i class="fas fa-wallet"></i> Wallet Information
+                                </h5>
+                                @if(Auth::user()->wallet_address)
+                                    <p class="text-{{$text}}">
+                                        <strong>Address:</strong><br>
+                                        <small class="text-muted font-monospace">{{Str::limit(Auth::user()->wallet_address, 30, '...')}}</small>
+                                    </p>
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-sm btn-outline-info" onclick="copyToClipboard('{{Auth::user()->wallet_address}}')">
+                                            <i class="fas fa-copy"></i> Copy Address
+                                        </button>
+                                        <a href="https://etherscan.io/address/{{Auth::user()->wallet_address}}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-external-link-alt"></i> View on Etherscan
+                                        </a>
+                                    </div>
+                                @else
+                                    <div class="text-center p-3">
+                                        <i class="fas fa-exclamation-triangle text-warning fa-2x mb-2"></i>
+                                        <p class="text-danger mb-2">No wallet address added</p>
+                                        <a href="#" data-toggle="modal" data-target="#walletmodal" class="btn btn-warning btn-sm">
+                                            <i class="fas fa-plus"></i> Add Wallet Address
+                                        </a>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Token Stats Card -->
+                        <div class="card bg-{{$bg == 'light' ? 'white' : 'dark'}} border-{{$bg == 'light' ? 'light' : 'secondary'}} mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title text-{{$text}}">Token Statistics</h5>
+                                <ul class="list-unstyled">
+                                    <li class="text-{{$text}} mb-2">
+                                        <i class="fas fa-coins text-primary"></i> 
+                                        Current Price: <strong>${{number_format($settings->amt_usd ?? 0, 2)}}</strong>
+                                    </li>
+                                    <li class="text-{{$text}} mb-2">
+                                        <i class="fas fa-chart-line text-success"></i> 
+                                        Your Holdings: <strong>{{number_format(Auth::user()->tot_tk_bal ?? 0)}} {{$settings->token_symbol}}</strong>
+                                    </li>
+                                    <li class="text-{{$text}} mb-2">
+                                        <i class="fas fa-percentage text-info"></i> 
+                                        Portfolio Value: <strong>${{number_format($total)}}</strong>
+                                    </li>
+                                    <li class="text-{{$text}}">
+                                        <i class="fab fa-ethereum text-warning"></i> 
+                                        MetaMask Ready: 
+                                        @if(Auth::user()->wallet_address)
+                                            <strong class="text-success">Yes</strong>
+                                        @else
+                                            <strong class="text-danger">Setup Required</strong>
+                                        @endif
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Purchase Methods Card -->
+                        <div class="card bg-{{$bg == 'light' ? 'white' : 'dark'}} border-{{$bg == 'light' ? 'light' : 'secondary'}} mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title text-{{$text}}">Purchase Methods</h5>
+                                <div class="row">
+                                    <div class="col-6 text-center">
+                                        <a href="{{route('buytoken')}}" class="btn btn-outline-primary btn-block">
+                                            <i class="fas fa-credit-card"></i><br>
+                                            <small>Traditional</small>
+                                        </a>
+                                    </div>
+                                    <div class="col-6 text-center">
+                                        <a href="{{route('buytoken')}}" class="btn btn-outline-warning btn-block">
+                                            <i class="fab fa-ethereum"></i><br>
+                                            <small>MetaMask</small>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @include('user.include.sideaction')
+                    </div>   
+                </div>
             </div>
-            @include('user.modal')
-    @endsection
-   
-    
+        </div>
+    </div>
+
+    @include('user.modal')
+
+    <!-- Copy to Clipboard Script -->
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                // Create a temporary notification
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-success alert-dismissible fade show position-fixed';
+                alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; max-width: 300px;';
+                alertDiv.innerHTML = `
+                    <i class="fas fa-check-circle"></i> Wallet address copied to clipboard!
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span>&times;</span>
+                    </button>
+                `;
+                document.body.appendChild(alertDiv);
+                
+                // Auto-remove after 3 seconds
+                setTimeout(() => {
+                    if (alertDiv.parentNode) {
+                        alertDiv.parentNode.removeChild(alertDiv);
+                    }
+                }, 3000);
+            }).catch(function(err) {
+                console.error('Could not copy text: ', err);
+                alert('Copy failed. Please copy manually: ' + text);
+            });
+        }
+
+        // Auto-refresh token data every 30 seconds to show updated balances
+        setInterval(function() {
+            // Only refresh if user seems active (has moved mouse recently)
+            if (document.hasFocus()) {
+                location.reload();
+            }
+        }, 30000);
+    </script>
+@endsection

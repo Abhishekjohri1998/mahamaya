@@ -5,19 +5,19 @@
         <div class="form-row">
             <div class="form-group col-md-12">
                 <label>Token Name</label>
-                <input type="text" class="form-control" name="token_name" value="{{$settings->token_name}}" required>
+                <input type="text" class="form-control" name="token_name" value="{{$settings->token_name ?? ''}}" required>
                 <small>Enter name of token without spaces. Lower and uppercase can be used.</small>
             </div>
         </div>
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label>Token Symbol</label>
-                <input type="text" class="form-control" name="token_symbol" value="{{$settings->token_symbol}}"required>
+                <input type="text" class="form-control" name="token_symbol" value="{{$settings->token_symbol ?? ''}}" required>
                 <small>Usually 3-4 Letters like ETH, BTC, WISH etc.</small>
             </div>
             <div class="form-group col-md-6">
                 <label>Price/USD</label>
-                <input type="text" class="form-control" name="price" value="{{$settings->amt_usd}}" required>
+                <input type="number" step="0.0001" class="form-control" name="price" value="{{$settings->amt_usd ?? ''}}" required>
                 <small>Define your token rate equivalent to USD.</small>
             </div>
         </div>
@@ -26,7 +26,7 @@
 </div>
 <hr>
 <div class="mt-4">
-    <h2 class="text-primary">Purchase & Addtional Setting</h2>
+    <h2 class="text-primary">Purchase & Additional Setting</h2>
     <p>Purchase With:</p>
     <form method="POST" action="{{route('savepayoption')}}">
         @csrf
@@ -99,28 +99,30 @@
         <button type="submit" class="btn btn-primary">Update</button>
     </form>
 
-    @if (in_array("usd", $options))
-    <script>document.getElementById("usd").checked= true;</script>
-    @endif
-    @if(in_array("eur", $options))
-    <script>document.getElementById("eur").checked= true;</script>
-    @endif
-    @if(in_array("gbp", $options))
-    <script>document.getElementById("gbp").checked= true;</script>
-    @endif
-    @if(in_array("btc", $options))
-    <script>document.getElementById("btc").checked= true;</script>
-    @endif
-    @if(in_array("eth", $options))
-    <script>document.getElementById("eth").checked= true;</script>
-    @endif
-    @if(in_array("ltc", $options))
-    <script>document.getElementById("ltc").checked= true;</script>
-    @endif
-    @if(in_array("usdt", $options))
-    <script>document.getElementById("usdt").checked= true;</script>
-    @endif
-    @if(in_array("bnb", $options))
-    <script>document.getElementById("bnb").checked= true;</script>
+    @if (isset($options) && is_array($options))
+        @if (in_array("usd", $options))
+        <script>document.getElementById("usd").checked= true;</script>
+        @endif
+        @if(in_array("eur", $options))
+        <script>document.getElementById("eur").checked= true;</script>
+        @endif
+        @if(in_array("gbp", $options))
+        <script>document.getElementById("gbp").checked= true;</script>
+        @endif
+        @if(in_array("btc", $options))
+        <script>document.getElementById("btc").checked= true;</script>
+        @endif
+        @if(in_array("eth", $options))
+        <script>document.getElementById("eth").checked= true;</script>
+        @endif
+        @if(in_array("ltc", $options))
+        <script>document.getElementById("ltc").checked= true;</script>
+        @endif
+        @if(in_array("usdt", $options))
+        <script>document.getElementById("usdt").checked= true;</script>
+        @endif
+        @if(in_array("bnb", $options))
+        <script>document.getElementById("bnb").checked= true;</script>
+        @endif
     @endif
 </div>
