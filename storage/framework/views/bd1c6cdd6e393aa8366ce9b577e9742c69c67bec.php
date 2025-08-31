@@ -63,7 +63,8 @@
         }
         @keyframes  pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         @keyframes  rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        /* Countdown styles */
+        
+        /* Dynamic Countdown styles */
         .countdown {
             display: flex; justify-content: center; align-items: center; margin: 30px 0 0 0; gap: 15px;
             font-family: inherit; list-style: none;
@@ -77,6 +78,7 @@
             font-weight: bold;
             color: #ffd700;
             display: block;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
         }
         .countdown p {
             font-size: 0.9rem;
@@ -85,6 +87,20 @@
             margin-top: 2px;
             text-transform: uppercase;
         }
+        
+        /* Sale Status */
+        .sale-status {
+            margin: 20px 0;
+            padding: 15px 30px;
+            border-radius: 25px;
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        .sale-status.active { color: #4CAF50; border-color: #4CAF50; }
+        .sale-status.ended { color: #f44336; border-color: #f44336; }
+        
         .action-buttons { display: flex; gap: 20px; justify-content: center; margin: 40px 0; flex-wrap: wrap; }
         .btn { padding: 15px 30px; border: 2px solid #ffd700; background: rgba(255, 215, 0, 0.1); color: #ffd700;
             text-decoration: none; border-radius: 30px; font-weight: bold; transition: all 0.3s ease; backdrop-filter: blur(10px);
@@ -95,6 +111,7 @@
         }
         .btn.primary { background: linear-gradient(45deg, #ffd700, #ffed4e); color: #1a0d2e;}
         .btn.primary:hover { transform: translateY(-2px) scale(1.05);}
+        
         /* Token Utility, section-title, utility grid, roadmap etc. unchanged */
         .utility-section { padding: 80px 0; }
         .section-title { font-size: 2.5rem; text-align: center; margin-bottom: 60px; color: #ffd700; }
@@ -146,7 +163,7 @@
             .roadmap-timeline { flex-direction: column; gap: 20px; }
             .roadmap-timeline::before { display: none; }
             .footer-info { flex-direction: column; text-align: center; }
-            .countdown span { font-size: 1.3rem; }
+            .countdown span { font-size: 1.8rem; }
         }
         #backToTop {
             position: fixed;
@@ -208,35 +225,39 @@
                 <img src="assets/MAYX_coin_M.png" alt="MAYX Coin Symbol" class="symbol-image">
             </div>
 
-            <!-- Countdown is here now: just above action buttons -->
+            <!-- Dynamic Countdown Timer -->
             <ul class="countdown" id="countdown">
                 <li>
-                    <span class="days" id="dayls"></span>
+                    <span class="days" id="dayls">0</span>
                     <p class="days_ref">days</p>
                 </li>
                 <li class="seperator"></li>
                 <li>
-                    <span class="hours" id="hours"></span>
+                    <span class="hours" id="hours">0</span>
                     <p class="hours_ref">hours</p>
                 </li>
                 <li class="seperator"></li>
                 <li>
-                    <span class="minutes" id="minutes"></span>
+                    <span class="minutes" id="minutes">0</span>
                     <p class="minutes_ref">minutes</p>
                 </li>
                 <li class="seperator"></li>
                 <li>
-                    <span class="seconds" id="seconds"></span>
+                    <span class="seconds" id="seconds">0</span>
                     <p class="seconds_ref">seconds</p>
                 </li>
             </ul>
-            <!-- End countdown -->
+
+            <!-- Sale Status -->
+            <div id="sale-status" class="sale-status active">
+                🚀 Token Sale is Active
+            </div>
 
             <div class="action-buttons">
                 <a href="mahamaya_whitepaper.html" class="btn primary">📄 Whitepaper</a>
-                <a href="faq.html" class="btn"> FAQs</a>
-                <a href="/home" class="btn primary">Buy MAYX</a>
-                <a href="#" onclick="joinCommunity()" class="btn">Join Community</a>
+                <a href="faq.html" class="btn">❓ FAQs</a>
+                <a href="/home" class="btn primary">🪙 Buy MAYX</a>
+                <a href="#" onclick="joinCommunity()" class="btn">👥 Join Community</a>
             </div>
         </section>
 
@@ -305,7 +326,6 @@
             </div>
             <div class="footer-info">
                 <div class="contract-info">
-                    <!-- Back to Top Button -->
                     <button id="backToTop">↑</button>
                     <strong>Smart Contract (Polygon)</strong>
                 </div>
@@ -316,35 +336,60 @@
         </div>
     </footer>
 
-<!-- Countdown timer script -->
-<script>
-    // Set your countdown target date below:
-    // Format: YYYY-MM-DDTHH:MM:SSZ (Z=UTC). E.g., June 30 2026 12:00 UTC
-    var targetDate = new Date('2026-06-30T12:00:00Z').getTime();
+<!-- Dynamic Countdown Timer Script - Synced with Admin Settings -->
+<script type="text/javascript">
+    // Initialize countdown timer with admin-set date
+    function initCountdown() {
+        <?php
+            $salesDate = $settings->sales_start_date ?? now()->addDays(30);
+            $salesTimestamp = strtotime($salesDate) * 1000;
+        ?>
+        
+        const countdownDate = <?php echo e($salesTimestamp); ?>;
+        
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = countdownDate - now;
+            
+            if (distance < 0) {
+                // Sale has ended - update all countdown elements
+                document.getElementById("dayls").innerText = 0;
+                document.getElementById("hours").innerText = 0;
+                document.getElementById("minutes").innerText = 0;
+                document.getElementById("seconds").innerText = 0;
+                
+                // Update status
+                const statusElement = document.getElementById('sale-status');
+                if (statusElement) {
+                    statusElement.innerHTML = '⏰ Token Sale Has Ended';
+                    statusElement.className = 'sale-status ended';
+                }
+                
+                clearInterval(countdownInterval);
+                return;
+            }
+            
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    function updateCountdown() {
-        var now = new Date().getTime();
-        var distance = targetDate - now;
-
-        var days    = Math.floor(distance / (1000 * 60 * 60 * 24));
-        var hours   = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-        document.getElementById("dayls").innerText    = days > 0 ? days : 0;
-        document.getElementById("hours").innerText    = hours >= 0 ? hours : 0;
-        document.getElementById("minutes").innerText  = minutes >= 0 ? minutes : 0;
-        document.getElementById("seconds").innerText  = seconds >= 0 ? seconds : 0;
-
-        if (distance < 0) {
-            document.getElementById("dayls").innerText    = 0;
-            document.getElementById("hours").innerText    = 0;
-            document.getElementById("minutes").innerText  = 0;
-            document.getElementById("seconds").innerText  = 0;
+            // Update countdown display
+            document.getElementById("dayls").innerText = days >= 0 ? days : 0;
+            document.getElementById("hours").innerText = hours >= 0 ? hours : 0;
+            document.getElementById("minutes").innerText = minutes >= 0 ? minutes : 0;
+            document.getElementById("seconds").innerText = seconds >= 0 ? seconds : 0;
         }
+        
+        // Start the countdown
+        updateCountdown();
+        const countdownInterval = setInterval(updateCountdown, 1000);
     }
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
+
+    // Initialize countdown when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        initCountdown();
+    });
 </script>
 
 <script>
@@ -360,9 +405,11 @@
     backToTopBtn.addEventListener("click", () => {
         document.querySelector(".hero").scrollIntoView({behavior: "smooth"});
     });
+    
     function buyToken() {
-        alert('Redirecting to token purchase...\n\nIn a real implementation, this would connect to a DEX or token sale platform.');
+        window.location.href = '/home';
     }
+    
     function joinCommunity() {
         document.querySelector("footer").scrollIntoView({behavior: "smooth"});
         const footer = document.querySelector("footer");
@@ -370,6 +417,7 @@
         footer.style.boxShadow = "0 0 20px 5px rgba(255, 215, 0, 0.7)";
         setTimeout(() => { footer.style.boxShadow = "none"; }, 1500);
     }
+    
     function openTelegram() { alert('Opening Telegram...\n\nThis would open the project\'s Telegram channel.'); }
     function openDiscord() { alert('Opening Discord...\n\nThis would open the project\'s Discord server.'); }
     function openTwitter() { alert('Opening Twitter...\n\nThis would open the project\'s Twitter profile.'); }
@@ -382,6 +430,7 @@
             card.addEventListener('mouseenter', function () { this.style.transform = 'translateY(-10px) scale(1.05)'; });
             card.addEventListener('mouseleave', function () { this.style.transform = 'translateY(0) scale(1)'; });
         });
+        
         const roadmapItems = document.querySelectorAll('.roadmap-item');
         roadmapItems.forEach((item, index) => {
             item.addEventListener('click', function () {
@@ -390,6 +439,7 @@
             });
             item.style.cursor = 'pointer';
         });
+        
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -401,6 +451,7 @@
         });
     });
 
+    // Parallax scrolling effects
     window.addEventListener('scroll', function () {
         const scrolled = window.pageYOffset;
         const heroTitle = document.querySelector('.hero-title');
@@ -409,17 +460,20 @@
         if (tokenSymbol) { tokenSymbol.style.transform = `translateY(${scrolled * 0.3}px) rotate(${scrolled * 0.1}deg)`; }
     });
 
+    // Overlap fade functionality
     let fadeInTimeout;
     function checkOverlap() {
         const heroTitle = document.querySelector('.hero-title');
         const tokenSymbol = document.querySelector('.token-symbol');
         if (!heroTitle || !tokenSymbol) return;
+        
         const titleRect = heroTitle.getBoundingClientRect();
         const symbolRect = tokenSymbol.getBoundingClientRect();
         const isOverlapping = !(titleRect.bottom < symbolRect.top ||
             titleRect.top > symbolRect.bottom ||
             titleRect.right < symbolRect.left ||
             titleRect.left > symbolRect.right);
+            
         if (isOverlapping) {
             clearTimeout(fadeInTimeout);
             heroTitle.style.transition = "none";
@@ -436,6 +490,7 @@
     window.addEventListener('resize', checkOverlap);
     document.addEventListener('DOMContentLoaded', checkOverlap);
 
+    // Audio functionality
     function unlockAudio() {
         const audio = document.getElementById("bgAudio");
         if (audio && audio.paused) {

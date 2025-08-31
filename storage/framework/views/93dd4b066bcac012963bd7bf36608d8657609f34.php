@@ -58,15 +58,15 @@
                 <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('transfer-token', [])->html();
-} elseif ($_instance->childHasBeenRendered('dMZCpcb')) {
-    $componentId = $_instance->getRenderedChildComponentId('dMZCpcb');
-    $componentTag = $_instance->getRenderedChildComponentTagName('dMZCpcb');
+} elseif ($_instance->childHasBeenRendered('TmwMo92')) {
+    $componentId = $_instance->getRenderedChildComponentId('TmwMo92');
+    $componentTag = $_instance->getRenderedChildComponentTagName('TmwMo92');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('dMZCpcb');
+    $_instance->preserveRenderedChild('TmwMo92');
 } else {
     $response = \Livewire\Livewire::mount('transfer-token', []);
     $html = $response->html();
-    $_instance->logRenderedChild('dMZCpcb', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('TmwMo92', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?>

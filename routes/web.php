@@ -27,21 +27,65 @@ use App\Http\Controllers\SocialLoginController;
 |--------------------------------------------------------------------------
 */
 
-// Landing page route (Fixed to use proper view name)
+// FIXED Landing page route with error handling and defaults
 Route::get('/', function () {
-    $settings = Settings::where('id', '1')->first();
-    
-    // Ensure settings exist with defaults
-    if (!$settings) {
-        $settings = new Settings();
-        $settings->site_name = 'Prechain';
-        $settings->site_email = 'admin@prechain.com';
-        $settings->token_symbol = 'PRC';
-        $settings->sales_start_date = now()->addDays(30);
-        $settings->save();
+    try {
+        $settings = Settings::first();
+        
+        // Create default settings if none exist
+        if (!$settings) {
+            $settings = new Settings();
+            $settings->site_name = 'Prechain';
+            $settings->site_email = 'admin@prechain.com';
+            $settings->token_symbol = 'PRC';
+            $settings->phone = '+1-555-0123';
+            $settings->address = '123 Blockchain St, Crypto City';
+            $settings->site_url = url('/');
+            $settings->sales_start_date = now()->addDays(30);
+            $settings->logo = '';
+            $settings->favicon = '';
+            $settings->livechat = '';
+            $settings->whitepaper = '';
+            $settings->annoucement = '';
+            $settings->email_verify = 'false';
+            $settings->social = 'yes';
+            $settings->install_type = 'Main-Domain';
+            $settings->captcha = 'false';
+            $settings->pay_methods = json_encode(['BTC', 'ETH', 'USDT']);
+            $settings->usestake = false;
+            $settings->ref_com = 5;
+            $settings->kyc_verification = 'false';
+            $settings->save();
+        }
+        
+        // Ensure required fields have defaults
+        if (!$settings->sales_start_date) {
+            $settings->sales_start_date = now()->addDays(30);
+            $settings->save();
+        }
+        
+        return view('landing', compact('settings'));
+        
+    } catch (\Exception $e) {
+        // Log error for debugging
+        \Log::error('Landing page error: ' . $e->getMessage());
+        
+        // Create minimal settings object for emergency fallback
+        $settings = (object) [
+            'site_name' => 'Prechain',
+            'site_email' => 'admin@prechain.com',
+            'token_symbol' => 'PRC',
+            'phone' => '+1-555-0123',
+            'address' => '123 Blockchain St, Crypto City',
+            'site_url' => url('/'),
+            'sales_start_date' => now()->addDays(30),
+            'logo' => '',
+            'favicon' => '',
+            'livechat' => ''
+        ];
+        
+        return view('landing', compact('settings'));
     }
-    
-    return view('home.index', compact('settings'));
 })->name('homepage');
 
 // Alternative route for backward compatibility
@@ -49,9 +93,11 @@ Route::get('/home', [ViewsController::class, 'homepage'])->name('home');
 
 // Activation routes
 Route::any('/activate', function () {
-    return view('activate.index', [
-        'settings' => Settings::where('id', '1')->first(),
-    ]);
+    $settings = Settings::first();
+    if (!$settings) {
+        $settings = (object) ['site_name' => 'Prechain'];
+    }
+    return view('activate.index', compact('settings'));
 });
 
 Route::any('/revoke', function () {
