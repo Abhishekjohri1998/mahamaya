@@ -179,7 +179,7 @@
                                         <p class="mb-2"><strong>Token Symbol:</strong> {{$settings->site_name}}</p>
                                         <p class="mb-2"><strong>Platform:</strong> Ethereum Blockchain</p>
                                         <p class="mb-2"><strong>Token Standard:</strong> ERC-20</p>
-                                        <p class="mb-0"><strong>Status:</strong> <span class="text-success">Sale Active</span></p>
+                                       <p class="mb-0"><strong>Status:</strong> <span class="sale-status text-success">Sale Active</span></p>
                                     </div>
                                 </div>
                             </div>
@@ -928,97 +928,123 @@
     <script src="{{ asset('front/assets/js/particle-dark.js') }}"></script>
     <script src="{{ asset('front/assets/js/custom.js') }}"></script>
 
-    <script type="text/javascript">
-        // Force header to always be visible - this overrides any hiding behavior
-        function forceHeaderVisible() {
-            const header = document.querySelector('.header-area');
-            const nav = document.querySelector('.main-nav');
-            const navItems = document.querySelectorAll('.nav li');
+<script type="text/javascript">
+    // Force header to always be visible - this overrides any hiding behavior
+    function forceHeaderVisible() {
+        const header = document.querySelector('.header-area');
+        const nav = document.querySelector('.main-nav');
+        const navItems = document.querySelectorAll('.nav li');
+        
+        if (header) {
+            header.style.position = 'fixed';
+            header.style.top = '0';
+            header.style.zIndex = '1000';
+            header.style.visibility = 'visible';
+            header.style.opacity = '1';
+            header.style.pointerEvents = 'auto';
+            header.style.left = '0';
+            header.style.right = '0';
+            header.style.background = 'white';
+            header.style.transform = 'translateY(0)';
+        }
+        
+        if (nav) {
+            nav.style.top = '0';
+            nav.style.opacity = '1';
+            nav.style.visibility = 'visible';
+            nav.style.transform = 'translateY(0)';
+        }
+        
+        navItems.forEach(item => {
+            item.style.opacity = '1';
+            item.style.visibility = 'visible';
+            item.style.display = 'block';
+        });
+    }
+
+    // Override scroll behavior to always keep header visible
+    window.addEventListener('scroll', forceHeaderVisible);
+    window.addEventListener('load', function() {
+        forceHeaderVisible();
+        initCountdown();
+    });
+    window.addEventListener('resize', forceHeaderVisible);
+    setInterval(forceHeaderVisible, 100);
+
+    // Initialize countdown timer with admin-set date
+    function initCountdown() {
+        @php
+            $salesDate = $settings->sales_start_date ?? now()->addDays(30);
+            $salesTimestamp = strtotime($salesDate) * 1000;
+        @endphp
+        
+        const countdownDate = {{ $salesTimestamp }};
+        
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = countdownDate - now;
             
-            if (header) {
-                header.style.position = 'fixed';
-                header.style.top = '0';
-                header.style.zIndex = '1000';
-                header.style.visibility = 'visible';
-                header.style.opacity = '1';
-                header.style.pointerEvents = 'auto';
-                header.style.left = '0';
-                header.style.right = '0';
-                header.style.background = 'white';
-                header.style.transform = 'translateY(0)';
+            if (distance < 0) {
+                // Sale has ended - update all countdown elements
+                const countdownElements = ['dayls', 'hours', 'minutes', 'seconds', 'daylss', 'hourss', 'minutess', 'secondss'];
+                countdownElements.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) element.innerHTML = 0;
+                });
+                
+                // Update status elements
+                const statusElements = document.querySelectorAll('.sale-status');
+                statusElements.forEach(element => {
+                    element.innerHTML = '<span class="text-danger">Sale Ended</span>';
+                });
+                
+                // Update info display status
+                const infoStatusElements = document.querySelectorAll('.info-display .text-success');
+                infoStatusElements.forEach(element => {
+                    element.innerHTML = 'Sale Ended';
+                    element.className = 'text-danger';
+                });
+                
+                clearInterval(countdownInterval);
+                return;
             }
             
-            if (nav) {
-                nav.style.top = '0';
-                nav.style.opacity = '1';
-                nav.style.visibility = 'visible';
-                nav.style.transform = 'translateY(0)';
-            }
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Update first countdown (welcome section)
+            const firstCountdown = ['dayls', 'hours', 'minutes', 'seconds'];
+            const values = [days, hours, minutes, seconds];
             
-            navItems.forEach(item => {
-                item.style.opacity = '1';
-                item.style.visibility = 'visible';
-                item.style.display = 'block';
+            firstCountdown.forEach((id, index) => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.innerHTML = values[index] >= 0 ? values[index] : 0;
+                }
+            });
+
+            // Update second countdown (token sale section)
+            const secondCountdown = ['daylss', 'hourss', 'minutess', 'secondss'];
+            secondCountdown.forEach((id, index) => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.innerHTML = values[index] >= 0 ? values[index] : 0;
+                }
             });
         }
+        
+        // Start the countdown
+        updateCountdown();
+        const countdownInterval = setInterval(updateCountdown, 1000);
+    }
 
-        // Override scroll behavior to always keep header visible
-        window.addEventListener('scroll', function() {
-            forceHeaderVisible();
-        });
-
-        window.addEventListener('load', function() {
-            forceHeaderVisible();
-            initCountdown();
-        });
-
-        window.addEventListener('resize', function() {
-            forceHeaderVisible();
-        });
-
-        // Run every 100ms to ensure header stays visible
-        setInterval(forceHeaderVisible, 100);
-
-        // Initialize countdown timer
-        function initCountdown() {
-            // Set countdown date (30 days from now as example)
-            const countdownDate = new Date();
-            countdownDate.setDate(countdownDate.getDate() + 30);
-            
-            const x = setInterval(function() {
-                const now = new Date().getTime();
-                const distance = countdownDate.getTime() - now;
-                
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                // Update both countdowns
-                document.getElementById("dayls").innerHTML = days >= 0 ? days : 0;
-                document.getElementById("hours").innerHTML = hours >= 0 ? hours : 0;
-                document.getElementById("minutes").innerHTML = minutes >= 0 ? minutes : 0;
-                document.getElementById('seconds').innerHTML = seconds >= 0 ? seconds : 0;
-
-                document.getElementById("daylss").innerHTML = days >= 0 ? days : 0;
-                document.getElementById("hourss").innerHTML = hours >= 0 ? hours : 0;
-                document.getElementById("minutess").innerHTML = minutes >= 0 ? minutes : 0;
-                document.getElementById('secondss').innerHTML = seconds >= 0 ? seconds : 0;
-
-                if (distance < 0) {
-                    clearInterval(x);
-                    document.getElementById("dayls").innerHTML = 0;
-                    document.getElementById("hours").innerHTML = 0;
-                    document.getElementById("minutes").innerHTML = 0;
-                    document.getElementById('seconds').innerHTML = 0;
-                    document.getElementById("daylss").innerHTML = 0;
-                    document.getElementById("hourss").innerHTML = 0;
-                    document.getElementById("minutess").innerHTML = 0;
-                    document.getElementById('secondss').innerHTML = 0;
-                }
-            }, 1000);
-        }
-    </script>
+    // Initialize when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        initCountdown();
+    });
+</script>
 
 </body>
 </html>
