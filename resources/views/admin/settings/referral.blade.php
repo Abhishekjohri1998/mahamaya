@@ -6,8 +6,8 @@
         <div class="form-row">
             <div class="form-group col-md-12">
                 <label>Referral Commission(%)</label>
-                <small>how many percent of {{$settings->token_symbol}}</small>
-                <input type="number" class="form-control"  value="{{$settings->ref_com}}" name="ref_com" required>
+                <small>How many percent of {{$settings->token_symbol ?? 'TOKEN'}}</small>
+                <input type="number" step="0.01" class="form-control" value="{{$settings->ref_com ?? 0}}" name="ref_com" required>
             </div>
         </div>
         <button type="submit" class="px-3 btn btn-primary">Update Commission</button>

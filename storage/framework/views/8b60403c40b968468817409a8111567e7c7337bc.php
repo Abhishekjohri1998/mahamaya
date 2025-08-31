@@ -1,5 +1,4 @@
 
-
 <?php $__env->startSection('content'); ?>
     <?php echo $__env->make('admin.topmenu', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
     <?php echo $__env->make('admin.sidebar', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
@@ -30,12 +29,12 @@
 <?php $component = $__componentOriginalefb6c7ab9c534676ce498db452c30763ee219126; ?>
 <?php unset($__componentOriginalefb6c7ab9c534676ce498db452c30763ee219126); ?>
 <?php endif; ?>
-            <!-- Beginning of  Dashboard Stats  -->
+            
             <?php if(count($errors) > 0): ?>
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="alert alert-danger alert-dismissable" role="alert" >
-                        <button type="button" clsass="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <div class="alert alert-danger alert-dismissable" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                         <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <i class="fa fa-warning"></i> <?php echo e($error); ?>
 
@@ -44,6 +43,7 @@
                 </div>
             </div>
             <?php endif; ?>
+            
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
@@ -69,16 +69,16 @@
                                 <div class="tab-pane fade show active" id="ico">
                                     <?php echo $__env->make('admin.settings.ico_settings', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                                 </div>
-                                <div class="tab-pane fade show" id="webset">
+                                <div class="tab-pane fade" id="webset">
                                     <?php echo $__env->make('admin.settings.web_settings', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                                 </div>
-                                <div class="tab-pane fade show" id="refset">
+                                <div class="tab-pane fade" id="refset">
                                     <?php echo $__env->make('admin.settings.referral', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                                 </div>
-                                <div class="tab-pane fade show" id="pset">
+                                <div class="tab-pane fade" id="pset">
                                     <?php echo $__env->make('admin.settings.payment', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                                 </div>
-                                <div class="tab-pane fade show" id="othset">
+                                <div class="tab-pane fade" id="othset">
                                     <?php echo $__env->make('admin.settings.staking', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                                 </div>
                             </div>
@@ -89,4 +89,5 @@
         </div>
     </div>
 <?php $__env->stopSection(); ?>
+
 <?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\Mahamaya\mahamaya\resources\views/admin/settings.blade.php ENDPATH**/ ?>
