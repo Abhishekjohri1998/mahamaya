@@ -218,11 +218,14 @@
         <section class="hero">
             <h1 class="hero-title">
                 Empowering a<br>
-                Spiritual Web3 Future
+                Spiritual Web3 Future  
             </h1>
 
             <div class="token-symbol">
-                <img src="assets/MAYX_coin_M.png" alt="MAYX Coin Symbol" class="symbol-image">
+                <img src="http://13.204.69.90/front/assets/images/mahamaya-logo.png" 
+                     alt="MAYX Coin Symbol" 
+                     class="symbol-image"
+                     onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\'font-size: 4rem; color: #ffd700;\'>M</span>';">
             </div>
 
             <!-- Dynamic Countdown Timer -->
