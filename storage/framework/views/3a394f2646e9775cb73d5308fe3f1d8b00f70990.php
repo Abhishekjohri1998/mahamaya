@@ -19,21 +19,23 @@
     <link href="<?php echo e(asset('front/assets/css/styles.css')); ?>" rel="stylesheet" type="text/css">
 
 <style>
-    /* Fix for header overlap - adjust margin-top as needed */
-    body {
-        margin-top: 80px; /* Add space to prevent header overlap */
-    }
-    
-    .welcome-area {
-        padding-top: 20px; /* Additional padding for welcome section */
+    /* Logo sizing and alignment fixes */
+    .header-area .logo {
+        display: flex;
+        align-items: flex-start; /* Changed from center to flex-start to move up */
+        height: 100px;
+        line-height: 1;
+        padding-top: 8px; /* Add padding to move logo up */
     }
 
-    /* Additional spacing for sections to avoid overlap */
-    .section {
-        scroll-margin-top: 80px; /* For smooth scrolling with fixed header */
+    .header-area .logo img {
+        max-height: 70px !important; /* Increased from 40px to make it larger */
+        width: auto !important;
+        object-fit: contain;
+        vertical-align: middle;
     }
-    
-    /* Header adjustments - ALWAYS VISIBLE */
+
+    /* Header container height control */
     .header-area {
         position: fixed !important;
         top: 0 !important; /* Always at top, never hide */
@@ -46,8 +48,18 @@
         visibility: visible !important;
         opacity: 1 !important;
         pointer-events: auto !important;
+        height: 80px; /* Fixed header height */
+        overflow: hidden; /* Prevent logo from extending below */
     }
-    
+
+    /* Navigation alignment */
+    .main-nav {
+        height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
     /* FORCE NAVIGATION MENU TO ALWAYS BE VISIBLE */
     .nav, .main-nav, .header-area nav {
         top: 0 !important;
@@ -56,12 +68,69 @@
         visibility: visible !important;
         transition: none !important;
     }
-    
+
+    /* Navigation menu alignment */
+    .nav {
+        display: flex;
+        align-items: center;
+        height: 70px;
+        margin: 0;
+        padding: 0;
+    }
+
+    .nav li {
+        display: flex;
+        align-items: center;
+        height: 70px;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+    .nav li a {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        padding: 0 15px;
+    }
+
     /* Prevent menu items from being hidden */
     .nav li, .main-nav li, .header-area nav ul li {
         opacity: 1 !important;
         visibility: visible !important;
         display: block !important;
+    }
+
+    /* Container row alignment */
+    .header-area .container .row {
+        align-items: center;
+        height: 70px;
+    }
+
+    .header-area .col-12 {
+        display: flex;
+        align-items: center;
+        height: 70px;
+    }
+
+    /* Mobile menu trigger alignment */
+    .menu-trigger {
+        display: flex;
+        align-items: center;
+        height: 70px;
+    }
+
+    /* Fix for header overlap - adjust margin-top to match header height */
+    body {
+        margin-top: 70px; /* Match the header height */
+    }
+    
+    .welcome-area {
+        padding-top: 20px; /* Additional padding for welcome section */
+    }
+
+    /* Additional spacing for sections to avoid overlap */
+    .section {
+        scroll-margin-top: 70px; /* For smooth scrolling with fixed header */
     }
 
     /* Information display styling */
@@ -87,7 +156,70 @@
         border-radius: 15px;
         margin: 20px 0;
     }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .header-area .logo img {
+            max-height: 42px !important; /* Increased from 35px */
+        }
+        
+        .header-area .logo {
+            padding-top: 6px; /* Reduced padding for mobile */
+        }
+        
+        .header-area {
+            height: 60px; /* Smaller header on mobile */
+        }
+        
+        .main-nav, .nav, .nav li, .header-area .container .row, .header-area .col-12 {
+            height: 60px;
+        }
+        
+        .menu-trigger {
+            height: 60px;
+        }
+        
+        /* Adjust body margin for smaller mobile header */
+        body {
+            margin-top: 60px;
+        }
+
+        .section {
+            scroll-margin-top: 60px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .header-area .logo img {
+            max-height: 38px !important; /* Increased from 30px */
+        }
+        
+        .header-area .logo {
+            padding-top: 4px; /* Minimal padding for very small screens */
+        }
+        
+        .header-area {
+            height: 55px;
+        }
+        
+        .main-nav, .nav, .nav li, .header-area .container .row, .header-area .col-12 {
+            height: 55px;
+        }
+        
+        .menu-trigger {
+            height: 55px;
+        }
+        
+        body {
+            margin-top: 55px;
+        }
+
+        .section {
+            scroll-margin-top: 55px;
+        }
+    }
 </style>
+
 
 </head>
 
@@ -113,10 +245,10 @@
                         <!-- ***** Menu Start ***** -->
                         <ul class="nav">
                             <li><a href="#what-is-ico">WHAT IS ICO</a></li>
-                            <li><a href="#token-sale">TOKEN SALE</a></li>
+                            <!-- <li><a href="#token-sale">TOKEN SALE</a></li> -->
                             <li><a href="#roadmap">ROADMAP</a></li>
-                            <li><a href="#apps">APPS</a></li>
-                            <li><a href="#team">TEAM</a></li>
+                            <!-- <li><a href="#apps">APPS</a></li> -->
+                            <!-- <li><a href="#team">TEAM</a></li> -->
                             <li><a href="#faq">FAQ</a></li>
                             <li><a href="#contact">CONTACT</a></li>
                             <li><a href="/login" class="btn-nav-box">BUY TOKEN</a></li>
@@ -138,10 +270,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6 col-md-12 col-sm-12 col-12 align-self-center">
-                        <h1><?php echo e($settings->site_name); ?> Decentralized Blockchain ICO System</h1>
-                        <p><?php echo e($settings->site_name); ?> makes it easy for user or Businesses who wants to Create there own Coins, <?php echo e($settings->site_name); ?>
-
-                            is A fully Fledge Blockchain ICO System</p>
+                        <h1><?php echo e($settings->site_name); ?> is a mythologically inspired Web3 game universe powered by MAYX</h1>
+                        <p><?php echo e($settings->site_name); ?> is a utility and governance token designed to align player actions with spiritual progression, Sanskrit learning, PvP competition, and NFT-powered ownership.</p>
                         <a href="#" class="btn-secondary-box">Download Whitepaper</a>
                     </div>
                     <div class="col-lg-6 col-md-12 col-sm-12 col-12 align-self-center">
@@ -263,9 +393,9 @@
     <!-- ***** What is ICO End ***** -->
 
     <!-- ***** Token Sale Start ***** -->
-    <section class="section gradient" id="token-sale">
-        <div class="container">
-            <div class="row">
+    <!-- <section class="section gradient" id="token-sale"> -->
+        <!-- <div class="container"> -->
+            <!-- <div class="row">
                 <div class="col-lg-12">
                     <div class="center-heading colored">
                         <h2 class="section-title">Token Sale</h2>
@@ -277,15 +407,15 @@
                             erat. </p>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="box">
-                        <div class="row">
+            </div> -->
+            <!-- <div class="row"> -->
+                <!-- <div class="col-lg-12"> -->
+                    <!-- <div class="box"> -->
+                        <!-- <div class="row"> -->
                             <!-- ***** Token Progress and Info Start ***** -->
-                            <div class="col-lg-6 col-md-6 cols-m-12">
+                            <!-- <div class="col-lg-6 col-md-6 cols-m-12"> -->
                                 <!-- ***** Token Progress Start ***** -->
-                                <div class="token-progress">
+                                <!-- <div class="token-progress">
                                     <ul id="test">
                                         <li class="progress-active" data-progress="50%"></li>
                                         <li class="item complate" data-position="0%">
@@ -302,11 +432,11 @@
                                         </li>
                                         <li class="item" data-position="73%"></li>
                                     </ul>
-                                </div>
+                                </div> -->
                                 <!-- ***** Token Progress End ***** -->
 
                                 <!-- ***** Token Info Table Start ***** -->
-                                <div class="token-info">
+                                <!-- <div class="token-info">
                                     <div class="item">
                                         <strong>Start</strong>
                                         <span>Started</span>
@@ -331,17 +461,17 @@
                                         <strong>Maximum Cap</strong>
                                         <span>60 M USD</span>
                                     </div>
-                                </div>
+                                </div> -->
                                 <!-- ***** Token Info Table End ***** -->
-                            </div>
+                            <!-- </div> -->
                             <!-- ***** Token Progress and Info End ***** -->
 
                             <!-- ***** Token Countdown and Information Start ***** -->
-                            <div class="col-lg-6 col-md-6 cols-m-12">
-                                <div class="token">
-                                    <h6 class="title">ICO SALE IS OPEN</h6>
+                            <!-- <div class="col-lg-6 col-md-6 cols-m-12"> -->
+                                <!-- <div class="token"> -->
+                                    <!-- <h6 class="title">ICO SALE IS OPEN</h6> -->
                                     <!-- ***** Countdown Start ***** -->
-                                    <ul class="countdown">
+                                    <!-- <ul class="countdown">
                                         <li>
                                             <span class="days" id="daylss">0</span>
                                             <p class="days_ref">days</p>
@@ -361,11 +491,11 @@
                                             <span class="seconds" id="secondss">0</span>
                                             <p class="seconds_ref">seconds</p>
                                         </li>
-                                    </ul>
+                                    </ul> -->
                                     <!-- ***** Countdown End ***** -->
                                     
                                     <!-- Information Section -->
-                                    <div class="countdown-info">
+                                    <!-- <div class="countdown-info">
                                         <h6 class="mb-3 text-primary"><i class="fas fa-rocket"></i> Join Our Token Sale</h6>
                                         <p class="mb-3">To participate in our token sale and purchase <?php echo e($settings->site_name); ?> tokens, please visit our secure purchase portal.</p>
                                         <div class="mb-3">
@@ -376,16 +506,16 @@
                                         <a href="/login" class="btn btn-primary btn-lg">
                                             <i class="fas fa-sign-in-alt"></i> Access Purchase Portal
                                         </a>
-                                    </div>
-                                </div>
-                            </div>
+                                    </div> -->
+                                <!-- </div> -->
+                            <!-- </div> -->
                             <!-- ***** Token Countdown and Information End ***** -->
-                        </div>
-                    </div>
-                </div>
-            </div>
+                        <!-- </div> -->
+                    <!-- </div> -->
+                <!-- </div> -->
+            <!-- </div>
         </div>
-    </section>
+    </section> -->
     <!-- ***** Token Sale End ***** -->
 
     <!-- ***** Roadmap Start ***** -->
@@ -410,16 +540,13 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-3 col-md-3 col-sm-12">
-                            <h6 class="date">04 2018</h6>
+                            <h6 class="date">Q2 2026</h6>
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-12 position-relative">
                             <div class="status complate"></div>
                         </div>
                         <div class="col-lg-7 col-md-7 col-sm-12">
-                            <p>Development of a desktop application for Windows, Android Wallet. Connecting Sidechain +
-                                Secure Sandbox. Opportunity to create decentralized applications on the <?php echo e($settings->site_name); ?>
-
-                                platform.
+                            <p>NFT Drop, Gameplay Demo
                             </p>
                         </div>
                     </div>
@@ -429,15 +556,13 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-3 col-md-3 col-sm-12">
-                            <h6 class="date">05 2018</h6>
+                            <h6 class="date">Q1 2027</h6>
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-12 position-relative">
                             <div class="status complate"></div>
                         </div>
                         <div class="col-lg-7 col-md-7 col-sm-12">
-                            <p>Running the delegate system. As soon as the system of delegates on the platform is
-                                launched, the documentation on how to start the delegate will be available in the FAQ
-                                section</p>
+                            <p>PvP Launch, Sanskrit Shrine MVP</p>
                         </div>
                     </div>
                 </div>
@@ -446,14 +571,13 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-3 col-md-3 col-sm-12">
-                            <h6 class="date">06 2018</h6>
+                            <h6 class="date">Q4 2027</h6>
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-12 position-relative">
                             <div class="status complate"></div>
                         </div>
                         <div class="col-lg-7 col-md-7 col-sm-12">
-                            <p>Placement of <?php echo e($settings->site_name); ?> on exchanges. The list of exchanges that placed <?php echo e($settings->site_name); ?> will be
-                                constantly updated, please, kindly check our site.</p>
+                            <p>Leaderboard Rewards, Staking</p>
                         </div>
                     </div>
                 </div>
@@ -462,46 +586,13 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-3 col-md-3 col-sm-12">
-                            <h6 class="date">07 2018</h6>
+                            <h6 class="date">Q1 2029</h6>
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-12 position-relative">
                             <div class="status"></div>
                         </div>
                         <div class="col-lg-7 col-md-7 col-sm-12">
-                            <p>Updating the consensus of the Delegates. Increase in decentralization, through the
-                                distribution of a portion of the delegate's income to those who vote for them.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="roadmap-item-full" data-scroll-reveal="enter bottom move 50px over 0.6s after 0.3s">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-3 col-md-3 col-sm-12">
-                            <h6 class="date">08 2018</h6>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-12 position-relative">
-                            <div class="status"></div>
-                        </div>
-                        <div class="col-lg-7 col-md-7 col-sm-12">
-                            <p>Adding additional crypto currencies to the wallet. Priority: Bitcoin, Litecoin, Dash,
-                                Zcash and Monero. The rest will be added during voting.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="roadmap-item-full" data-scroll-reveal="enter bottom move 50px over 0.6s after 0.3s">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-3 col-md-3 col-sm-12">
-                            <h6 class="date">09 2018</h6>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-12 position-relative">
-                            <div class="status"></div>
-                        </div>
-                        <div class="col-lg-7 col-md-7 col-sm-12">
-                            <p>Creating a DAO module. Increase the effectiveness of the community through the creation
-                                of a special section of decision-making and budget management.</p>
+                            <p>DAO Activation, CEX Listing, Metaverse Gateway, Expansions</p>
                         </div>
                     </div>
                 </div>
@@ -511,7 +602,7 @@
     <!-- ***** Roadmap End ***** -->
 
     <!-- ***** Apps Start ***** -->
-    <section class="section gradient" id="apps">
+    <!-- <section class="section gradient" id="apps">
         <div class="container">
             <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-12 align-self-center mobile-bottom-fix">
@@ -543,11 +634,11 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
     <!-- ***** Apps End ***** -->
 
     <!-- ***** Team Start ***** -->
-    <section class="section bg-bottom" id="team">
+    <!-- <section class="section bg-bottom" id="team">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
@@ -633,7 +724,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
     <!-- ***** Team End ***** -->
 
     <!-- ***** Telegram Parallax Start ***** -->
