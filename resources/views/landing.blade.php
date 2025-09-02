@@ -41,38 +41,23 @@
             from { text-shadow: 0 0 30px rgba(255, 215, 0, 0.3); }
             to { text-shadow: 0 0 40px rgba(255, 215, 0, 0.6); }
         }
-        .symbol-image { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: contain; 
-            pointer-events: none;
-            border-radius: 50%;
-        }
+        .symbol-image { width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
         .token-symbol {
-            width: 200px; 
-            height: 200px; 
-            margin: 40px auto;
-            background: transparent; 
-            border-radius: 50%;
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            font-size: 4rem; 
-            font-weight: bold; 
-            color: #1a0d2e;
+            width: 200px; height: 200px; margin: 40px auto;
+            background: transparent; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 4rem; font-weight: bold; color: #1a0d2e;
             box-shadow: 0 0 50px rgba(255, 215, 0, 0.5),
                         0 0 100px rgba(255, 215, 0, 0.3),
                         inset 0 0 30px rgba(255, 255, 255, 0.2);
-            animation: pulse 3s ease-in-out infinite; 
-            position: relative;
-            overflow: hidden;
+            animation: pulse 3s ease-in-out infinite; position: relative;
         }
         .token-symbol::before {
             content: '';
             position: absolute;
             inset: -20px;
-            border: 3px solid #ffd700;
-            border-radius: 50%;
+            background: url('assets/MAYX_coin_Ring.png') no-repeat center center;
+            background-size: contain;
             z-index: -1;
             animation: rotate 6s linear infinite;
         }
@@ -127,7 +112,7 @@
         .btn.primary { background: linear-gradient(45deg, #ffd700, #ffed4e); color: #1a0d2e;}
         .btn.primary:hover { transform: translateY(-2px) scale(1.05);}
         
-        /* Token Utility, section-title, utility grid, roadmap etc. */
+        /* Token Utility, section-title, utility grid, roadmap etc. unchanged */
         .utility-section { padding: 80px 0; }
         .section-title { font-size: 2.5rem; text-align: center; margin-bottom: 60px; color: #ffd700; }
         .utility-grid {
@@ -199,16 +184,7 @@
         #backToTop:hover { transform: scale(1.1) translateY(-3px);}
         #backToTop.show { opacity: 1; visibility: visible;}
         #bgAudio { display: none; }
-        #bgGif { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            z-index: -1;
-            display: none; /* Hide background gif since we're using URL-based logo */
-        }
+        #bgGif { position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1;}
         #soundToggle {
             position: fixed; bottom: 100px; right: 30px;
             padding: 10px 15px;
@@ -231,10 +207,10 @@
     </style>
 </head>
 <body>
-    <!-- Background gif removed since using URL-based logo -->
+    <img src="assets/background.gif" id="bgGif">
 
     <audio id="bgAudio" loop>
-        <source src="http://13.204.69.90/front/assets/audio/background.mp3" type="audio/mpeg">
+        <source src="assets/background.mp3" type="audio/mpeg">
     </audio>
 
     <div class="container">
@@ -242,7 +218,7 @@
         <section class="hero">
             <h1 class="hero-title">
                 Empowering a<br>
-                Spiritual Web3 Future
+                Spiritual Web3 Future  
             </h1>
 
             <div class="token-symbol">
@@ -367,9 +343,12 @@
 <script type="text/javascript">
     // Initialize countdown timer with admin-set date
     function initCountdown() {
-        // Set countdown to 30 days from now (you can modify this)
-        const now = new Date().getTime();
-        const countdownDate = now + (30 * 24 * 60 * 60 * 1000); // 30 days from now
+        @php
+            $salesDate = $settings->sales_start_date ?? now()->addDays(30);
+            $salesTimestamp = strtotime($salesDate) * 1000;
+        @endphp
+        
+        const countdownDate = {{ $salesTimestamp }};
         
         function updateCountdown() {
             const now = new Date().getTime();
