@@ -245,3 +245,4 @@ Route::middleware(['isadmin'])->prefix('admin')->group(function () {
 Route::get('/process-roi', [Controller::class, 'getRoi'])
     ->middleware('throttle:1,1') // Limit to once per minute
     ->name('process.roi');
+  
