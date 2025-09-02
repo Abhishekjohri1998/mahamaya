@@ -218,7 +218,7 @@
         <section class="hero">
             <h1 class="hero-title">
                 Empowering a<br>
-                Spiritual Web3 Future
+                Spiritual Web3 Future  
             </h1>
 
             <div class="token-symbol">
