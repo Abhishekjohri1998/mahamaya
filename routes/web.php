@@ -109,6 +109,10 @@ Route::post('/enquiry', [Controller::class, 'sendContact'])->name('enquiry');
 Route::get('/ref/{id}', [ViewsController::class, 'ref'])->name('refer');
 Route::get('/setroi', [Controller::class, 'getRoi'])->name('getroi');
 
+// Password reset routes (Fixed naming conflicts)
+Route::post('/password/update', [Controller::class, 'update'])->name('password.update');
+Route::put('/user/password', [ProfileController::class, 'updatepassword'])->name('user.password.update');
+
 // Socialite login routes
 Route::get('/auth/{social}/redirect', [SocialLoginController::class, 'redirect'])
     ->where('social', 'twitter|facebook|linkedin|google|github|bitbucket')->name('social.redirect');
@@ -155,7 +159,6 @@ Route::middleware(['auth:sanctum', 'verified', 'status'])->prefix('dashboard/use
     // Profile Update
     Route::put('update-profile', [ProfileController::class, 'updateprofile'])->name('profile.update');
     Route::put('update-wallet-address', [ProfileController::class, 'updatewallet'])->name('wallet.update');
-    Route::put('update-password', [ProfileController::class, 'updatepassword'])->name('password.update');
 
     // KYC and Payment
     Route::post('submit-kyc', [KycController::class, 'submitkyc'])->name('submitkyc');
@@ -245,4 +248,3 @@ Route::middleware(['isadmin'])->prefix('admin')->group(function () {
 Route::get('/process-roi', [Controller::class, 'getRoi'])
     ->middleware('throttle:1,1') // Limit to once per minute
     ->name('process.roi');
-  
