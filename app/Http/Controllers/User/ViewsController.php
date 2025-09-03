@@ -81,6 +81,21 @@ public function dashboard_home(Request $request){
             'title' => "My Transactions",
         ]);
     }
+    
+public function metamaskPurchase()
+ {
+    $settings = Settings::where('id', '1')->first();
+    if (!$settings) {
+        $settings = new Settings();
+        $settings->token_symbol = 'PRC';
+        $settings->amt_usd = 1; // Set default USD price for tokens if needed
+        $settings->save();
+    }
+    return view('user.KycStatusMail', [
+        'settings' => $settings,
+        'title' => 'Buy Tokens with MetaMask'
+    ]);
+ }
 
 public function stake(){
     $user = Auth::user();

@@ -25,7 +25,7 @@
         align-items: flex-start; /* Changed from center to flex-start to move up */
         height: 100px;
         line-height: 1;
-        padding-top: 8px; /* Add padding to move logo up */
+        padding-top: 2px; /* Add padding to move logo up */
     }
 
     .header-area .logo img {
@@ -271,8 +271,8 @@
                 <div class="row">
                     <div class="col-lg-6 col-md-12 col-sm-12 col-12 align-self-center">
                         <h1>{{$settings->site_name}} is a mythologically inspired Web3 game universe powered by MAYX</h1>
-                        <p>{{$settings->site_name}} is a utility and governance token designed to align player actions with spiritual progression, Sanskrit learning, PvP competition, and NFT-powered ownership.</p>
-                        <a href="#" class="btn-secondary-box">Download Whitepaper</a>
+                        <p>{{$settings->site_name}} is a utility and governance token designed to align player actions with spiritual progression, Sanskrit learning, PvP competition, and NFT-powered ownership.</p>                      
+                        <a href="/login" class="btn-secondary-box">Purchase Token</a>
                     </div>
                     <div class="col-lg-6 col-md-12 col-sm-12 col-12 align-self-center">
                         <div class="box">
@@ -320,19 +320,19 @@
             </div>
         </div>
 
-        <div class="scroll-to">
+        <!-- <div class="scroll-to">
             <a href="#what-is-ico">
                 <i class="fa fa-angle-double-down" aria-hidden="true"></i>
             </a>
-        </div>
+        </div> -->
     </section>
     <!-- ***** Welcome Area End ***** -->
 
     <!-- ***** What is ICO Start ***** -->
-    <section class="section bg-bottom" id="what-is-ico">
-        <div class="container">
+    <!-- <section class="section bg-bottom" id="what-is-ico">
+        <div class="container"> -->
             <!-- ***** Features Items Start ***** -->
-            <div class="row m-bottom-70">
+            <!-- <div class="row m-bottom-70">
                 <div class="col-lg-4 col-md-4 col-sm-6 col-12">
                     <div class="features-elliptical elliptical-bottom"
                         data-scroll-reveal="enter right move 30px over 0.6s after 0.2s">
@@ -364,11 +364,11 @@
                             malesuada.</p>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <!-- ***** Features Items End ***** -->
 
             <!-- ***** About Start ***** -->
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-12 align-self-center">
                     <div class="left-heading">
                         <h2 class="section-title">A compelling value proposition.</h2>
@@ -386,10 +386,10 @@
                     <img src="{{ asset('front/assets/images/theme-1-about.svg') }}" class="img-fluid float-right"
                         alt="{{$settings->site_name}} ICO">
                 </div>
-            </div>
+            </div> -->
             <!-- ***** About End ***** -->
-        </div>
-    </section>
+        <!-- </div>
+    </section> -->
     <!-- ***** What is ICO End ***** -->
 
     <!-- ***** Token Sale Start ***** -->
@@ -757,11 +757,7 @@
                         <h1 class="section-title">FAQ</h1>
                     </div>
                 </div>
-                <div class="offset-lg-3 col-lg-6">
-                    <div class="center-text">
-                        <p>Fusce placerat pretium mauris, vel sollicitudin elit lacinia vitae. Quisque sit amet nisi
-                            erat.</p>
-                    </div>
+                <div class="offset-lg-3 col-lg-6">                    
                 </div>
             </div>
             <div class="row">
@@ -771,21 +767,13 @@
                             <h2 class="accordion-header" id="heading-1">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#collapse-1" aria-expanded="false" aria-controls="collapse-1">
-                                    <span class="badge">1</span> What are the benefits of digital currency?
+                                    <span class="badge">1</span> What is MAYX Coin?
                                 </button>
                             </h2>
                             <div id="collapse-1" class="accordion-collapse collapse" aria-labelledby="heading-1"
                                 data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-                                    <p>Donec tempus sodales dolor, at efficitur enim posuere auctor. Nam et nisi eu
-                                        purus tempor faucibus aliquet vitae orci. Curabitur sollicitudin leo et magna
-                                        pharetra efficitur. Nullam et scelerisque lectus. Orci varius natoque penatibus
-                                        et magnis dis parturient montes, nascetur ridiculus mus. Quisque faucibus sit
-                                        amet odio eget scelerisque. Mauris dictum cursus ornare.</p>
-                                    <p>Ut vehicula blandit tellus. Sed sit amet bibendum leo, non sagittis neque. Nam
-                                        fringilla fermentum tortor, ac gravida velit facilisis id. Donec congue
-                                        ullamcorper velit, at malesuada arcu faucibus pretium. Donec rhoncus magna sit
-                                        amet massa venenatis, ut convallis justo ultricies.</p>
+                                    <p>MAYX is the native cryptocurrency powering the Mahamaya Web3 ecosystem, combining blockchain, gaming, Sanskrit learning, and Vedic Cultural innovation. Omni Manual Private Limited a IT Services company developing and providing technical supports to the Mahamaya ecosystem.</p>
                                 </div>
                             </div>
                         </div>
@@ -793,21 +781,13 @@
                             <h2 class="accordion-header" id="heading-2">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#collapse-2" aria-expanded="false" aria-controls="collapse-2">
-                                    <span class="badge">2</span> How long has digital currency existed?
+                                    <span class="badge">2</span> How can I buy MAYX?
                                 </button>
                             </h2>
                             <div id="collapse-2" class="accordion-collapse collapse" aria-labelledby="heading-2"
                                 data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-                                    <p>Donec tempus sodales dolor, at efficitur enim posuere auctor. Nam et nisi eu
-                                        purus tempor faucibus aliquet vitae orci. Curabitur sollicitudin leo et magna
-                                        pharetra efficitur. Nullam et scelerisque lectus. Orci varius natoque penatibus
-                                        et magnis dis parturient montes, nascetur ridiculus mus. Quisque faucibus sit
-                                        amet odio eget scelerisque. Mauris dictum cursus ornare.</p>
-                                    <p>Ut vehicula blandit tellus. Sed sit amet bibendum leo, non sagittis neque. Nam
-                                        fringilla fermentum tortor, ac gravida velit facilisis id. Donec congue
-                                        ullamcorper velit, at malesuada arcu faucibus pretium. Donec rhoncus magna sit
-                                        amet massa venenatis, ut convallis justo ultricies.</p>
+                                    <p>You can purchase MAYX by clicking the "Buy MAYX" button on the homepage. It will guide you to ICO (Initial Coin Offering) platforms during the ICO token sale.</p>
                                 </div>
                             </div>
                         </div>
@@ -815,23 +795,13 @@
                             <h2 class="accordion-header" id="heading-3">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
-                                    <span class="badge">3</span> How will digital currency affect daily life
-                                    in the US
-                                    and around the world?
+                                    <span class="badge">3</span> Which blockchain does MAYX run on?
                                 </button>
                             </h2>
                             <div id="collapse-3" class="accordion-collapse collapse" aria-labelledby="heading-3"
                                 data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-                                    <p>Donec tempus sodales dolor, at efficiur enim posuere auctor. Nam et nisi eu
-                                        purus tempor faucibus aliquet vitae orci. Curabitur sollicitudin leo et magna
-                                        pharetra efficitur. Nullam et scelerisque lectus. Orci varius natoque penatibus
-                                        et magnis dis parturient montes, nascetur ridiculus mus. Quisque faucibus sit
-                                        amet odio eget scelerisque. Mauris dictum cursus ornare.</p>
-                                    <p>Ut vehicula blandit tellus. Sed sit amet bibendum leo, non sagittis neque. Nam
-                                        fringilla fermentum tortor, ac gravida velit facilisis id. Donec congue
-                                        ullamcorper velit, at malesuada arcu faucibus pretium. Donec rhoncus magna sit
-                                        amet massa venenatis, ut convallis justo ultricies.</p>
+                                    <p>MAYX is deployed on the Polygon network (Smart Contract:0xc38475656538D79a977FAF39C7713b76F69b1fa6), ensuring fast, secure, and low-cost transactions.</p>
                                 </div>
                             </div>
                         </div>
@@ -839,24 +809,13 @@
                             <h2 class="accordion-header" id="heading-4">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
-                                    <span class="badge">4</span> Why should I use {{$settings->site_name}} currency and how is
-                                    it
-                                    different
-                                    from other currencies?
+                                    <span class="badge">4</span> What is the maximum supply of MAYX?
                                 </button>
                             </h2>
                             <div id="collapse-4" class="accordion-collapse collapse" aria-labelledby="heading-4"
                                 data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-                                    <p>Donec tempus sodales dolor, at efficitur enim posuere auctor. Nam et nisi eu
-                                        purus tempor faucibus aliquet vitae orci. Curabitur sollicitudin leo et magna
-                                        pharetra efficitur. Nullam et scelerisque lectus. Orci varius natoque penatibus
-                                        et magnis dis parturient montes, nascetur ridiculus mus. Quisque faucibus sit
-                                        amet odio eget scelerisque. Mauris dictum cursus ornare.</p>
-                                    <p>Ut vehicula blandit tellus. Sed sit amet bibendum leo, non sagittis neque. Nam
-                                        fringilla fermentum tortor, ac gravida velit facilisis id. Donec congue
-                                        ullamcorper velit, at malesuada arcu faucibus pretium. Donec rhoncus magna sit
-                                        amet massa venenatis, ut convallis justo ultricies.</p>
+                                    <p>The total max supply is 1,000,000,000 MAYX, with an initial circulation of 50,000,000 tokens.</p>
                                 </div>
                             </div>
                         </div>
@@ -864,21 +823,13 @@
                             <h2 class="accordion-header" id="heading-5">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#collapse-5" aria-expanded="false" aria-controls="collapse-5">
-                                    <span class="badge">5</span> How is {{$settings->site_name}} helping entrepreneurs?
+                                    <span class="badge">5</span> What are the utilities of MAYX?
                                 </button>
                             </h2>
                             <div id="collapse-5" class="accordion-collapse collapse" aria-labelledby="heading-5"
                                 data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-                                    <p>Donec tempus sodales dolor, at efficitur enim posuere auctor. Nam et nisi eu
-                                        purus tempor faucibus aliquet vitae orci. Curabitur sollicitudin leo et magna
-                                        pharetra efficitur. Nullam et scelerisque lectus. Orci varius natoque penatibus
-                                        et magnis dis parturient montes, nascetur ridiculus mus. Quisque faucibus sit
-                                        amet odio eget scelerisque. Mauris dictum cursus ornare.</p>
-                                    <p>Ut vehicula blandit tellus. Sed sit amet bibendum leo, non sagittis neque. Nam
-                                        fringilla fermentum tortor, ac gravida velit facilisis id. Donec congue
-                                        ullamcorper velit, at malesuada arcu faucibus pretium. Donec rhoncus magna sit
-                                        amet massa venenatis, ut convallis justo ultricies.</p>
+                                    <p>MAYX can be staked for rewards, used to unlock in-game shrines, participate in governance of the game, join PvP tournaments, and purchase NFT assets.</p>
                                 </div>
                             </div>
                         </div>
@@ -886,23 +837,13 @@
                             <h2 class="accordion-header" id="heading-6">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#collapse-6" aria-expanded="false" aria-controls="collapse-6">
-                                    <span class="badge">6</span> What benefits can I get from joining the
-                                    {{$settings->site_name}} crowd
-                                    funding platform?
+                                    <span class="badge">6</span> How does staking work?
                                 </button>
                             </h2>
                             <div id="collapse-6" class="accordion-collapse collapse" aria-labelledby="heading-6"
                                 data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-                                    <p>Donec tempus sodales dolor, at efficitur enim posuere auctor. Nam et nisi eu
-                                        purus tempor faucibus aliquet vitae orci. Curabitur sollicitudin leo et magna
-                                        pharetra efficitur. Nullam et scelerisque lectus. Orci varius natoque penatibus
-                                        et magnis dis parturient montes, nascetur ridiculus mus. Quisque faucibus sit
-                                        amet odio eget scelerisque. Mauris dictum cursus ornare.</p>
-                                    <p>Ut vehicula blandit tellus. Sed sit amet bibendum leo, non sagittis neque. Nam
-                                        fringilla fermentum tortor, ac gravida velit facilisis id. Donec congue
-                                        ullamcorper velit, at malesuada arcu faucibus pretium. Donec rhoncus magna sit
-                                        amet massa venenatis, ut convallis justo ultricies.</p>
+                                    <p>Players can lock their MAYX tokens to earn passive yields and bonus rewards from special "spiritual quests."</p>
                                 </div>
                             </div>
                         </div>
@@ -910,24 +851,55 @@
                             <h2 class="accordion-header" id="heading-7">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#collapse-7" aria-expanded="false" aria-controls="collapse-7">
-                                    <span class="badge">7</span> How do I convert my {{$settings->site_name}} currency into US
-                                    dollars
-                                    or
-                                    other currencies?
+                                    <span class="badge">7</span> What is the Mahamaya game?
                                 </button>
                             </h2>
                             <div id="collapse-7" class="accordion-collapse collapse" aria-labelledby="heading-7"
                                 data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-                                    <p>Donec tempus sodales dolor, at efficitur enim posuere auctor. Nam et nisi eu
-                                        purus tempor faucibus aliquet vitae orci. Curabitur sollicitudin leo et magna
-                                        pharetra efficitur. Nullam et scelerisque lectus. Orci varius natoque penatibus
-                                        et magnis dis parturient montes, nascetur ridiculus mus. Quisque faucibus sit
-                                        amet odio eget scelerisque. Mauris dictum cursus ornare.</p>
-                                    <p>Ut vehicula blandit tellus. Sed sit amet bibendum leo, non sagittis neque. Nam
-                                        fringilla fermentum tortor, ac gravida velit facilisis id. Donec congue
-                                        ullamcorper velit, at malesuada arcu faucibus pretium. Donec rhoncus magna sit
-                                        amet massa venenatis, ut convallis justo ultricies.</p>
+                                    <p>Mahamaya is a mythologically inspired survival and co-op Web3 game where players explore Vedic lore, engage in PvP, and learn Sanskrit Vedic Culture through immersive gameplay.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading-8">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapse-8" aria-expanded="false" aria-controls="collapse-8">
+                                    <span class="badge">8</span> Is there governance in the ecosystem?
+                                </button>
+                            </h2>
+                            <div id="collapse-8" class="accordion-collapse collapse" aria-labelledby="heading-8"
+                                data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <p>Yes, MAYX holders will be able to vote on shrine placements, PvP balance, Sanskrit Vedic Cultural curriculum expansion, and ecosystem updates through a DAO system.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading-9">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapse-9" aria-expanded="false" aria-controls="collapse-9">
+                                    <span class="badge">9</span> How will the community grow?
+                                </button>
+                            </h2>
+                            <div id="collapse-9" class="accordion-collapse collapse" aria-labelledby="heading-9"
+                                data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <p>Through Sanskrit Vedic Cultural challenges, PvP leaderboards, NFT drops, partnerships with cultural foundations, and collaborations with Web3 guilds worldwide.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading-10">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapse-10" aria-expanded="false" aria-controls="collapse-10">
+                                    <span class="badge">10</span> Is MAYX safe and compliant?
+                                </button>
+                            </h2>
+                            <div id="collapse-10" class="accordion-collapse collapse" aria-labelledby="heading-10"
+                                data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <p>Yes, smart contracts will be audited, KYC will be required for private investors, and the project aligns with GDPR and Indian IT regulations.</p>
                                 </div>
                             </div>
                         </div>
