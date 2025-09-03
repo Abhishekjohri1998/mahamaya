@@ -46,10 +46,7 @@
             width: 200px; height: 200px; margin: 40px auto;
             background: transparent; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-size: 4rem; font-weight: bold; color: #1a0d2e;
-            box-shadow: 0 0 50px rgba(255, 215, 0, 0.5),
-                        0 0 100px rgba(255, 215, 0, 0.3),
-                        inset 0 0 30px rgba(255, 255, 255, 0.2);
+            font-size: 4rem; font-weight: bold; color: #1a0d2e;            
             animation: pulse 3s ease-in-out infinite; position: relative;
         }
         .token-symbol::before {
