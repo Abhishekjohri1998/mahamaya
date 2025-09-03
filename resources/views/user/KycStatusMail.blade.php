@@ -1,13 +1,16 @@
 <div>
     <?php
     if (Auth::user()->dashboard_style == "light") {
-        $bg = "light";
+        $bg="light";
         $text = "dark";
     } else {
-        $bg = "dark";
+        $bg="dark";
         $text = "light";
     }
-    $kycApproved = Auth::user()->kyc_status === 'approved';
+
+    // Check KYC status
+    $userKyc = App\Models\Kyc::where('user_id', Auth::id())->first();
+    $isKycVerified = $userKyc && $userKyc->status == "Verified";
     ?>
 
     <x-danger-alert/>
@@ -158,6 +161,23 @@
             margin: 10px 0;
             font-size: 0.9em;
         }
+
+        .kyc-warning {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.2), rgba(255, 193, 7, 0.1));
+            border: 2px solid rgba(255, 193, 7, 0.4);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .kyc-verified-badge {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
     </style>
 
     <div class="row">
@@ -167,14 +187,23 @@
                     <h5 class="card-title">Buy {{$settings->token_symbol}} Tokens with MetaMask</h5>
                     <p class="card-text">Connect your MetaMask wallet to purchase {{$settings->token_symbol}} tokens directly with Ethereum. Secure, fast, and decentralized.</p>
                     
-                    <!-- KYC Status Alert -->
-                    @if (!$kycApproved)
-                    <div class="alert alert-warning">
-                        <i class="fas fa-exclamation-triangle"></i> Your KYC verification is not approved. Please complete KYC to purchase tokens.
-                        <a href="{{ route('kyc.submit') }}" class="btn btn-primary btn-sm mt-2">Submit KYC</a>
+                    <!-- KYC Verification Status -->
+                    <div class="kyc-warning text-center mb-4">
+                        <?php if ($isKycVerified): ?>
+                            <div class="kyc-verified-badge d-inline-block mb-3">
+                                <i class="fas fa-check-circle"></i> KYC Verified
+                            </div>
+                            <p class="mb-0 text-success">Your account is verified. You can now purchase tokens.</p>
+                        <?php else: ?>
+                            <i class="fas fa-exclamation-triangle fa-2x text-warning mb-3"></i>
+                            <h5 class="text-warning">KYC Verification Required</h5>
+                            <p class="mb-3">You must complete KYC verification before purchasing tokens.</p>
+                            <a href="{{ route('kyc') }}" class="btn btn-warning">
+                                <i class="fas fa-id-card"></i> Complete KYC Verification
+                            </a>
+                        <?php endif; ?>
                     </div>
-                    @endif
-
+                    
                     <!-- MetaMask Connection Section -->
                     <div class="row mb-4">
                         <div class="col-md-12">
@@ -216,14 +245,14 @@
                                 <label for="metamask-token-amount" class="form-label">Number of {{$settings->token_symbol}} Tokens</label>
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
-                                        <button class="plus-minus-btn" type="button" onclick="decreaseTokenAmount()">
+                                        <button class="plus-minus-btn" type="button" onclick="decreaseTokenAmount()" <?php echo !$isKycVerified ? 'disabled' : ''; ?>>
                                             <i class="fas fa-minus"></i>
                                         </button>
                                     </div>
-                                    <input type="number" id="metamask-token-amount" class="form-control text-center" value="100" min="1" onchange="updateMetaMaskCalculation()" onfocus="this.select()">
+                                    <input type="number" id="metamask-token-amount" class="form-control text-center" value="100" min="1" onchange="updateMetaMaskCalculation()" onfocus="this.select()" <?php echo !$isKycVerified ? 'disabled' : ''; ?>>
                                     <div class="input-group-append">
                                         <span class="input-group-text bg-primary text-white">{{$settings->token_symbol}}</span>
-                                        <button class="plus-minus-btn" type="button" onclick="increaseTokenAmount()">
+                                        <button class="plus-minus-btn" type="button" onclick="increaseTokenAmount()" <?php echo !$isKycVerified ? 'disabled' : ''; ?>>
                                             <i class="fas fa-plus"></i>
                                         </button>
                                     </div>
@@ -261,22 +290,28 @@
                         <div class="row mb-4">
                             <div class="col-12">
                                 <p class="mb-2"><strong>Quick Select:</strong></p>
-                                <button class="btn btn-outline-primary btn-sm mr-2 mb-2" onclick="setTokenAmount(100)">100 {{$settings->token_symbol}}</button>
-                                <button class="btn btn-outline-primary btn-sm mr-2 mb-2" onclick="setTokenAmount(500)">500 {{$settings->token_symbol}}</button>
-                                <button class="btn btn-outline-primary btn-sm mr-2 mb-2" onclick="setTokenAmount(1000)">1,000 {{$settings->token_symbol}}</button>
-                                <button class="btn btn-outline-primary btn-sm mr-2 mb-2" onclick="setTokenAmount(5000)">5,000 {{$settings->token_symbol}}</button>
-                                <button class="btn btn-outline-primary btn-sm mr-2 mb-2" onclick="setTokenAmount(10000)">10,000 {{$settings->token_symbol}}</button>
+                                <button class="btn btn-outline-primary btn-sm mr-2 mb-2" onclick="setTokenAmount(100)" <?php echo !$isKycVerified ? 'disabled' : ''; ?>>100 {{$settings->token_symbol}}</button>
+                                <button class="btn btn-outline-primary btn-sm mr-2 mb-2" onclick="setTokenAmount(500)" <?php echo !$isKycVerified ? 'disabled' : ''; ?>>500 {{$settings->token_symbol}}</button>
+                                <button class="btn btn-outline-primary btn-sm mr-2 mb-2" onclick="setTokenAmount(1000)" <?php echo !$isKycVerified ? 'disabled' : ''; ?>>1,000 {{$settings->token_symbol}}</button>
+                                <button class="btn btn-outline-primary btn-sm mr-2 mb-2" onclick="setTokenAmount(5000)" <?php echo !$isKycVerified ? 'disabled' : ''; ?>>5,000 {{$settings->token_symbol}}</button>
+                                <button class="btn btn-outline-primary btn-sm mr-2 mb-2" onclick="setTokenAmount(10000)" <?php echo !$isKycVerified ? 'disabled' : ''; ?>>10,000 {{$settings->token_symbol}}</button>
                             </div>
                         </div>
 
                         <!-- Purchase Buttons -->
                         <div class="text-center">
-                            <button id="connect-btn" class="metamask-btn mb-3" onclick="connectWallet()">
+                            <button id="connect-btn" class="metamask-btn mb-3" onclick="connectWallet()" <?php echo !$isKycVerified ? 'disabled' : ''; ?>>
                                 <i class="fab fa-ethereum"></i> Connect MetaMask Wallet
                             </button>
-                            <button id="purchase-btn" class="metamask-btn mb-3" onclick="purchaseTokens()" style="display: none;" <?php echo $kycApproved ? '' : 'disabled'; ?>>
+                            <button id="purchase-btn" class="metamask-btn mb-3" onclick="purchaseTokens()" style="display: none;">
                                 <span id="btn-text"><i class="fas fa-shopping-cart"></i> Purchase Tokens Now</span>
                             </button>
+                            
+                            <?php if (!$isKycVerified): ?>
+                                <div class="alert alert-warning mt-3">
+                                    <i class="fas fa-exclamation-triangle"></i> You must complete KYC verification before purchasing tokens.
+                                </div>
+                            <?php endif; ?>
                         </div>
 
                         <div class="text-center">
@@ -289,7 +324,7 @@
         
         <div class="col-md-4">
             <div class="row">
-                @if (empty(Auth::user()->wallet_address))
+                <?php if (empty(Auth::user()->wallet_address)): ?>
                 <div class="col-12 mb-3">
                     <a href="#" data-toggle="modal" data-target="#walletmodal" class="text-white text-decoration-none">
                         <div class="card bg-danger">
@@ -301,7 +336,7 @@
                         </div>
                     </a>
                 </div>
-                @else
+                <?php else: ?>
                 <div class="col-12 mb-3">
                     <a href="#" data-toggle="modal" data-target="#walletmodal" class="text-white text-decoration-none">
                         <div class="card bg-info">
@@ -313,7 +348,7 @@
                         </div>
                     </a>
                 </div>
-                @endif
+                <?php endif; ?>
                 
                 <div class="col-12 mb-3">
                     <div class="text-white card bg-primary">
@@ -336,6 +371,7 @@
                                 <li><i class="fas fa-check text-success"></i> Keep sufficient ETH for gas fees</li>
                                 <li><i class="fas fa-check text-success"></i> Double-check transaction details</li>
                                 <li><i class="fas fa-check text-success"></i> 18% GST is included in total amount</li>
+                                <li><i class="fas fa-check text-success"></i> KYC verification is required</li>
                             </ul>
                         </div>
                     </div>
@@ -345,9 +381,12 @@
                     <div class="card bg-{{$bg}} border-info">
                         <div class="card-body">
                             <h6 class="card-title text-info"><i class="fas fa-question-circle"></i> Need Help?</h6>
-                            <p class="small mb-2">Having trouble with MetaMask?</p>
+                            <p class="small mb-2">Having trouble with MetaMask or KYC?</p>
                             <a href="https://metamask.io/faqs/" target="_blank" class="btn btn-outline-info btn-sm">
                                 <i class="fas fa-external-link-alt"></i> MetaMask Help Center
+                            </a>
+                            <a href="{{ route('kyc') }}" class="btn btn-outline-info btn-sm mt-2">
+                                <i class="fas fa-id-card"></i> KYC Verification
                             </a>
                         </div>
                     </div>
@@ -374,7 +413,9 @@
         let web3;
         let userAccount;
         let connected = false;
-        const kycApproved = <?php echo json_encode($kycApproved); ?>;
+
+        // Get KYC status from PHP
+        const isKycVerified = <?php echo $isKycVerified ? 'true' : 'false'; ?>;
 
         // Price calculation function
         function calculatePriceWithGST(tokenAmount) {
@@ -414,6 +455,11 @@
 
         // Token amount controls
         function increaseTokenAmount() {
+            if (!isKycVerified) {
+                showAlert('Please complete KYC verification before purchasing tokens.', 'error');
+                return;
+            }
+            
             const input = document.getElementById('metamask-token-amount');
             const currentValue = parseInt(input.value) || 0;
             input.value = currentValue + 100;
@@ -421,6 +467,11 @@
         }
 
         function decreaseTokenAmount() {
+            if (!isKycVerified) {
+                showAlert('Please complete KYC verification before purchasing tokens.', 'error');
+                return;
+            }
+            
             const input = document.getElementById('metamask-token-amount');
             const currentValue = parseInt(input.value) || 0;
             const newValue = currentValue - 100;
@@ -429,6 +480,11 @@
         }
 
         function setTokenAmount(amount) {
+            if (!isKycVerified) {
+                showAlert('Please complete KYC verification before purchasing tokens.', 'error');
+                return;
+            }
+            
             document.getElementById('metamask-token-amount').value = amount;
             updateMetaMaskCalculation();
         }
@@ -446,6 +502,11 @@
 
         // Connect to MetaMask
         async function connectWallet() {
+            if (!isKycVerified) {
+                showAlert('Please complete KYC verification before connecting your wallet.', 'error');
+                return;
+            }
+            
             try {
                 if (typeof window.ethereum === 'undefined') {
                     showAlert('MetaMask not installed. Please install MetaMask extension first. <a href="https://metamask.io/" target="_blank">Download MetaMask</a>', 'error');
@@ -523,112 +584,122 @@
         }
 
         // Purchase tokens with backend integration
-// Purchase tokens with backend integration using the EXISTING route
-async function purchaseTokens() {
-    if (!kycApproved) {
-        showAlert('Your KYC verification is not approved. Please complete KYC to purchase tokens. <a href="{{ route('kyc.submit') }}" class="btn btn-primary btn-sm mt-2">Submit KYC</a>', 'warning');
-        return;
-    }
+        async function purchaseTokens() {
+            if (!isKycVerified) {
+                showAlert('You must complete KYC verification before purchasing tokens. <a href="{{ route("kyc") }}">Complete KYC Verification</a>', 'error');
+                return;
+            }
+            
+            if (!connected) {
+                showAlert('Please connect your wallet first', 'warning');
+                await connectWallet();
+                return;
+            }
 
-    if (!connected) {
-        showAlert('Please connect your wallet first', 'warning');
-        await connectWallet();
-        return;
-    }
+            const tokenAmount = parseInt(document.getElementById('metamask-token-amount').value);
+            if (tokenAmount <= 0 || isNaN(tokenAmount)) {
+                showAlert('Please enter a valid token amount (minimum 1 token)', 'error');
+                return;
+            }
 
-    const tokenAmount = parseInt(document.getElementById('metamask-token-amount').value);
-    if (tokenAmount <= 0 || isNaN(tokenAmount)) {
-        showAlert('Please enter a valid token amount (minimum 1 token)', 'error');
-        return;
-    }
+            const prices = calculatePriceWithGST(tokenAmount);
+            const totalEthAmount = prices.totalPrice;
+            
+            // Check balance
+            try {
+                const balance = await web3.eth.getBalance(userAccount);
+                const balanceInEth = parseFloat(web3.utils.fromWei(balance, 'ether'));
+                const requiredEth = totalEthAmount + 0.01;
+                
+                if (balanceInEth < requiredEth) {
+                    showAlert(`Insufficient balance! You need at least ${requiredEth.toFixed(6)} ETH (including gas fees). Your current balance: ${balanceInEth.toFixed(6)} ETH`, 'error');
+                    return;
+                }
+            } catch (error) {
+                showAlert('Failed to check balance. Please try again.', 'error');
+                return;
+            }
+            
+            try {
+                setButtonLoading(true);
+                showAlert(`Please confirm the transaction in your MetaMask wallet...<br><strong>Total Amount: ${totalEthAmount.toFixed(6)} ETH (including 18% GST)</strong>`, 'warning');
 
-    const prices = calculatePriceWithGST(tokenAmount);
-    const totalEthAmount = prices.totalPrice;
+                const transaction = {
+                    from: userAccount,
+                    to: CONFIG.contractAddress,
+                    value: web3.utils.toWei(totalEthAmount.toString(), 'ether'),
+                    gas: CONFIG.gasLimit
+                };
 
-    // Check balance
-    try {
-        const balance = await web3.eth.getBalance(userAccount);
-        const balanceInEth = parseFloat(web3.utils.fromWei(balance, 'ether'));
-        const requiredEth = totalEthAmount + 0.01;
+                const txHash = await web3.eth.sendTransaction(transaction);
+                
+                // Get USD conversion
+                const ethToUsd = await getEthToUsdRate();
+                const usdAmount = prices.totalPrice * ethToUsd;
 
-        if (balanceInEth < requiredEth) {
-            showAlert(`Insufficient balance! You need at least ${requiredEth.toFixed(6)} ETH (including gas fees). Your current balance: ${balanceInEth.toFixed(6)} ETH`, 'error');
-            return;
+                // **ACTIVE BACKEND INTEGRATION** - Save transaction to database
+                const response = await fetch('/api/record-metamask-purchase', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        txn_id: txHash.transactionHash,
+                        wallet_address: userAccount,
+                        tokens: tokenAmount,
+                        amount: prices.totalPrice.toFixed(6),
+                        to: 'ETH',
+                        base_amt: usdAmount.toFixed(2),
+                        base_price_eth: prices.basePrice.toFixed(6),
+                        gst_amount_eth: prices.gstAmount.toFixed(6),
+                        total_eth_amount: prices.totalPrice.toFixed(6),
+                        gst_rate: CONFIG.gstRate,
+                        transaction_hash: txHash.transactionHash,
+                        type: 'MetaMask Purchase',
+                        status: 'completed'
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    console.log('Transaction saved to database successfully');
+                    showAlert(`Transaction submitted successfully! 🎉<br>
+                        <strong>Purchase Details:</strong><br>
+                        • Tokens: ${tokenAmount} {{$settings->token_symbol}}<br>
+                        • Base Price: ${prices.basePrice.toFixed(6)} ETH<br>
+                        • GST (18%): ${prices.gstAmount.toFixed(6)} ETH<br>
+                        • Total Paid: ${prices.totalPrice.toFixed(6)} ETH<br>
+                        • USD Value: $${usdAmount.toFixed(2)}<br>
+                        <br>Transaction Hash: <code>${txHash.transactionHash}</code><br>
+                        <a href="https://etherscan.io/tx/${txHash.transactionHash}" target="_blank">View on Etherscan</a><br>
+                        <br><strong>Note:</strong> Transaction has been recorded and will appear in your transaction history.`, 'success');
+                    
+                    // Refresh the page after 5 seconds to update token balance
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 5000);
+                } else {
+                    console.error('Failed to save transaction to database');
+                    showAlert('Transaction completed but failed to record in database. Please contact support.', 'warning');
+                }
+                
+                console.log('Transaction hash:', txHash.transactionHash);
+
+            } catch (error) {
+                console.error('Purchase error:', error);
+                if (error.code === 4001) {
+                    showAlert('Transaction rejected by user. The purchase was cancelled.', 'warning');
+                } else if (error.message.includes('insufficient funds')) {
+                    showAlert('Insufficient funds for gas fees. Please add more ETH to your wallet.', 'error');
+                } else {
+                    showAlert('Transaction failed: ' + error.message, 'error');
+                }
+            } finally {
+                setButtonLoading(false);
+            }
         }
-    } catch (error) {
-        showAlert('Failed to check balance. Please try again.', 'error');
-        return;
-    }
-
-    try {
-        setButtonLoading(true);
-        showAlert(`Please confirm the transaction in your MetaMask wallet...<br><strong>Total Amount: ${totalEthAmount.toFixed(6)} ETH (including 18% GST)</strong>`, 'warning');
-
-        const transaction = {
-            from: userAccount,
-            to: CONFIG.contractAddress,
-            value: web3.utils.toWei(totalEthAmount.toString(), 'ether'),
-            gas: CONFIG.gasLimit
-        };
-
-        const txHash = await web3.eth.sendTransaction(transaction);
-
-        // Get USD conversion
-        const ethToUsd = await getEthToUsdRate();
-        const usdAmount = prices.totalPrice * ethToUsd;
-
-        // Save transaction to database via EXISTING route
-        const response = await fetch('/dashboard/user/metamask-transaction', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify({
-                txn_hash: txHash.transactionHash,        // Backend expects txn_hash
-                wallet_address: userAccount,
-                token_amount: tokenAmount,                // Backend expects token_amount
-                amount: prices.totalPrice.toFixed(6),
-                to: 'ETH',
-                base_amt: usdAmount.toFixed(2),
-                type: 'MetaMask Purchase',
-                status: 'completed'
-            })
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-            showAlert(`Transaction submitted successfully! 🎉<br>
-                <strong>Purchase Details:</strong><br>
-                • Tokens: ${tokenAmount} {{$settings->token_symbol}}<br>
-                • Base Price: ${prices.basePrice.toFixed(6)} ETH<br>
-                • GST (18%): ${prices.gstAmount.toFixed(6)} ETH<br>
-                • Total Paid: ${prices.totalPrice.toFixed(6)} ETH<br>
-                • USD Value: $${usdAmount.toFixed(2)}<br>
-                <br>Transaction Hash: <code>${txHash.transactionHash}</code><br>
-                <a href="https://etherscan.io/tx/${txHash.transactionHash}" target="_blank">View on Etherscan</a><br>
-                <br><strong>Note:</strong> Transaction has been recorded and will appear in your transaction history.`, 'success');
-            setTimeout(() => {
-                window.location.reload();
-            }, 5000);
-        } else {
-            showAlert('Transaction completed but failed to record in database. Please contact support.', 'warning');
-        }
-
-    } catch (error) {
-        if (error.code === 4001) {
-            showAlert('Transaction rejected by user. The purchase was cancelled.', 'warning');
-        } else if (error.message.includes('insufficient funds')) {
-            showAlert('Insufficient funds for gas fees. Please add more ETH to your wallet.', 'error');
-        } else {
-            showAlert('Transaction failed: ' + error.message, 'error');
-        }
-    } finally {
-        setButtonLoading(false);
-    }
-}
-
 
         // Update UI based on connection status
         async function updateUI() {
@@ -639,7 +710,7 @@ async function purchaseTokens() {
             if (connected && userAccount) {
                 try {
                     connectBtn.style.display = 'none';
-                    purchaseBtn.style.display = kycApproved ? 'block' : 'none';
+                    purchaseBtn.style.display = 'block';
                     
                     const balance = await web3.eth.getBalance(userAccount);
                     const ethBalance = web3.utils.fromWei(balance, 'ether');
@@ -678,7 +749,7 @@ async function purchaseTokens() {
                 btn.disabled = true;
                 btnText.innerHTML = '<div class="loading"></div> Processing Transaction...';
             } else {
-                btn.disabled = !kycApproved;
+                btn.disabled = false;
                 btnText.innerHTML = '<i class="fas fa-shopping-cart"></i> Purchase Tokens Now';
             }
         }
@@ -743,9 +814,6 @@ async function purchaseTokens() {
         document.addEventListener('DOMContentLoaded', function() {
             initWeb3();
             updateMetaMaskCalculation();
-            if (!kycApproved) {
-                showAlert('Your KYC verification is not approved. Please complete KYC to purchase tokens. <a href="{{ route('kyc.submit') }}" class="btn btn-primary btn-sm mt-2">Submit KYC</a>', 'warning');
-            }
         });
     </script>
 </div>
