@@ -244,7 +244,7 @@
 
                         <!-- ***** Menu Start ***** -->
                         <ul class="nav">
-                            <li><a href="#what-is-ico">WHAT IS ICO</a></li>
+                            <!-- <li><a href="#what-is-ico">WHAT IS ICO</a></li> -->
                             <!-- <li><a href="#token-sale">TOKEN SALE</a></li> -->
                             <li><a href="#roadmap">ROADMAP</a></li>
                             <!-- <li><a href="#apps">APPS</a></li> -->
