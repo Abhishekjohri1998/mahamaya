@@ -140,6 +140,7 @@ Route::get('/dashboard', [ViewsController::class, 'dashboard_home'])
     ->middleware(['auth:sanctum', 'verified', 'status'])->name('dashboard');
 
 Route::middleware(['auth:sanctum', 'verified', 'status'])->prefix('dashboard/user')->group(function () {
+
     // Views Routes
     Route::get('contribute', [ViewsController::class, 'buytoken'])->name('buytoken');
     Route::get('transactions', [ViewsController::class, 'transactions'])->name('transactions');
@@ -152,13 +153,14 @@ Route::middleware(['auth:sanctum', 'verified', 'status'])->prefix('dashboard/use
     Route::get('account/clear-activity/{user_id}', [ActivityController::class, 'clearactivity'])->name('clearactivity');
     Route::get('buytoken/payment', [ViewsController::class, 'payment'])->name('payment');
     Route::get('transfer/success', [ViewsController::class, 'tsuccess'])->name('tsuccess');
-
+    Route::get('metamask-purchase', [ViewsController::class, 'metamaskPurchase'])->name('metamask.purchase');
     // MetaMask transaction handling
     Route::post('metamask-transaction', [ViewsController::class, 'storeMetaMaskTransaction'])->name('metamask.transaction');
 
-    // Profile Update
+    // Profile Update (REMOVED the conflicting route name)
     Route::put('update-profile', [ProfileController::class, 'updateprofile'])->name('profile.update');
     Route::put('update-wallet-address', [ProfileController::class, 'updatewallet'])->name('wallet.update');
+    Route::put('update-password', [ProfileController::class, 'updatepassword'])->name('user.password.change');
 
     // KYC and Payment
     Route::post('submit-kyc', [KycController::class, 'submitkyc'])->name('submitkyc');
