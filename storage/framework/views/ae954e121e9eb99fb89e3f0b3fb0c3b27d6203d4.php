@@ -379,7 +379,7 @@ KycStatusMail.php<div>
             chainName: 'Ethereum Mainnet',
             tokenPrice: 0.001,
             gstRate: 0.18,
-            rpcUrl: 'https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID',
+          rpcUrl: 'https://mainnet.infura.io/v3/9615666ceef74a58b3c46782c9974678',
             gasLimit: 100000
         };
 
