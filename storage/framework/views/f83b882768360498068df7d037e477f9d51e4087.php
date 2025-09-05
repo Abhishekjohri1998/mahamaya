@@ -18,7 +18,7 @@ if (Auth::user()->dashboard_style == "light") {
             <div class="page-inner">
                 <div class="mt-2 mb-4">
                     <h2 class="text-<?php echo e($text); ?> pb-2">
-                        <i class="fas fa-user-edit"></i> Account Settings
+                        <i class="fas fa-user-edit"></i> Account Setti
                     </h2>
                     <p class="text-<?php echo e($text); ?>">Manage your personal information, security settings, and wallet configuration.</p>
                 </div>
@@ -300,15 +300,15 @@ if (Auth::user()->dashboard_style == "light") {
                                                 <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('profile.two-factor-authentication-form')->html();
-} elseif ($_instance->childHasBeenRendered('GovgkHg')) {
-    $componentId = $_instance->getRenderedChildComponentId('GovgkHg');
-    $componentTag = $_instance->getRenderedChildComponentTagName('GovgkHg');
+} elseif ($_instance->childHasBeenRendered('gncYwmO')) {
+    $componentId = $_instance->getRenderedChildComponentId('gncYwmO');
+    $componentTag = $_instance->getRenderedChildComponentTagName('gncYwmO');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('GovgkHg');
+    $_instance->preserveRenderedChild('gncYwmO');
 } else {
     $response = \Livewire\Livewire::mount('profile.two-factor-authentication-form');
     $html = $response->html();
-    $_instance->logRenderedChild('GovgkHg', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('gncYwmO', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?>
