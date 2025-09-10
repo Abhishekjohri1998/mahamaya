@@ -249,53 +249,62 @@ if (Auth::user()->dashboard_style == "light") {
                 <?php endif; ?>
 
                 <!-- Welcome Section -->
-                <div class="row row-card-no-pd bg-<?php echo e($bg); ?> shadow-none mt-4">
-                    <div class="col-md-12">
-                        <div class="card bg-<?php echo e($bg == 'light' ? 'white' : 'dark'); ?> border-<?php echo e($bg == 'light' ? 'light' : 'secondary'); ?>">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="p-3 col-md-3 text-center">
-                                        <img src="<?php echo e(asset('storage/app/public/'. $settings->logo)); ?>" class="img-fluid" style="max-width: 150px;"> 
-                                    </div> 
-                                    <div class="p-3 col-md-9">
-                                        <h3 class="text-<?php echo e($text); ?>">
-                                            <i class="fas fa-handshake text-primary"></i> Thank you for choosing <?php echo e($settings->site_name); ?>
+<!-- Welcome Section -->
+<div class="row row-card-no-pd bg-<?php echo e($bg); ?> shadow-none mt-4">
+    <div class="col-md-12">
+        <div class="card bg-<?php echo e($bg == 'light' ? 'white' : 'dark'); ?> border-<?php echo e($bg == 'light' ? 'light' : 'secondary'); ?>">
+            <div class="card-body">
+                <div class="row">
+                    <div class="p-3 col-md-3 text-center">
+                        <?php if($settings->logo): ?>
+                            <img src="<?php echo e(asset('storage/'. $settings->logo)); ?>" class="img-fluid" style="max-width: 150px;">
+                        <?php else: ?>
+                            <div class="text-center">
+                                <h4 class="text-<?php echo e($text); ?>"><?php echo e($settings->site_name); ?></h4>
+                                <i class="fas fa-coins fa-3x text-primary"></i>
+                            </div>
+                        <?php endif; ?>
+                    </div> 
+                    <div class="p-3 col-md-9">
+                        <h3 class="text-<?php echo e($text); ?>">
+                            <i class="fas fa-handshake text-primary"></i> Thank you for choosing <?php echo e($settings->site_name); ?>
 
-                                        </h3>
-                                        <p class="text-<?php echo e($text); ?> mb-3">
-                                            <?php echo e($settings->whitepaper); ?>
+                        </h3>
+                        <p class="text-<?php echo e($text); ?> mb-3">
+                            <?php echo e($settings->whitepaper); ?>
 
-                                        </p>
-                                        
-                                        <!-- Quick Actions -->
-                                        <div class="row">
-                                            <div class="col-md-3 mb-2">
-                                                <a href="<?php echo e(route('buytoken')); ?>" class="btn btn-primary btn-block">
-                                                    <i class="fas fa-shopping-cart"></i> Buy Tokens
-                                                </a>
-                                            </div>
-                                            <div class="col-md-3 mb-2">
-                                                <a href="<?php echo e(route('mytoken')); ?>" class="btn btn-info btn-block">
-                                                    <i class="fas fa-coins"></i> My Portfolio
-                                                </a>
-                                            </div>
-                                            <div class="col-md-3 mb-2">
-                                                <a href="<?php echo e(route('transactions')); ?>" class="btn btn-success btn-block">
-                                                    <i class="fas fa-history"></i> Transactions
-                                                </a>
-                                            </div>
-                                            <div class="col-md-3 mb-2">
-                                                <a href="#" class="btn btn-secondary btn-block">
-                                                    <i class="fas fa-download"></i> Whitepaper
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div> 
-                                </div>
+                        </p>
+                        
+                        <!-- Quick Actions -->
+                        <div class="row">
+                            <div class="col-md-3 mb-2">
+                                <a href="<?php echo e(route('buytoken')); ?>" class="btn btn-primary btn-block">
+                                    <i class="fas fa-shopping-cart"></i> Buy Tokens
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <a href="<?php echo e(route('mytoken')); ?>" class="btn btn-info btn-block">
+                                    <i class="fas fa-coins"></i> My Portfolio
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <a href="<?php echo e(route('transactions')); ?>" class="btn btn-success btn-block">
+                                    <i class="fas fa-history"></i> Transactions
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <a href="#" class="btn btn-secondary btn-block">
+                                    <i class="fas fa-download"></i> Whitepaper
+                                </a>
                             </div>
                         </div>
                     </div> 
                 </div>
+            </div>
+        </div>
+    </div> 
+</div>
+
             </div>
         </div>
     </div>

@@ -9,7 +9,11 @@
     <meta name="description" content="<?php echo e($settings->site_name); ?> is a Bitcoin and Cryptocurrency ICO System." />
     <meta name="keywords" content="bitcoin, ethereum, monero, ico, token, free token, btc, eth" />
 
-    <link rel="icon" href="<?php echo e(asset('storage/app/public/'. $settings->favicon)); ?>" type="image/png"/>
+    <?php if($settings->favicon): ?>
+    <link rel="icon" href="<?php echo e(asset('storage/'. $settings->favicon)); ?>" type="image/png"/>
+<?php else: ?>
+    <link rel="icon" href="<?php echo e(asset('front/assets/images/default-favicon.ico')); ?>" type="image/x-icon"/>
+<?php endif; ?>
 
     <!-- Bootstrap & Plugins CSS -->
     <link href="<?php echo e(asset('front/assets/css/bootstrap.min.css')); ?>" rel="stylesheet" type="text/css">

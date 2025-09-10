@@ -2,7 +2,13 @@
 {{-- Header --}}
 @slot('header')
 @component('mail::header', ['url' => config('app.url')])
-<img src="{{ asset('storage/app/public/'. $settings->logo) }}" alt="{{ config('app.name') }}" style="width: 90px">
+@if($settings->logo)
+    <img src="{{ asset('storage/'. $settings->logo) }}" alt="{{ config('app.name') }}" style="width: 90px; display: block;">
+@else
+    <div style="font-size: 24px; font-weight: bold; text-align: center; padding: 20px; color: #333;">
+        {{ config('app.name') }}
+    </div>
+@endif
 @endcomponent
 @endslot
 

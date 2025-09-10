@@ -1,4 +1,3 @@
-
 @extends('layouts.app')
 @section('content')
     @include('admin.topmenu')
@@ -21,16 +20,28 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <h4>image(front)</h4>
-                            <img src="{{ asset('storage/app/public/'. $kyc->doc1) }}" class="img-fluid w-75" alt="image-front">
+                            <h4>Document (Front)</h4>
+                            @if($kyc->doc1)
+                                <img src="{{ asset('storage/'. $kyc->doc1) }}" class="img-fluid w-75" alt="document-front">
+                            @else
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle"></i> No front document uploaded
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <h4>image(back)</h4>
-                            <img src="{{ asset('storage/app/public/'. $kyc->doc2) }}" class="img-fluid w-75" alt="image-back">
+                            <h4>Document (Back)</h4>
+                            @if($kyc->doc2)
+                                <img src="{{ asset('storage/'. $kyc->doc2) }}" class="img-fluid w-75" alt="document-back">
+                            @else
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle"></i> No back document uploaded
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -38,7 +49,13 @@
                     <div class="card">
                         <div class="card-body">
                             <h4>Photograph</h4>
-                            <img src="{{ asset('storage/app/public/'. $kyc->photo) }}" class="img-fluid w-75" alt="photograp">
+                            @if($kyc->photo)
+                                <img src="{{ asset('storage/'. $kyc->photo) }}" class="img-fluid w-75" alt="photograph">
+                            @else
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle"></i> No photograph uploaded
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>

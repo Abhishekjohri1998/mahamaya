@@ -10,7 +10,11 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{$settings->site_name}} | {{$title}}</title>
-    <link rel="icon" href="{{ asset('storage/app/public/'. $settings->favicon) }}" type="image/png"/>
+    @if($settings->favicon)
+        <link rel="icon" href="{{ asset('storage/'. $settings->favicon) }}" type="image/png"/>
+    @else
+        <link rel="icon" href="{{ asset('front/assets/images/default-favicon.ico') }}" type="image/x-icon"/>
+    @endif
 	
 	@section('styles')
 			<!-- Fonts and icons -->

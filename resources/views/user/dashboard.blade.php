@@ -224,51 +224,60 @@ if (Auth::user()->dashboard_style == "light") {
                 @endif
 
                 <!-- Welcome Section -->
-                <div class="row row-card-no-pd bg-{{$bg}} shadow-none mt-4">
-                    <div class="col-md-12">
-                        <div class="card bg-{{$bg == 'light' ? 'white' : 'dark'}} border-{{$bg == 'light' ? 'light' : 'secondary'}}">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="p-3 col-md-3 text-center">
-                                        <img src="{{ asset('storage/app/public/'. $settings->logo) }}" class="img-fluid" style="max-width: 150px;"> 
-                                    </div> 
-                                    <div class="p-3 col-md-9">
-                                        <h3 class="text-{{$text}}">
-                                            <i class="fas fa-handshake text-primary"></i> Thank you for choosing {{$settings->site_name}}
-                                        </h3>
-                                        <p class="text-{{$text}} mb-3">
-                                            {{$settings->whitepaper}}
-                                        </p>
-                                        
-                                        <!-- Quick Actions -->
-                                        <div class="row">
-                                            <div class="col-md-3 mb-2">
-                                                <a href="{{route('buytoken')}}" class="btn btn-primary btn-block">
-                                                    <i class="fas fa-shopping-cart"></i> Buy Tokens
-                                                </a>
-                                            </div>
-                                            <div class="col-md-3 mb-2">
-                                                <a href="{{route('mytoken')}}" class="btn btn-info btn-block">
-                                                    <i class="fas fa-coins"></i> My Portfolio
-                                                </a>
-                                            </div>
-                                            <div class="col-md-3 mb-2">
-                                                <a href="{{route('transactions')}}" class="btn btn-success btn-block">
-                                                    <i class="fas fa-history"></i> Transactions
-                                                </a>
-                                            </div>
-                                            <div class="col-md-3 mb-2">
-                                                <a href="#" class="btn btn-secondary btn-block">
-                                                    <i class="fas fa-download"></i> Whitepaper
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div> 
-                                </div>
+<!-- Welcome Section -->
+<div class="row row-card-no-pd bg-{{$bg}} shadow-none mt-4">
+    <div class="col-md-12">
+        <div class="card bg-{{$bg == 'light' ? 'white' : 'dark'}} border-{{$bg == 'light' ? 'light' : 'secondary'}}">
+            <div class="card-body">
+                <div class="row">
+                    <div class="p-3 col-md-3 text-center">
+                        @if($settings->logo)
+                            <img src="{{ asset('storage/'. $settings->logo) }}" class="img-fluid" style="max-width: 150px;">
+                        @else
+                            <div class="text-center">
+                                <h4 class="text-{{$text}}">{{$settings->site_name}}</h4>
+                                <i class="fas fa-coins fa-3x text-primary"></i>
+                            </div>
+                        @endif
+                    </div> 
+                    <div class="p-3 col-md-9">
+                        <h3 class="text-{{$text}}">
+                            <i class="fas fa-handshake text-primary"></i> Thank you for choosing {{$settings->site_name}}
+                        </h3>
+                        <p class="text-{{$text}} mb-3">
+                            {{$settings->whitepaper}}
+                        </p>
+                        
+                        <!-- Quick Actions -->
+                        <div class="row">
+                            <div class="col-md-3 mb-2">
+                                <a href="{{route('buytoken')}}" class="btn btn-primary btn-block">
+                                    <i class="fas fa-shopping-cart"></i> Buy Tokens
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <a href="{{route('mytoken')}}" class="btn btn-info btn-block">
+                                    <i class="fas fa-coins"></i> My Portfolio
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <a href="{{route('transactions')}}" class="btn btn-success btn-block">
+                                    <i class="fas fa-history"></i> Transactions
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <a href="#" class="btn btn-secondary btn-block">
+                                    <i class="fas fa-download"></i> Whitepaper
+                                </a>
                             </div>
                         </div>
                     </div> 
                 </div>
+            </div>
+        </div>
+    </div> 
+</div>
+
             </div>
         </div>
     </div>

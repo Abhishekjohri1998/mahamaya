@@ -19,15 +19,15 @@ if (Auth::user()->dashboard_style == "light") {
                     <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('buy-token', [])->html();
-} elseif ($_instance->childHasBeenRendered('oTE4ykM')) {
-    $componentId = $_instance->getRenderedChildComponentId('oTE4ykM');
-    $componentTag = $_instance->getRenderedChildComponentTagName('oTE4ykM');
+} elseif ($_instance->childHasBeenRendered('VmUlCWH')) {
+    $componentId = $_instance->getRenderedChildComponentId('VmUlCWH');
+    $componentTag = $_instance->getRenderedChildComponentTagName('VmUlCWH');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('oTE4ykM');
+    $_instance->preserveRenderedChild('VmUlCWH');
 } else {
     $response = \Livewire\Livewire::mount('buy-token', []);
     $html = $response->html();
-    $_instance->logRenderedChild('oTE4ykM', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('VmUlCWH', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?>
