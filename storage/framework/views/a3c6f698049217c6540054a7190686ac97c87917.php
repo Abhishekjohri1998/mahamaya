@@ -10,7 +10,11 @@
     <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
 
     <title><?php echo e($settings->site_name); ?> | <?php echo e($title); ?></title>
-    <link rel="icon" href="<?php echo e(asset('storage/app/public/'. $settings->favicon)); ?>" type="image/png"/>
+    <?php if($settings->favicon): ?>
+        <link rel="icon" href="<?php echo e(asset('storage/'. $settings->favicon)); ?>" type="image/png"/>
+    <?php else: ?>
+        <link rel="icon" href="<?php echo e(asset('front/assets/images/default-favicon.ico')); ?>" type="image/x-icon"/>
+    <?php endif; ?>
 	
 	<?php $__env->startSection('styles'); ?>
 			<!-- Fonts and icons -->

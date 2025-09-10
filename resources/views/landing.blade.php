@@ -42,16 +42,26 @@
             to { text-shadow: 0 0 40px rgba(255, 215, 0, 0.6); }
         }
         .symbol-image { width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
-        .token-symbol {
-            width: 200px; height: 200px; margin: 40px auto;
-            background: transparent; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 4rem; font-weight: bold; color: #1a0d2e;
-            /* box-shadow: 0 0 50px rgba(255, 215, 0, 0.5),
-                        0 0 100px rgba(255, 215, 0, 0.3),
-                        inset 0 0 30px rgba(255, 255, 255, 0.2); */
-            animation: pulse 3s ease-in-out infinite; position: relative;
-        }
+       .token-symbol {
+    width: 200px; 
+    height: 200px; 
+    margin: 40px auto;
+    background: transparent;
+    border-radius: 50%;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    font-size: 4rem; 
+    font-weight: bold; 
+    color: #1a0d2e;
+    position: relative;
+    animation: pulse 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.4))
+            drop-shadow(0 0 40px rgba(255, 215, 0, 0.3))
+            drop-shadow(0 0 60px rgba(255, 215, 0, 0.2))
+            drop-shadow(0 0 80px rgba(255, 215, 0, 0.0));
+}
+
         /* .token-symbol::before {
             content: '';
             position: absolute;
