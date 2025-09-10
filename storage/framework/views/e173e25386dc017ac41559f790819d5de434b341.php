@@ -1,5 +1,3 @@
-<!-- Stored in resources/views/child.blade.php -->
-
 <!-- Sidebar -->
 
 <div class="sidebar sidebar-style-2" data-background-color="light">
@@ -22,12 +20,17 @@
                         <p>Dashboard</p>
                     </a>
                 </li>
+                
+                
+                <?php if(Auth::user()->verification_status == "Verified"): ?>
                 <li class="nav-item">
                     <a href="<?php echo e(url('/dashboard/user/contribute')); ?>">
                         <i class="fas fa-coins"></i>
                         <p>Buy Token</p>
                     </a>
                 </li>
+                <?php endif; ?>
+                
                 <li class="nav-item">
                     <a href="<?php echo e(url('/dashboard/user/transactions')); ?>">
                         <i class="fas fa-exchange-alt" aria-hidden="true"></i>

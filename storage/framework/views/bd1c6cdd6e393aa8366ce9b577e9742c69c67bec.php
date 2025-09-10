@@ -222,7 +222,7 @@
             </h1>
 
             <div class="token-symbol">
-                <img src="https://3.110.186.69/front/assets/images/mahamaya-logo.png" 
+                <img src="http://3.110.186.69//front/assets/images/mahamaya-logo.png" 
                      alt="MAYX Coin Symbol" 
                      class="symbol-image"
                      onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\'font-size: 4rem; color: #ffd700;\'>M</span>';">

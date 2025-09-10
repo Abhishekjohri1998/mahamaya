@@ -10,10 +10,14 @@
                     <div class="col-12 col-md-6 col-lg-6 col-sm-10 col-xl-6 ">
                         
                         <div class="text-center mb-4">
-                            <a href="{{url('/')}}" ><img class="auth__logo img-fluid" 
-                            src="{{ asset('storage/app/public/'. $settings->logo) }}" alt="{{$settings->site_name}}"> </a>
-                            
-                        
+                             <a href="{{url('/')}}" >
+                            @if($settings->logo)
+                                <img class="auth__logo img-fluid" 
+                                    src="{{ asset('storage/'. $settings->logo) }}" alt="{{$settings->site_name}}">
+                            @else
+                                <h2 class="auth__logo text-center">{{$settings->site_name}}</h2>
+                            @endif
+                        </a>
                             <x-jet-validation-errors class="alert alert-danger alert-dismissible fade show mb-2" />
     
                             @if (session('status'))

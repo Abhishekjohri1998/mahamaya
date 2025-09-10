@@ -9,7 +9,11 @@
     <meta name="description" content="{{$settings->site_name}} is a Bitcoin and Cryptocurrency ICO System." />
     <meta name="keywords" content="bitcoin, ethereum, monero, ico, token, free token, btc, eth" />
 
-    <link rel="icon" href="{{ asset('storage/app/public/'. $settings->favicon) }}" type="image/png"/>
+    @if($settings->favicon)
+    <link rel="icon" href="{{ asset('storage/'. $settings->favicon) }}" type="image/png"/>
+@else
+    <link rel="icon" href="{{ asset('front/assets/images/default-favicon.ico') }}" type="image/x-icon"/>
+@endif
 
     <!-- Bootstrap & Plugins CSS -->
     <link href="{{ asset('front/assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
