@@ -36,7 +36,7 @@
                         <div class="card-body">
                             <div class="mb-5">
                                 <span class="card-title">
-                                    <i class="fas fa-list"></i> All Transactions
+                                    <i class="fas fa-list"></i> All Transacti
                                     <small class="text-muted">(Including MetaMask Purchases)</small>
                                 </span>
                                 <a href="#" data-toggle="modal" data-target="#addtoken" class="float-right btn btn-primary"> 

@@ -361,7 +361,7 @@ if (Auth('admin')->User()->dashboard_style == "light") {
                                     <div class="col-md-2 col-sm-4 mb-3">
                                         <a href="<?php echo e(route('admin.trx')); ?>" class="btn btn-outline-primary btn-block">
                                             <i class="fas fa-list"></i><br>
-                                            All Transactions
+                                            All Transactio
                                         </a>
                                     </div>
                                     <div class="col-md-2 col-sm-4 mb-3">

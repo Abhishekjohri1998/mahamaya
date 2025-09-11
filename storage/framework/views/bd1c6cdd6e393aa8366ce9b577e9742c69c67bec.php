@@ -64,7 +64,7 @@
                 content: '';
                 position: absolute;
                 inset: -20px; /* Increase padding to fit image */
-                background: url('assets/MAYX_coin_Ring.png') no-repeat center center;
+                background: url('https://stallioneuro.s3.ap-south-1.amazonaws.com/images/mayx_coin_ring.png') no-repeat center center;
                 background-size: contain;
                 z-index: -1;
                 animation: rotate 6s linear infinite;
