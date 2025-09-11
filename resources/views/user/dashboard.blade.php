@@ -100,18 +100,32 @@ if (Auth::user()->dashboard_style == "light") {
                                                 <i class="fas fa-tag text-success"></i> 1 {{$settings->token_symbol}} = ${{number_format($settings->amt_usd, 2)}}
                                             </h4>
                                             <div class="row">
-                                                <div class="col-6">
-                                                    <a href="{{route('buytoken')}}" class="btn btn-primary btn-block btn-sm">
-                                                        <i class="fas fa-credit-card"></i><br>
-                                                        <small>Buy Traditional</small>
-                                                    </a>
-                                                </div>
-                                                <div class="col-6">
-                                                    <a href="{{route('buytoken')}}" class="btn btn-warning btn-block btn-sm">
-                                                        <i class="fab fa-ethereum"></i><br>
-                                                        <small>Buy MetaMask</small>
-                                                    </a>
-                                                </div>
+                                                {{-- Only show Buy Token buttons if KYC is verified --}}
+                                                @if(Auth::user()->verification_status == "Verified")
+                                                    <div class="col-6">
+                                                        <a href="{{route('buytoken')}}" class="btn btn-primary btn-block btn-sm">
+                                                            <i class="fas fa-credit-card"></i><br>
+                                                            <small>Buy Traditional</small>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <a href="{{route('buytoken')}}" class="btn btn-warning btn-block btn-sm">
+                                                            <i class="fab fa-ethereum"></i><br>
+                                                            <small>Buy MetaMask</small>
+                                                        </a>
+                                                    </div>
+                                                @else
+                                                    <div class="col-12">
+                                                        <div class="text-center">
+                                                            <small class="text-muted mb-2 d-block">
+                                                                <i class="fas fa-lock"></i> Complete KYC to buy tokens
+                                                            </small>
+                                                            <a href="{{route('kycinfo')}}" class="btn btn-outline-warning btn-sm">
+                                                                <i class="fas fa-id-card"></i> Verify KYC
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -224,59 +238,63 @@ if (Auth::user()->dashboard_style == "light") {
                 @endif
 
                 <!-- Welcome Section -->
-<!-- Welcome Section -->
-<div class="row row-card-no-pd bg-{{$bg}} shadow-none mt-4">
-    <div class="col-md-12">
-        <div class="card bg-{{$bg == 'light' ? 'white' : 'dark'}} border-{{$bg == 'light' ? 'light' : 'secondary'}}">
-            <div class="card-body">
-                <div class="row">
-                    <div class="p-3 col-md-3 text-center">
-                        @if($settings->logo)
-                            <img src="{{ asset('storage/'. $settings->logo) }}" class="img-fluid" style="max-width: 150px;">
-                        @else
-                            <div class="text-center">
-                                <h4 class="text-{{$text}}">{{$settings->site_name}}</h4>
-                                <i class="fas fa-coins fa-3x text-primary"></i>
-                            </div>
-                        @endif
-                    </div> 
-                    <div class="p-3 col-md-9">
-                        <h3 class="text-{{$text}}">
-                            <i class="fas fa-handshake text-primary"></i> Thank you for choosing {{$settings->site_name}}
-                        </h3>
-                        <p class="text-{{$text}} mb-3">
-                            {{$settings->whitepaper}}
-                        </p>
-                        
-                        <!-- Quick Actions -->
-                        <div class="row">
-                            <div class="col-md-3 mb-2">
-                                <a href="{{route('buytoken')}}" class="btn btn-primary btn-block">
-                                    <i class="fas fa-shopping-cart"></i> Buy Tokens
-                                </a>
-                            </div>
-                            <div class="col-md-3 mb-2">
-                                <a href="{{route('mytoken')}}" class="btn btn-info btn-block">
-                                    <i class="fas fa-coins"></i> My Portfolio
-                                </a>
-                            </div>
-                            <div class="col-md-3 mb-2">
-                                <a href="{{route('transactions')}}" class="btn btn-success btn-block">
-                                    <i class="fas fa-history"></i> Transactions
-                                </a>
-                            </div>
-                            <div class="col-md-3 mb-2">
-                                <a href="#" class="btn btn-secondary btn-block">
-                                    <i class="fas fa-download"></i> Whitepaper
-                                </a>
+                <div class="row row-card-no-pd bg-{{$bg}} shadow-none mt-4">
+                    <div class="col-md-12">
+                        <div class="card bg-{{$bg == 'light' ? 'white' : 'dark'}} border-{{$bg == 'light' ? 'light' : 'secondary'}}">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="p-3 col-md-3 text-center">
+                                        @if($settings->logo)
+                                            <img src="{{ asset('storage/'. $settings->logo) }}" class="img-fluid" style="max-width: 150px;">
+                                        @else
+                                            <div class="text-center">
+                                                <h4 class="text-{{$text}}">{{$settings->site_name}}</h4>
+                                                <i class="fas fa-coins fa-3x text-primary"></i>
+                                            </div>
+                                        @endif
+                                    </div> 
+                                    <div class="p-3 col-md-9">
+                                        <h3 class="text-{{$text}}">
+                                            <i class="fas fa-handshake text-primary"></i> Thank you for choosing {{$settings->site_name}}
+                                        </h3>
+                                        <p class="text-{{$text}} mb-3">
+                                            {{$settings->whitepaper}}
+                                        </p>
+                                        
+                                        <!-- Quick Actions -->
+                                        <div class="row">
+                                            {{-- Only show Buy Tokens button if KYC is verified --}}
+                                            @if(Auth::user()->verification_status == "Verified")
+                                                <div class="col-md-3 mb-2">
+                                                    <a href="{{route('buytoken')}}" class="btn btn-primary btn-block">
+                                                        <i class="fas fa-shopping-cart"></i> Buy Tokens
+                                                    </a>
+                                                </div>
+                                            @else
+                                                <div class="col-md-3 mb-2">
+                                                    <a href="{{route('kycinfo')}}" class="btn btn-warning btn-block">
+                                                        <i class="fas fa-id-card"></i> Complete KYC First
+                                                    </a>
+                                                </div>
+                                            @endif
+                                            
+                                            <div class="col-md-3 mb-2">
+                                                <a href="{{route('mytoken')}}" class="btn btn-info btn-block">
+                                                    <i class="fas fa-coins"></i> My Portfolio
+                                                </a>
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <a href="{{route('transactions')}}" class="btn btn-success btn-block">
+                                                    <i class="fas fa-history"></i> Transactions
+                                                </a>
+                                            </div>                                            
+                                        </div>
+                                    </div> 
+                                </div>
                             </div>
                         </div>
                     </div> 
                 </div>
-            </div>
-        </div>
-    </div> 
-</div>
 
             </div>
         </div>

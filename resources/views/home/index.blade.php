@@ -533,8 +533,7 @@
                 </div>
                 <div class="offset-lg-3 col-lg-6">
                     <div class="center-text">
-                        <p>Cras at leo et lacus laoreet euismod. Nulla malesuada tortor ac scelerisque sollicitudin.
-                        </p>
+                        
                     </div>
                 </div>
             </div>

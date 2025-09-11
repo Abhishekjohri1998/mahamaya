@@ -42,35 +42,33 @@
             to { text-shadow: 0 0 40px rgba(255, 215, 0, 0.6); }
         }
         .symbol-image { width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
-       .token-symbol {
-    width: 200px; 
-    height: 200px; 
-    margin: 40px auto;
-    background: transparent;
-    border-radius: 50%;
-    display: flex; 
-    align-items: center; 
-    justify-content: center;
-    font-size: 4rem; 
-    font-weight: bold; 
-    color: #1a0d2e;
-    position: relative;
-    animation: pulse 3s ease-in-out infinite;
-    filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.4))
-            drop-shadow(0 0 40px rgba(255, 215, 0, 0.3))
-            drop-shadow(0 0 60px rgba(255, 215, 0, 0.2))
-            drop-shadow(0 0 80px rgba(255, 215, 0, 0.0));
-}
+        /* Token Symbol */
+        .token-symbol {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto 100px auto;
+            background: transparent; /* Or a flat color like #fff or #1a0d2e */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            font-weight: bold;
+            color: #1a0d2e;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.5), 0 0 100px rgba(255, 215, 0, 0.3), inset 0 0 30px rgba(255, 255, 255, 0.2);
+            animation: pulse 3s ease-in-out infinite;
+            position: relative;
+        }
 
-        /* .token-symbol::before {
-            content: '';
-            position: absolute;
-            inset: -20px;
-            background: url('assets/MAYX_coin_Ring.png') no-repeat center center;
-            background-size: contain;
-            z-index: -1;
-            animation: rotate 6s linear infinite;
-        } */
+            .token-symbol::before {
+                content: '';
+                position: absolute;
+                inset: -20px; /* Increase padding to fit image */
+                background: url('https://stallioneuro.s3.ap-south-1.amazonaws.com/images/mayx_coin_ring.png') no-repeat center center;
+                background-size: contain;
+                z-index: -1;
+                animation: rotate 6s linear infinite;
+            }
         @keyframes  pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         @keyframes  rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         
@@ -232,7 +230,7 @@
             </h1>
 
             <div class="token-symbol">
-                <img src="http://3.110.186.69//front/assets/images/mahamaya-logo.png" 
+                <img src="https://stallioneuro.s3.ap-south-1.amazonaws.com/images/mayx_coin_m.png" 
                      alt="MAYX Coin Symbol" 
                      class="symbol-image"
                      onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\'font-size: 4rem; color: #ffd700;\'>M</span>';">

@@ -125,18 +125,32 @@ if (Auth::user()->dashboard_style == "light") {
 
                                             </h4>
                                             <div class="row">
-                                                <div class="col-6">
-                                                    <a href="<?php echo e(route('buytoken')); ?>" class="btn btn-primary btn-block btn-sm">
-                                                        <i class="fas fa-credit-card"></i><br>
-                                                        <small>Buy Traditional</small>
-                                                    </a>
-                                                </div>
-                                                <div class="col-6">
-                                                    <a href="<?php echo e(route('buytoken')); ?>" class="btn btn-warning btn-block btn-sm">
-                                                        <i class="fab fa-ethereum"></i><br>
-                                                        <small>Buy MetaMask</small>
-                                                    </a>
-                                                </div>
+                                                
+                                                <?php if(Auth::user()->verification_status == "Verified"): ?>
+                                                    <div class="col-6">
+                                                        <a href="<?php echo e(route('buytoken')); ?>" class="btn btn-primary btn-block btn-sm">
+                                                            <i class="fas fa-credit-card"></i><br>
+                                                            <small>Buy Traditional</small>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <a href="<?php echo e(route('buytoken')); ?>" class="btn btn-warning btn-block btn-sm">
+                                                            <i class="fab fa-ethereum"></i><br>
+                                                            <small>Buy MetaMask</small>
+                                                        </a>
+                                                    </div>
+                                                <?php else: ?>
+                                                    <div class="col-12">
+                                                        <div class="text-center">
+                                                            <small class="text-muted mb-2 d-block">
+                                                                <i class="fas fa-lock"></i> Complete KYC to buy tokens
+                                                            </small>
+                                                            <a href="<?php echo e(route('kycinfo')); ?>" class="btn btn-outline-warning btn-sm">
+                                                                <i class="fas fa-id-card"></i> Verify KYC
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                <?php endif; ?>
                                             </div>
                                         </div>
                                     </div>
@@ -249,61 +263,65 @@ if (Auth::user()->dashboard_style == "light") {
                 <?php endif; ?>
 
                 <!-- Welcome Section -->
-<!-- Welcome Section -->
-<div class="row row-card-no-pd bg-<?php echo e($bg); ?> shadow-none mt-4">
-    <div class="col-md-12">
-        <div class="card bg-<?php echo e($bg == 'light' ? 'white' : 'dark'); ?> border-<?php echo e($bg == 'light' ? 'light' : 'secondary'); ?>">
-            <div class="card-body">
-                <div class="row">
-                    <div class="p-3 col-md-3 text-center">
-                        <?php if($settings->logo): ?>
-                            <img src="<?php echo e(asset('storage/'. $settings->logo)); ?>" class="img-fluid" style="max-width: 150px;">
-                        <?php else: ?>
-                            <div class="text-center">
-                                <h4 class="text-<?php echo e($text); ?>"><?php echo e($settings->site_name); ?></h4>
-                                <i class="fas fa-coins fa-3x text-primary"></i>
-                            </div>
-                        <?php endif; ?>
-                    </div> 
-                    <div class="p-3 col-md-9">
-                        <h3 class="text-<?php echo e($text); ?>">
-                            <i class="fas fa-handshake text-primary"></i> Thank you for choosing <?php echo e($settings->site_name); ?>
+                <div class="row row-card-no-pd bg-<?php echo e($bg); ?> shadow-none mt-4">
+                    <div class="col-md-12">
+                        <div class="card bg-<?php echo e($bg == 'light' ? 'white' : 'dark'); ?> border-<?php echo e($bg == 'light' ? 'light' : 'secondary'); ?>">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="p-3 col-md-3 text-center">
+                                        <?php if($settings->logo): ?>
+                                            <img src="<?php echo e(asset('storage/'. $settings->logo)); ?>" class="img-fluid" style="max-width: 150px;">
+                                        <?php else: ?>
+                                            <div class="text-center">
+                                                <h4 class="text-<?php echo e($text); ?>"><?php echo e($settings->site_name); ?></h4>
+                                                <i class="fas fa-coins fa-3x text-primary"></i>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div> 
+                                    <div class="p-3 col-md-9">
+                                        <h3 class="text-<?php echo e($text); ?>">
+                                            <i class="fas fa-handshake text-primary"></i> Thank you for choosing <?php echo e($settings->site_name); ?>
 
-                        </h3>
-                        <p class="text-<?php echo e($text); ?> mb-3">
-                            <?php echo e($settings->whitepaper); ?>
+                                        </h3>
+                                        <p class="text-<?php echo e($text); ?> mb-3">
+                                            <?php echo e($settings->whitepaper); ?>
 
-                        </p>
-                        
-                        <!-- Quick Actions -->
-                        <div class="row">
-                            <div class="col-md-3 mb-2">
-                                <a href="<?php echo e(route('buytoken')); ?>" class="btn btn-primary btn-block">
-                                    <i class="fas fa-shopping-cart"></i> Buy Tokens
-                                </a>
-                            </div>
-                            <div class="col-md-3 mb-2">
-                                <a href="<?php echo e(route('mytoken')); ?>" class="btn btn-info btn-block">
-                                    <i class="fas fa-coins"></i> My Portfolio
-                                </a>
-                            </div>
-                            <div class="col-md-3 mb-2">
-                                <a href="<?php echo e(route('transactions')); ?>" class="btn btn-success btn-block">
-                                    <i class="fas fa-history"></i> Transactions
-                                </a>
-                            </div>
-                            <div class="col-md-3 mb-2">
-                                <a href="#" class="btn btn-secondary btn-block">
-                                    <i class="fas fa-download"></i> Whitepaper
-                                </a>
+                                        </p>
+                                        
+                                        <!-- Quick Actions -->
+                                        <div class="row">
+                                            
+                                            <?php if(Auth::user()->verification_status == "Verified"): ?>
+                                                <div class="col-md-3 mb-2">
+                                                    <a href="<?php echo e(route('buytoken')); ?>" class="btn btn-primary btn-block">
+                                                        <i class="fas fa-shopping-cart"></i> Buy Tokens
+                                                    </a>
+                                                </div>
+                                            <?php else: ?>
+                                                <div class="col-md-3 mb-2">
+                                                    <a href="<?php echo e(route('kycinfo')); ?>" class="btn btn-warning btn-block">
+                                                        <i class="fas fa-id-card"></i> Complete KYC First
+                                                    </a>
+                                                </div>
+                                            <?php endif; ?>
+                                            
+                                            <div class="col-md-3 mb-2">
+                                                <a href="<?php echo e(route('mytoken')); ?>" class="btn btn-info btn-block">
+                                                    <i class="fas fa-coins"></i> My Portfolio
+                                                </a>
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <a href="<?php echo e(route('transactions')); ?>" class="btn btn-success btn-block">
+                                                    <i class="fas fa-history"></i> Transactions
+                                                </a>
+                                            </div>                                            
+                                        </div>
+                                    </div> 
+                                </div>
                             </div>
                         </div>
                     </div> 
                 </div>
-            </div>
-        </div>
-    </div> 
-</div>
 
             </div>
         </div>
